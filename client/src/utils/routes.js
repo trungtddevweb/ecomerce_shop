@@ -1,5 +1,6 @@
 import HomePage from "~/pages/HomePage";
 import LoginPage from "~/pages/LoginPage";
+import ProductPage from "~/pages/ProductPage";
 import RegisterPage from "~/pages/RegisterPage";
 
 const routes =
@@ -15,6 +16,10 @@ const routes =
     register: {
         path: '/register',
         element: <RegisterPage />,
+    },
+    product: {
+        path: '/products/:productId',
+        element: <ProductPage />
     }
 
 }

@@ -1,19 +1,29 @@
-import { Suspense } from "react";
+import ErrorPage from "~/pages/ErrorPage";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import routes from "src/utils/routes";
+// import AuthRouters from "./AuthRouters";
 
 
 const AuthLayout = () => {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        // <AuthRouters>
+        <>
+            <nav>
+                <div>Home</div>
+                <div>ConTact</div>
+                <div>Product</div>
+            </nav>
             <Outlet />
-        </Suspense>
+            <footer>Footer</footer>
+        </>
+        // </AuthRouters>
     )
 }
 
 export default createBrowserRouter([
     {
         element: <AuthLayout />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 element: routes.home.element,
@@ -28,6 +38,7 @@ export default createBrowserRouter([
                 path: routes.register.path
             },
 
-        ]
+
+        ],
     }
 ])

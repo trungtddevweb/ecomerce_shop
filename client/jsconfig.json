@@ -2,15 +2,15 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@api/*": [
+            "~/pages/*": [
+                "src/pages/*"
+            ],
+            "~/components/*": [
+                "src/components/*"
+            ],
+            "~/api/*": [
                 "src/api/*"
-            ],
-            "@components/*": [
-                "src/components"
-            ],
-            "@pages/*": [
-                "src/pages"
-            ],
+            ]
         }
     }
 }
