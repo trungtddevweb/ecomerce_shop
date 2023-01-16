@@ -1,24 +1,9 @@
 import ErrorPage from "~/pages/ErrorPage";
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import routes from "src/utils/routes";
-// import AuthRouters from "./AuthRouters";
+import { AuthLayout, MainLayout } from "src/layouts";
 
 
-const AuthLayout = () => {
-    return (
-        // <AuthRouters>
-        <>
-            <nav>
-                <div>Home</div>
-                <div>ConTact</div>
-                <div>Product</div>
-            </nav>
-            <Outlet />
-            <footer>Footer</footer>
-        </>
-        // </AuthRouters>
-    )
-}
 
 export default createBrowserRouter([
     {
@@ -26,19 +11,36 @@ export default createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-                element: routes.home.element,
-                path: routes.home.path
-            },
-            {
+                path: routes.login.path,
                 element: routes.login.element,
-                path: routes.login.path
             },
             {
+                path: routes.register.path,
                 element: routes.register.element,
-                path: routes.register.path
             },
-
-
+            {
+                element: routes.logout.path
+            }
         ],
     }
+    ,
+    {
+        element: <MainLayout />,
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                path: routes.home.path,
+                element: routes.home.element
+            },
+            {
+                path: routes.product.path,
+                element: routes.product.element
+            }
+
+        ]
+
+    }
+
+
 ])
+

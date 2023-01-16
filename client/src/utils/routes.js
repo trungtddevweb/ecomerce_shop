@@ -17,6 +17,10 @@ const routes =
         path: '/register',
         element: <RegisterPage />,
     },
+    logout: {
+        path: '/logout',
+
+    },
     product: {
         path: '/products/:productId',
         element: <ProductPage />
