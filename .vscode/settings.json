@@ -1,0 +1,7 @@
+{
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "selection",
+    "editor.wordWrap": "off",
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+}
