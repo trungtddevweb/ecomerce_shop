@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import validator from 'validator';
 
 const { Schema } = mongoose;
 
@@ -7,33 +6,28 @@ const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
-    minLength: 1,
-    maxLength: 255,
+    min: 1,
+    max: 50,
   },
   email: {
     type: String,
     required: true,
     unique: true,
     lowercase: true,
-    validator: (value) => {
-      return validator.isEmail(value);
-    },
   },
   password: {
     type: String,
     required: true,
-    validator: (value) => {
-      return validator.isByteLength(value, {
-        min: 1,
-        max: 255,
-      });
-    },
+    min: 6,
+    max: 24,
   },
+
   picture: {
     type: String,
-    required: true,
     default: '',
   },
+}, {
+  timestamps: true
 });
 
 const User = mongoose.model('User', UserSchema);
