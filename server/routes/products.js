@@ -1,13 +1,13 @@
 import express from 'express'
-import { register, login, logout } from '../controllers/auth.js'
+import { getAProduct, getAllProduct, createAProduct } from '../controllers/product.js'
 
 const router = express.Router()
 
 // CREATE A PRODUCT
-// router.post('/register', register)
+router.post('/', createAProduct)
 // GET A PRODUCT
-// router.post('/products/:productId', login)
+router.get('/:productId', getAProduct)
 // GET ALL PRODUCTS
-// router.post('/products', logout)
+router.get('/', getAllProduct)
 
 export default router
