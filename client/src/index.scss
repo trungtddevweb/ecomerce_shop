@@ -1,6 +1,8 @@
-html{
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import "./assets//scss/variables";
 
-}
+// SCSS files
+@import './assets/scss/loader.scss';
 
 body{
     margin: 0;
