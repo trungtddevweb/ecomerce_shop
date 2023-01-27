@@ -1,11 +1,18 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
-@import "./assets//scss/variables";
+@import 'bootstrap/dist/css/bootstrap.min.css';
 
+@import "./assets//scss/variables";
 // SCSS files
 @import './assets/scss/loader.scss';
+@import './assets/scss/header.scss';
 
 body{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+// Main
+.main {
+    padding: 0 200px;
 }

@@ -1,20 +1,17 @@
-// import PropTypes from 'prop-types'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { Outlet } from 'react-router-dom'
 
-const MainLayout = ({ children }) => {
+const MainLayout = () => {
     return (
-        <>
-            <Header />
-            <Outlet />
-            <Footer />
-        </>
+        <div>
+            <div className="main">
+                <Header />
+                <Outlet />
+                <Footer />
+            </div>
+        </div>
     )
 }
-
-// MainLayout.propTypes = {
-//     children: PropTypes.node.isRequired
-// }
 
 export default MainLayout
