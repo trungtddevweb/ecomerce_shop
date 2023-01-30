@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    currentUser: null,
+    userLogin: null,
     loading: false,
     error: false,
+    cartCount: [],
 };
 
 export const userSlice = createSlice({
@@ -15,33 +16,28 @@ export const userSlice = createSlice({
         },
         loginSuccess: (state, action) => {
             state.loading = false;
-            state.currentUser = action.payload;
+            state.userLogin = action.payload;
         },
         loginFailure: (state) => {
             state.loading = false;
             state.error = true;
         },
         logout: (state) => {
-            state.currentUser = null;
+            state.userLogin = null;
             state.loading = false;
             state.error = false;
         },
-        subscription: (state, action) => {
-            if (state.currentUser.subscribedUsers.includes(action.payload)) {
-                state.currentUser.subscribedUsers.splice(
-                    state.currentUser.subscribedUsers.findIndex(
-                        (channelId) => channelId === action.payload
-                    ),
-                    1
-                );
-            } else {
-                state.currentUser.subscribedUsers.push(action.payload);
-            }
+        addToCart: (state, action) => {
+            state.cartCount += action.payload;
         },
+        removeToCart: (state, action) => {
+            state.cartCount -= action.payload;
+        }
+
     },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, subscription } =
+export const { loginStart, loginSuccess, loginFailure, logout, addToCart, removeToCart } =
     userSlice.actions;
 
 export default userSlice.reducer;
