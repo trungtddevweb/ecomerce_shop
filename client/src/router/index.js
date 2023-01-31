@@ -35,6 +35,14 @@ export default createBrowserRouter([
             {
                 path: routes.product.path,
                 element: routes.product.element
+            },
+            {
+                path: routes.about.path,
+                element: routes.about.element
+            },
+            {
+                path: routes.blog.path,
+                element: routes.blog.element
             }
 
         ]

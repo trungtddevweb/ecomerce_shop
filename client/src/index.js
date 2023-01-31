@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from 'src/redux/store'
 import { Provider } from 'react-redux';
 import SpinnerAnimation from './components/SpinnerAnimation';
+import { ThemeProvider } from 'react-bootstrap';
 const LazyApp = lazy(() => import('./App'))
 
 
@@ -14,7 +15,12 @@ root.render(
         <Provider store={store} >
             <PersistGate loading={null} persistor={persistor}>
                 <Suspense fallback={<SpinnerAnimation />}>
-                    <LazyApp />
+                    <ThemeProvider
+                        breakpoints={['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']}
+                        minBreakpoint="xxs"
+                    >
+                        <LazyApp />
+                    </ThemeProvider>
                 </Suspense>
             </PersistGate>
         </Provider>
