@@ -3,8 +3,9 @@ import bcrypt from 'bcryptjs'
 import responseHandler from "../handler/responseHandler.js"
 import jwt from 'jsonwebtoken'
 
+// REGISTER
 export const register = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
     try {
         const user = await User.findOne({ email });
         if (user) {
@@ -12,17 +13,23 @@ export const register = async (req, res, next) => {
         }
         const salt = bcrypt.genSaltSync(10)
         const hashPassword = bcrypt.hashSync(password, salt)
+        if (password !== confirmPassword) {
+            return next(responseHandler.badRequest(res, "Confirm password not equal to your password!"))
+        }
         const newUser = await User({
             ...req.body,
             password: hashPassword,
+            confirmPassword: hashPassword
         })
         await newUser.save()
         responseHandler.created(res, newUser)
+
     } catch (error) {
-        next(responseHandler.error(res))
+        responseHandler.error(res, error)
     }
 }
 
+// LOGIN
 export const login = async (req, res, next) => {
     try {
         const { email } = req.body
