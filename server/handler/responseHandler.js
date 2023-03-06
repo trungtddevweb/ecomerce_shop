@@ -1,8 +1,10 @@
 const responseWithData = (res, statusCode, data) => res.status(statusCode).json(data);
 
-const error = (res) => responseWithData(res, 500, {
+const error = (res, error) => responseWithData(res, 500, {
     status: 500,
-    message: "Oopps! Something went wrong!"
+    message: "Oopps! Something went wrong!",
+    error: error.errors.name.message || error
+
 })
 
 const badRequest = (res, message) => responseWithData(res, 400, {
@@ -12,9 +14,21 @@ const badRequest = (res, message) => responseWithData(res, 400, {
 
 const created = (res, data) => responseWithData(res, 201, data)
 
+const getData = (res, data) => responseWithData(res, 200, data)
+
 const unAuthorized = (res) => responseWithData(res, 401, {
     status: 401,
     message: "Unauthorized",
+})
+
+const tokenNotValid = (res) => responseWithData(res, {
+    status: 401,
+    message: "Token is not valid",
+})
+
+const forbidden = (res) => responseWithData(res, {
+    status: 403,
+    message: "Access denied",
 })
 
 const notFound = (res) => responseWithData(res, 404, {
@@ -22,4 +36,4 @@ const notFound = (res) => responseWithData(res, 404, {
     message: "Not Found",
 })
 
-export default { error, badRequest, created, unAuthorized, notFound }
+export default { error, badRequest, created, unAuthorized, notFound, tokenNotValid, forbidden, getData }

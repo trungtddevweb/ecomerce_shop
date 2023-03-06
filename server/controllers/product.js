@@ -23,9 +23,10 @@ export const getAProduct = async (req, res, next) => {
     }
 }
 
-export const getAllProductByUser = async (req, res, next) => {
+export const getAllProduct = async (req, res, next) => {
     try {
-
+        const products = await Product.find()
+        responseHandler.getData(res, products)
     } catch (error) {
         next(responseHandler.error(error));
     }

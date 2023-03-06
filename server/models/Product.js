@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const ProductSchema = new Schema({
     userId: {
         type: String,
-        required: true,
+        ref: "User",
     },
     name: {
         type: String,
@@ -16,7 +16,6 @@ const ProductSchema = new Schema({
     },
     productImg: {
         type: String,
-        required: true,
         default: '',
     },
     quantity: {

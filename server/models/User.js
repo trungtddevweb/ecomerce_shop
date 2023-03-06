@@ -21,11 +21,14 @@ const UserSchema = new Schema({
     min: 6,
     max: 24,
   },
-
   picture: {
     type: String,
     default: '',
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  }
 }, {
   timestamps: true
 });
