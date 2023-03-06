@@ -14,6 +14,8 @@ const badRequest = (res, message) => responseWithData(res, 400, {
 
 const created = (res, data) => responseWithData(res, 201, data)
 
+const getData = (res, data) => responseWithData(res, 200, data)
+
 const unAuthorized = (res) => responseWithData(res, 401, {
     status: 401,
     message: "Unauthorized",
@@ -34,4 +36,4 @@ const notFound = (res) => responseWithData(res, 404, {
     message: "Not Found",
 })
 
-export default { error, badRequest, created, unAuthorized, notFound, tokenNotValid, forbidden }
+export default { error, badRequest, created, unAuthorized, notFound, tokenNotValid, forbidden, getData }
