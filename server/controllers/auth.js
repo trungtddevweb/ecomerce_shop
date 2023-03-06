@@ -22,9 +22,8 @@ export const register = async (req, res, next) => {
         })
         await newUser.save()
         responseHandler.created(res, newUser)
-
     } catch (error) {
-        responseHandler.error(res, error)
+        next(responseHandler.error(res, error))
     }
 }
 
