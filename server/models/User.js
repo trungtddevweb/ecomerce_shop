@@ -21,12 +21,6 @@ const UserSchema = new Schema({
     min: 6,
     max: 24,
   },
-  confirmPassword: {
-    type: String,
-    required: true,
-    min: 6,
-    max: 24,
-  },
   picture: {
     type: String,
     default: '',

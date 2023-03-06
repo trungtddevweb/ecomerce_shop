@@ -19,7 +19,6 @@ export const register = async (req, res, next) => {
         const newUser = await User({
             ...req.body,
             password: hashPassword,
-            confirmPassword: hashPassword
         })
         await newUser.save()
         responseHandler.created(res, newUser)
@@ -37,12 +36,14 @@ export const login = async (req, res, next) => {
         if (!user) return next(responseHandler.notFound(res));
         const checkPassword = await bcrypt.compare(req.body.password, user.password);
         if (!checkPassword) return next(responseHandler.badRequest(res, "Email or password is incorrect."));
-        const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, { expiresIn: "3d" })
+        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { algorithm: 'RS256', allowInsecureKeySizes: true, expiresIn: "3d" })
         const { password, ...other } = user._doc;
         res.cookie("access_token", token, {
-            httpOnly: true
+            httpOnly: true,
+            expires: new Date(Date.now() + 8 * 3600000)
         }).status(200).json({
-            data: other
+            data: other,
+            token,
         })
     } catch (error) {
         next(responseHandler.error(error))

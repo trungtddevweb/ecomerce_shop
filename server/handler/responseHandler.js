@@ -19,9 +19,14 @@ const unAuthorized = (res) => responseWithData(res, 401, {
     message: "Unauthorized",
 })
 
+const tokenNotValid = (res) => responseWithData(res, {
+    status: 401,
+    message: "Token is not valid",
+})
+
 const notFound = (res) => responseWithData(res, 404, {
     status: 404,
     message: "Not Found",
 })
 
-export default { error, badRequest, created, unAuthorized, notFound }
+export default { error, badRequest, created, unAuthorized, notFound, tokenNotValid }
