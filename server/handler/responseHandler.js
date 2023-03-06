@@ -24,9 +24,14 @@ const tokenNotValid = (res) => responseWithData(res, {
     message: "Token is not valid",
 })
 
+const forbidden = (res) => responseWithData(res, {
+    status: 403,
+    message: "Access denied",
+})
+
 const notFound = (res) => responseWithData(res, 404, {
     status: 404,
     message: "Not Found",
 })
 
-export default { error, badRequest, created, unAuthorized, notFound, tokenNotValid }
+export default { error, badRequest, created, unAuthorized, notFound, tokenNotValid, forbidden }
