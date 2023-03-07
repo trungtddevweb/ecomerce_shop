@@ -13,6 +13,9 @@
     background-color: white;
     max-width: 100%;
 }
+.form-control {
+    padding: 12px;
+}
 .btn {
     width: 100%;
     padding: 12px;
@@ -24,4 +27,7 @@
 .img-wrap img {
     width: 100%;
     object-fit: cover;
+}
+.mb-12 {
+    margin-bottom: 12px;
 }

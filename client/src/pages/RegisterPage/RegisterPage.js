@@ -1,70 +1,101 @@
-import React from 'react'
-
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+
+import 'react-toastify/dist/ReactToastify.css'
+import Loading from '~/components/Loading'
+
 const registerData = yup.object().shape({
-    username: yup.string().required('Username không được để trống'),
-    password: yup.string().required('Password không được để trống').min(6),
+    name: yup.string().required(),
+    email: yup.string().email().required(),
+    password: yup.string().required().min(6),
     confirmPassowrd: yup.string().oneOf([yup.ref('password'), null])
 })
+
 const RegisterPage = () => {
+    const navigate = useNavigate()
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
+
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm({ resolver: yupResolver(registerData) })
-    const onSubmit = data => console.log(data)
+    const onSubmitRegiser = data => {
+        setLoading(true)
+        console.log(data)
+        axios
+            .post('https://ecomerce-shopping.onrender.com/api/auth/register', data)
+            .then(() => {
+                setLoading(false)
+                alert('ban da dang ky thanh cong')
+                // setTimeout(() => {
+                // }, 6000)
+                navigate('/login')
+            })
+            .catch(err => {
+                setLoading(false)
+                setError(err.response.data.message)
+            })
+    }
     return (
         <>
             <div className=' form-container d-flex justify-content-center align-items-center'>
-                <Form onSubmit={handleSubmit(onSubmit)} className=' shadow p-4 rounded form-wrap'>
-                    <div className='img-wrap'>
+                <Form onSubmit={handleSubmit(onSubmitRegiser)} className='shadow p-4 rounded form-wrap'>
+                    <div className='img-wrap mb-3'>
                         <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </div>
-                    <h3 className='text-center mb-5'>Register Form</h3>
-                    <div className='form-floating mb-3'>
+                    <div className='mb-3'>
                         <input
                             type='text'
                             className='form-control'
-                            id='floatingInput'
-                            placeholder='Username'
-                            {...register('username', { required: true })}
+                            placeholder='Name'
+                            {...register('name', { required: true })}
                         />
-                        <label htmlFor='floatingInput'>Username</label>
+                        {errors.name && <p className='text-danger'>{errors.name.message}</p>}
                     </div>
-                    {errors.username && <p className='text-danger'>{errors.username.message}</p>}
-
-                    <div className='form-floating mb-3'>
+                    <div className='mb-3'>
+                        <input
+                            type='email'
+                            className='form-control'
+                            placeholder='Email'
+                            {...register('email', { required: true })}
+                        />
+                    </div>
+                    {errors.email && <p className='text-danger'>{errors.email.message}</p>}
+                    <p className='text-danger'>{error}</p>
+                    <div className='mb-3'>
                         <input
                             type='password'
                             className='form-control'
-                            id='floatingInput'
                             placeholder='Password'
-                            {...register('password', { required: true, minLength: 6 })}
+                            {...register('password', { required: true })}
                         />
-
-                        <label htmlFor='floatingInput'>Password</label>
                     </div>
                     {errors.password && <p className='text-danger'>{errors.password.message}</p>}
-                    {errors.password?.type === 'minLength' && <p>Password must be 6 characters long</p>}
-                    <div className='form-floating mb-3'>
+
+                    <div className='mb-3'>
                         <input
                             type='password'
                             className='form-control'
-                            id='floatingInput'
                             placeholder='ConfirmPassowrd'
                             {...register('confirmPassowrd', { required: true })}
                         />
-                        <label htmlFor='floatingInput'>ConfirmPassowrd</label>
                     </div>
-
                     {errors.confirmPassowrd && <p className='text-danger'>password don't match</p>}
-                    <Button type='submit' variant='primary' className='btn'>
-                        Register
-                    </Button>
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <Button type='submit' variant='primary' className='btn'>
+                            Register
+                        </Button>
+                    )}
                 </Form>
             </div>
         </>

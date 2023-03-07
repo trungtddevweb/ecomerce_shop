@@ -9,13 +9,12 @@ import { useNavigate } from 'react-router-dom'
 import Loading from '~/components/Loading'
 
 const registerData = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().required().min(6)
+    oldPass: yup.string().required().min(6),
+    newPass: yup.string().required().min(6)
 })
-const Login = () => {
+const ForgotPassword = () => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
     const {
         register,
         handleSubmit,
@@ -23,57 +22,49 @@ const Login = () => {
     } = useForm({
         resolver: yupResolver(registerData)
     })
-    const onSubmit = data => {
+    const forgotPass = data => {
         setLoading(true)
         console.log(data)
         axios
-            .post('https://ecomerce-shopping.onrender.com/api/auth/login', data)
+            .post('https://ecomerce-shopping.onrender.com/api/auth/forgot', data)
             .then(() => {
+                navigate('/login')
                 setLoading(false)
-
-                navigate('/')
             })
             .catch(err => {
                 setLoading(false)
-                setError(err.response.data.message)
+                console.log(err)
             })
     }
     return (
         <>
             <div className='form-container d-flex justify-content-center align-items-center '>
-                <Form onSubmit={handleSubmit(onSubmit)} className='shadow rounded p-4 form-wrap '>
+                <Form onSubmit={handleSubmit(forgotPass)} className='shadow rounded p-4 form-wrap '>
                     <div className='img-wrap mb-3'>
                         <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </div>
 
                     <div className='mb-3'>
                         <input
-                            type='email'
+                            type='password'
                             className='form-control'
-                            placeholder='Email'
-                            {...register('email', { required: true })}
+                            placeholder='Oldpass'
+                            {...register('oldPass', { required: true })}
                         />
                     </div>
-                    {errors.email && <p className='text-danger'>{errors.email.message}</p>}
+                    {errors.oldPass && <p className='text-danger'>{errors.oldPass.message}</p>}
                     <div className='mb-3'>
                         <input
                             type='password'
                             className='form-control'
-                            placeholder='Password'
-                            {...register('password', { required: true })}
+                            placeholder='NewPassword'
+                            {...register('newPass', { required: true })}
                         />
                     </div>
-                    {errors.password && <p className='text-danger'>{errors.password.message}</p>}
-                    {errors.username?.type === 'required' && (
-                        <span className='text-danger mb-12 d-block'>Username không được để trống</span>
-                    )}
-                    <p className='text-danger'>{error}</p>
-                    <div className='d-flex justify-content-between'>
-                        <a href='/forgot'>Forget Password?</a>
-                        <a href='/register'>
-                            <p className='text-primary'>Register now!</p>
-                        </a>
-                    </div>
+                    {errors.newPass && <p className='text-danger'>{errors.newPass.message}</p>}
+
+                    {/* <p className='text-danger'>{error}</p> */}
+
                     {loading ? (
                         <Loading />
                     ) : (
@@ -87,4 +78,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default ForgotPassword

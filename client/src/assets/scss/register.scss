@@ -13,6 +13,9 @@
     background-color: white;
     max-width: 100%;
 }
+.form-control {
+    padding: 12px;
+}
 .btn {
     width: 100%;
     padding: 12px;
@@ -27,4 +30,7 @@
 }
 .form-floating > .form-control {
     padding: 12px;
+}
+.mb-12 {
+    margin-bottom: 12px;
 }
