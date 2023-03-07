@@ -1,31 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    userLogin: null,
-    loading: false,
+    isAuthenticated: false,
     error: false,
+    user: null,
     cartCount: [],
 };
 
 export const userSlice = createSlice({
-    name: "user",
+    name: "auth",
     initialState,
     reducers: {
-        loginStart: (state) => {
-            state.loading = true;
-        },
         loginSuccess: (state, action) => {
-            state.loading = false;
-            state.userLogin = action.payload;
+            state.isAuthenticated = true
+            state.user = action.payload
+            state.error = null
         },
-        loginFailure: (state) => {
-            state.loading = false;
-            state.error = true;
+        loginFailed: (state, action) => {
+            state.isAuthenticated = false;
+            state.user = null;
+            state.error = action.payload;
         },
-        logout: (state) => {
-            state.userLogin = null;
-            state.loading = false;
-            state.error = false;
+        logoutSuccess: (state) => {
+            state.isAuthenticated = false;
+            state.user = null;
+            state.error = null;
         },
         addToCart: (state, action) => {
             state.cartCount += action.payload;
@@ -37,7 +36,7 @@ export const userSlice = createSlice({
     },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout, addToCart, removeToCart } =
+export const { loginSuccess, loginFailed, logoutSuccess, addToCart, removeToCart } =
     userSlice.actions;
 
 export default userSlice.reducer;

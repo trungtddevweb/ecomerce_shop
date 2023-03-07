@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -6,7 +6,6 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-
 import 'react-toastify/dist/ReactToastify.css'
 import Loading from '~/components/Loading'
 
@@ -35,8 +34,6 @@ const RegisterPage = () => {
             .then(() => {
                 setLoading(false)
                 alert('ban da dang ky thanh cong')
-                // setTimeout(() => {
-                // }, 6000)
                 navigate('/login')
             })
             .catch(err => {
@@ -84,8 +81,8 @@ const RegisterPage = () => {
                         <input
                             type='password'
                             className='form-control'
-                            placeholder='ConfirmPassowrd'
-                            {...register('confirmPassowrd', { required: true })}
+                            placeholder='Confirm Password'
+                            {...register('confirmPassword', { required: true })}
                         />
                     </div>
                     {errors.confirmPassowrd && <p className='text-danger'>password don't match</p>}

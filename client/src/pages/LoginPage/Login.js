@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { loginAPI } from '~/api/main'
+import { loginSuccess, loginFailed } from 'src/redux/slice/usersSlice'
 import { useForm } from 'react-hook-form'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Loading from '~/components/Loading'
+import mainAPI from '~/api/base'
+import axios from 'axios'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
@@ -16,6 +20,8 @@ const Login = () => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const dispatch = useDispatch()
+
     const {
         register,
         handleSubmit,
@@ -23,21 +29,35 @@ const Login = () => {
     } = useForm({
         resolver: yupResolver(registerData)
     })
-    const onSubmit = data => {
-        setLoading(true)
-        console.log(data)
-        axios
-            .post('https://ecomerce-shopping.onrender.com/api/auth/login', data)
-            .then(() => {
-                setLoading(false)
+    // const onSubmit = data => {
+    //     setLoading(true)
+    //     console.log(data)
+    //     axios
+    //         .post('https://ecomerce-shopping.onrender.com/api/auth/login', data)
+    //         .then(() => {
+    //             setLoading(false)
 
-                navigate('/')
-            })
-            .catch(err => {
-                setLoading(false)
-                setError(err.response.data.message)
-            })
+    //             navigate('/')
+    //         })
+    //         .catch(err => {
+    //             setLoading(false)
+    //             setError(err.response.data.message)
+    //         })
+    // }
+
+    const onSubmit = async (data) => {
+        try {
+            // const res = await loginAPI(data)
+            const res = await mainAPI.post("/auth/login", data)
+            dispatch(loginSuccess(res.data))
+            navigate('/')
+        } catch (error) {
+            dispatch(loginFailed(error))
+            // setError(error.response.statusText)
+            console.log("Errror", error)
+        }
     }
+
     return (
         <>
             <div className='form-container d-flex justify-content-center align-items-center '>
