@@ -40,10 +40,7 @@ export const login = async (req, res, next) => {
         res.cookie("access_token", token, {
             httpOnly: true,
             expires: new Date(Date.now() + 8 * 3600000)
-        }).status(200).json({
-            data: other,
-            token,
-        })
+        }).status(200).json({ ...other, token })
     } catch (error) {
         next(responseHandler.error(error))
     }
