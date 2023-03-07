@@ -5,7 +5,19 @@ export const getAllProducts = async () => {
     return res.data
 }
 
+export const registerAPI = (data) => {
+    return mainAPI.post("/auth/register", <data></data>)
+}
 
-export const loginAPI = (data) => {
-    return mainAPI.post("/auth/login", data)
+export const loginAPI = async (data) => {
+    const response = await mainAPI.post("/auth/login", data)
+    if (response.data.accessToken) {
+        localStorage.setItem("user", JSON.stringify(response.data))
+
+    }
+    return response.data
+}
+
+export const logout = () => {
+    localStorage.removeItem("user")
 }

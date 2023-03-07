@@ -9,8 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useNavigate } from 'react-router-dom'
 import Loading from '~/components/Loading'
-import mainAPI from '~/api/base'
-import axios from 'axios'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
@@ -29,32 +27,18 @@ const Login = () => {
     } = useForm({
         resolver: yupResolver(registerData)
     })
-    // const onSubmit = data => {
-    //     setLoading(true)
-    //     console.log(data)
-    //     axios
-    //         .post('https://ecomerce-shopping.onrender.com/api/auth/login', data)
-    //         .then(() => {
-    //             setLoading(false)
-
-    //             navigate('/')
-    //         })
-    //         .catch(err => {
-    //             setLoading(false)
-    //             setError(err.response.data.message)
-    //         })
-    // }
 
     const onSubmit = async (data) => {
+        setLoading(true)
         try {
-            // const res = await loginAPI(data)
-            const res = await mainAPI.post("/auth/login", data)
+            const res = await loginAPI(data)
             dispatch(loginSuccess(res.data))
+            setLoading(false)
             navigate('/')
         } catch (error) {
             dispatch(loginFailed(error))
-            // setError(error.response.statusText)
-            console.log("Errror", error)
+            setLoading(false)
+            setError(error.response.data.message)
         }
     }
 
