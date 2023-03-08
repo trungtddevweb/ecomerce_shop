@@ -6,14 +6,13 @@ export const getAllProducts = async () => {
 }
 
 export const registerAPI = (data) => {
-    return mainAPI.post("/auth/register", <data></data>)
+    return mainAPI.post("/auth/register", data)
 }
 
 export const loginAPI = async (data) => {
     const response = await mainAPI.post("/auth/login", data)
-    if (response.data.accessToken) {
+    if (response.data.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data))
-
     }
     return response.data
 }
