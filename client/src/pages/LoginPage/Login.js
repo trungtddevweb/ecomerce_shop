@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { loginAPI } from '~/api/main'
 import { loginSuccess, loginFailed } from 'src/redux/slice/usersSlice'
 import { useForm } from 'react-hook-form'
-// import Button from 'react-bootstrap/Button'
 import Button from '~/components/Button/Button'
 import Form from 'react-bootstrap/Form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -34,16 +33,16 @@ const Login = () => {
         setLoading(true)
         try {
             const res = await loginAPI(data)
-            dispatch(loginSuccess(res.data))
+            dispatch(loginSuccess(res))
             setLoading(false)
             navigate('/')
         } catch (error) {
             dispatch(loginFailed(error))
             setLoading(false)
             setError(error.response?.data.message)
-            console.log(error)
         }
     }
+
     return (
         <div className='form-container d-flex justify-content-center align-items-center '>
             <Form onSubmit={handleSubmit(onSubmit)} className='shadow rounded p-4 form-wrap '>

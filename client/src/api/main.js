@@ -11,12 +11,15 @@ export const registerAPI = (data) => {
 
 export const loginAPI = async (data) => {
     const response = await mainAPI.post("/auth/login", data)
-    if (response.data.data.token) {
+    if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data))
     }
     return response.data
 }
 
-export const logout = () => {
-    localStorage.removeItem("user")
+export const logout = async () => {
+    const res = await mainAPI.post('/auth/logout')
+    if (res) {
+        localStorage.removeItem('user')
+    }
 }

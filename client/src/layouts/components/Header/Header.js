@@ -25,7 +25,6 @@ const Header = () => {
 
     }, [user, navigate])
 
-    console.log("user----", user)
     const handleLogout = async () => {
         setIsLoading(true)
         try {
@@ -86,7 +85,7 @@ const Header = () => {
                                 </div>
                             ) : (
                                 <Button rightIcon={<ExitToApp onClick={handleLogout} />}>
-                                    Hello username
+                                    {user?.name}
                                 </Button>
                             )
                         }
