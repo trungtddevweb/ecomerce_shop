@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import Button from 'react-bootstrap/Button'
+import Button from 'src/components/Button'
 import Form from 'react-bootstrap/Form'
 import { registerAPI } from '~/api/main'
 import { useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import Loading from '~/components/Loading'
+import routes from 'src/utils/routes'
 
 const registerData = yup.object().shape({
     name: yup.string().required(),
@@ -28,7 +29,6 @@ const RegisterPage = () => {
     } = useForm({ resolver: yupResolver(registerData) })
     const onSubmitRegiser = async data => {
         setLoading(true)
-        console.log(data)
         try {
             const res = await registerAPI(data)
             if (res) {
@@ -37,7 +37,6 @@ const RegisterPage = () => {
             }
         } catch (err) {
             setLoading(false)
-            console.log(err)
             setError(err.response.data.message)
         }
     }
@@ -86,6 +85,7 @@ const RegisterPage = () => {
                         />
                     </div>
                     {errors.confirmPassowrd && <p className='text-danger'>password don't match</p>}
+                    <div className='mb-3 '>Have account.<Button className="text-primary" to={routes.login.path}> Login now!</Button> </div>
                     {loading ? (
                         <Loading />
                     ) : (
