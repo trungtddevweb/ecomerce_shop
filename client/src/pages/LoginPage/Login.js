@@ -29,7 +29,7 @@ const Login = () => {
         resolver: yupResolver(registerData)
     })
 
-    const onSubmit = async (data) => {
+    const onSubmit = async data => {
         setLoading(true)
         try {
             const res = await loginAPI(data)
@@ -68,9 +68,6 @@ const Login = () => {
                     />
                 </div>
                 {errors.password && <p className='text-danger'>{errors.password.message}</p>}
-                {errors.username?.type === 'required' && (
-                    <span className='text-danger mb-12 d-block'>Username không được để trống</span>
-                )}
                 <p className='text-danger'>{error}</p>
                 <div className='d-flex justify-content-between'>
                     <Button to={routes.forgot.path}>Forget Password?</Button>

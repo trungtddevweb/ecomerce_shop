@@ -19,6 +19,14 @@
 .btn {
     width: 100%;
     padding: 12px;
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+.btn:hover {
+    color: white;
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
 }
 .img-wrap {
     width: 100%;

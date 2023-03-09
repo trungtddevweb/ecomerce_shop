@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import axios from 'axios'
+import { registerAPI } from '~/api/main'
 import { useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import Loading from '~/components/Loading'
@@ -26,20 +26,20 @@ const RegisterPage = () => {
         handleSubmit,
         formState: { errors }
     } = useForm({ resolver: yupResolver(registerData) })
-    const onSubmitRegiser = data => {
+    const onSubmitRegiser = async data => {
         setLoading(true)
         console.log(data)
-        axios
-            .post('https://ecomerce-shopping.onrender.com/api/auth/register', data)
-            .then(() => {
+        try {
+            const res = await registerAPI(data)
+            if (res) {
                 setLoading(false)
-                alert('ban da dang ky thanh cong')
                 navigate('/login')
-            })
-            .catch(err => {
-                setLoading(false)
-                setError(err.response.data.message)
-            })
+            }
+        } catch (err) {
+            setLoading(false)
+            console.log(err)
+            setError(err.response.data.message)
+        }
     }
     return (
         <>
