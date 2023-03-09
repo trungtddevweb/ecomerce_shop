@@ -1,9 +1,7 @@
-import ErrorPage from "~/pages/ErrorPage";
-import { createBrowserRouter } from "react-router-dom";
-import routes from "src/utils/routes";
-import { AuthLayout, MainLayout } from "src/layouts";
-
-
+import ErrorPage from '~/pages/ErrorPage'
+import { createBrowserRouter } from 'react-router-dom'
+import routes from 'src/utils/routes'
+import { AuthLayout, MainLayout } from 'src/layouts'
 
 export default createBrowserRouter([
     {
@@ -12,18 +10,21 @@ export default createBrowserRouter([
         children: [
             {
                 path: routes.login.path,
-                element: routes.login.element,
+                element: routes.login.element
             },
             {
                 path: routes.register.path,
-                element: routes.register.element,
+                element: routes.register.element
             },
             {
                 element: routes.logout.path
+            },
+            {
+                path: routes.forgot.path,
+                element: routes.forgot.element
             }
-        ],
-    }
-    ,
+        ]
+    },
     {
         element: <MainLayout />,
         errorElement: <ErrorPage />,
@@ -44,11 +45,6 @@ export default createBrowserRouter([
                 path: routes.blog.path,
                 element: routes.blog.element
             }
-
         ]
-
     }
-
-
 ])
-

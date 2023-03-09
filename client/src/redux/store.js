@@ -7,7 +7,7 @@ import {
     persistReducer, FLUSH, PAUSE, REHYDRATE, PERSIST, PURGE, REGISTER
 } from "redux-persist";
 
-const rootReducer = combineReducers({ user: usersReducer, cart: cartsReducer })
+const rootReducer = combineReducers({ auth: usersReducer, cart: cartsReducer })
 
 const persistConfig = {
     key: 'root',

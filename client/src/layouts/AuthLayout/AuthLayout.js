@@ -1,15 +1,19 @@
-// import PropTypes from 'prop-types'
-
-import { Outlet } from "react-router-dom"
+import { useLayoutEffect } from "react"
+import { Outlet, useNavigate } from "react-router-dom"
 
 const AuthLayout = () => {
+    // Check if exist a user navigate to home page
+    const user = localStorage.getItem('user')
+    const navigate = useNavigate()
+
+    useLayoutEffect(() => {
+        if (user) {
+            return navigate('/')
+        }
+    }, [user, navigate])
     return (
         <Outlet />
     )
 }
-
-// AuthLayout.propTypes = {
-//     children: PropTypes.node.isRequired
-// }
 
 export default AuthLayout
