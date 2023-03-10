@@ -2,37 +2,35 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import path from 'path';
+import bodyParser from 'body-parser';
+// import multer from 'multer'
+import helmet from 'helmet'
 import connectDB from './connect.js';
 import routes from './routes/index.js'
 import cors from 'cors'
-
+// import fs from 'fs'
+import path from 'path';
 // Used for environment variables
 dotenv.config();
+
+const __dirname = path.resolve()
 
 const app = express();
 morgan('combined');
 
-const options = {
-  dotfiles: 'ignore',
-  etag: false,
-  extensions: ['htm', 'html'],
-  index: false,
-  maxAge: '1d',
-  redirect: false,
-  setHeaders: function (res, path, stat) {
-    res.set('x-timestamp', Date.now())
-  }
-}
-
 // Use middlewares
 app.use(express.json());
 app.use(cors())
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static('public', options))
-// app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use("/assets", express.static(path.join(__dirname, "public/assets")))
 
+app.use((err, req, res, next) => {
+  res.status(500).send({ message: err.message });
+});
 
 app.use('/api', routes)
 

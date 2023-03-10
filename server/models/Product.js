@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePageinate from 'mongoose-paginate-v2'
 
 const { Schema } = mongoose;
 
@@ -30,6 +31,10 @@ const ProductSchema = new Schema({
     }
 
 }, { timestamps: true })
+
+
+
+ProductSchema.plugin(mongoosePageinate)
 
 const Product = mongoose.model('Product', ProductSchema);
 export default Product;

@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken'
 // REGISTER
 export const register = async (req, res, next) => {
     const { email, password, confirmPassword } = req.body;
+    const picture = req.file
+
     try {
         const user = await User.findOne({ email });
         if (user) {
@@ -18,10 +20,12 @@ export const register = async (req, res, next) => {
         }
         const newUser = await User({
             ...req.body,
+            picture: picture?.path,
             password: hashPassword,
         })
         await newUser.save()
         responseHandler.created(res, newUser)
+
     } catch (error) {
         next(responseHandler.error(res, error))
     }
@@ -40,10 +44,7 @@ export const login = async (req, res, next) => {
         res.cookie("access_token", token, {
             httpOnly: true,
             expires: new Date(Date.now() + 8 * 3600000)
-        }).status(200).json({
-            data: other,
-            token,
-        })
+        }).status(200).json({ ...other, token })
     } catch (error) {
         next(responseHandler.error(error))
     }
