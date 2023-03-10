@@ -25,7 +25,9 @@ export const getAProduct = async (req, res, next) => {
 
 export const getAllProduct = async (req, res, next) => {
     try {
-        const products = await Product.find()
+        const limit = parseInt(req.query.limit, 10) || 10
+        const page = parseInt(req.query.page, 10) || 1
+        const products = await Product.paginate({}, { limit, page })
         responseHandler.getData(res, products)
     } catch (error) {
         next(responseHandler.error(error));
