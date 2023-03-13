@@ -10,12 +10,16 @@ import * as yup from 'yup'
 import { useNavigate } from 'react-router-dom'
 import Loading from '~/components/Loading'
 import routes from 'src/utils/routes'
+import DynamicTitle from 'src/utils/DynamicTitle'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required().min(6)
 })
+
+
 const Login = () => {
+    DynamicTitle('Login')
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -44,45 +48,47 @@ const Login = () => {
     }
 
     return (
-        <div className='form-container d-flex justify-content-center align-items-center '>
-            <Form onSubmit={handleSubmit(onSubmit)} className='shadow rounded p-4 form-wrap '>
-                <div className='img-wrap mb-3'>
-                    <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
-                </div>
+        <div className='login-page'>
+            <div className='form-container d-flex justify-content-center align-items-center '>
+                <Form onSubmit={handleSubmit(onSubmit)} className='shadow rounded p-4 form-wrap '>
+                    <div className='img-wrap mb-3'>
+                        <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
+                    </div>
 
-                <div className='mb-3'>
-                    <input
-                        type='email'
-                        className='form-control'
-                        placeholder='Email'
-                        {...register('email', { required: true })}
-                    />
-                </div>
-                {errors.email && <p className='text-danger'>{errors.email.message}</p>}
-                <div className='mb-3'>
-                    <input
-                        type='password'
-                        className='form-control'
-                        placeholder='Password'
-                        {...register('password', { required: true })}
-                    />
-                </div>
-                {errors.password && <p className='text-danger'>{errors.password.message}</p>}
-                <p className='text-danger'>{error}</p>
-                <div className='d-flex justify-content-between'>
-                    <Button to={routes.forgot.path}>Forget Password?</Button>
-                    <Button to={routes.register.path}>
-                        <p className='text-primary'>Register now!</p>
-                    </Button>
-                </div>
-                {loading ? (
-                    <Loading />
-                ) : (
-                    <Button type='submit' variant='primary' className='btn'>
-                        Login
-                    </Button>
-                )}
-            </Form>
+                    <div className='mb-3'>
+                        <input
+                            type='email'
+                            className='form-control'
+                            placeholder='Email'
+                            {...register('email', { required: true })}
+                        />
+                    </div>
+                    {errors.email && <p className='text-danger'>{errors.email.message}</p>}
+                    <div className='mb-3'>
+                        <input
+                            type='password'
+                            className='form-control'
+                            placeholder='Password'
+                            {...register('password', { required: true })}
+                        />
+                    </div>
+                    {errors.password && <p className='text-danger'>{errors.password.message}</p>}
+                    <p className='text-danger'>{error}</p>
+                    <div className='d-flex justify-content-between'>
+                        <Button to={routes.forgot.path}>Forget Password?</Button>
+                        <Button to={routes.register.path}>
+                            <p className='text-primary'>Register now!</p>
+                        </Button>
+                    </div>
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <Button type='submit' variant='primary' className='btn'>
+                            Login
+                        </Button>
+                    )}
+                </Form>
+            </div>
         </div>
     )
 }
