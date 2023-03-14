@@ -10,7 +10,8 @@ import * as yup from 'yup'
 import { useNavigate } from 'react-router-dom'
 import Loading from '~/components/Loading'
 import routes from 'src/utils/routes'
-import DynamicTitle from 'src/utils/DynamicTitle'
+import useDocumentTitle from 'src/hooks/useDocumentTitle'
+import ErrorMessages from '~/components/ErrorMessages'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
@@ -19,7 +20,7 @@ const registerData = yup.object().shape({
 
 
 const Login = () => {
-    DynamicTitle('Login')
+    useDocumentTitle("Đăng nhập")
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -54,7 +55,7 @@ const Login = () => {
                     <div className='img-wrap mb-3'>
                         <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </div>
-
+                    <p className='text-danger'>{error}</p>
                     <div className='mb-3'>
                         <input
                             type='email'
@@ -62,8 +63,8 @@ const Login = () => {
                             placeholder='Email'
                             {...register('email', { required: true })}
                         />
+                        <ErrorMessages errors={errors} fieldName="email" />
                     </div>
-                    {errors.email && <p className='text-danger'>{errors.email.message}</p>}
                     <div className='mb-3'>
                         <input
                             type='password'
@@ -71,20 +72,19 @@ const Login = () => {
                             placeholder='Password'
                             {...register('password', { required: true })}
                         />
+                        <ErrorMessages errors={errors} fieldName="password" />
                     </div>
-                    {errors.password && <p className='text-danger'>{errors.password.message}</p>}
-                    <p className='text-danger'>{error}</p>
                     <div className='d-flex justify-content-between'>
-                        <Button to={routes.forgot.path}>Forget Password?</Button>
+                        <p>Quên mật khẩu?</p>
                         <Button to={routes.register.path}>
-                            <p className='text-primary'>Register now!</p>
+                            <p className='text-primary'>Đăng kí ngay!</p>
                         </Button>
                     </div>
                     {loading ? (
                         <Loading />
                     ) : (
                         <Button type='submit' variant='primary' className='btn'>
-                            Login
+                            Đăng nhập
                         </Button>
                     )}
                 </Form>

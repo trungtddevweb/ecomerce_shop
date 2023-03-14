@@ -36,9 +36,9 @@ export const login = async (req, res, next) => {
     try {
         const { email } = req.body
         const user = await User.findOne({ email });
-        if (!user) return next(responseHandler.notFound(res));
+        if (!user) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"));
         const checkPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!checkPassword) return next(responseHandler.badRequest(res, "Email or password is incorrect."));
+        if (!checkPassword) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"));
         const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { expiresIn: "3d" })
         const { password, ...other } = user._doc;
         res.cookie("access_token", token, {
