@@ -91,7 +91,7 @@ const Header = () => {
                         }
                         <Nav className="cart-shopping p-2">
                             <FontAwesomeIcon icon={faCartShopping} />
-                            <div className="count-product bg-danger text-white p-1 fw-bold rounded-circle">10</div>
+                            <div className="count-product bg-danger text-var(--white) p-1 fw-bold rounded-circle">10</div>
                         </Nav>
                     </Nav>
                 </Navbar.Collapse>
