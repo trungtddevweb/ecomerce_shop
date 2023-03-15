@@ -1,7 +1,8 @@
 import { useEffect } from "react"
+import useDocumentTitle from "src/hooks/useDocumentTitle"
 
 const HomePage = () => {
-
+  useDocumentTitle('Trang chủ')
 
   // const [data, setData] = useState([])
   useEffect(() => {

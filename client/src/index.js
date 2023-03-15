@@ -6,11 +6,13 @@ import { persistor, store } from 'src/redux/store'
 import { Provider } from 'react-redux';
 import SpinnerAnimation from './components/SpinnerAnimation';
 import { ThemeProvider } from 'react-bootstrap';
+import { CssBaseline } from '@mui/material';
 const LazyApp = lazy(() => import('./App'))
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
+        <CssBaseline />
         <Provider store={store} >
             <PersistGate loading={null} persistor={persistor}>
                 <Suspense fallback={<SpinnerAnimation />}>
