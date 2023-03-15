@@ -1,15 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons"
 import Search from "../Search"
-// import routes from "src/utils/routes"
 import { Container, Nav, NavDropdown, Navbar, NavbarBrand } from "react-bootstrap"
 import { LinkContainer } from "react-router-bootstrap"
-import Button from "~/components/Button/Button"
+import Button from "~/components/Button"
 import { ExitToApp } from "@mui/icons-material"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
 import { logoutSuccess } from "src/redux/slice/usersSlice"
-import Loading from "~/components/Loading/Loading"
+import Loading from "~/components/CustomLoading/CustomLoading"
 import { logout } from "~/api/main"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
@@ -98,6 +97,6 @@ const Header = () => {
             </Container>
         </Navbar>
     )
-}
 
+}
 export default Header
