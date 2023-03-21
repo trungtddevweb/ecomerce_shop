@@ -60,7 +60,7 @@ const Header = () => {
                 className="header-wrapper"
 
             >
-                <Stac >
+                <Stack >
                     <Typography component={Link} to="/" variant="h5">MyStore</Typography>
                     <Tabs
                         textColor='primary'
@@ -75,7 +75,7 @@ const Header = () => {
                         <Tab label='Liên hệ' component={Link} to={routes.contact.path} />
                         <Tab label='sẩn phẩm' component={Link} to={routes.categories.path} />
                     </Tabs>
-                </Stac >
+                </Stack >
                 <Box sx={{
                     margin: 'auto'
                 }}>
