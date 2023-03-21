@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Box, AppBar, Toolbar, MenuItem, Typography, Tab, Tabs, Avatar, Stack, Menu, Fade, ListItemIcon, Tooltip } from "@mui/material"
+import { AppBar, Toolbar, MenuItem, Typography, Tab, Tabs, Avatar, Stack, Menu, Fade, ListItemIcon, Tooltip } from "@mui/material"
 import { Inventory, Logout } from "@mui/icons-material";
-import { Link, useNavigate } from 'react-router-dom';
-import Search from '../Search/Search';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Search from '../Search';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '~/api/main';
 import CustomBackDrop from '~/components/BackDrop';
@@ -10,10 +10,10 @@ import { logoutSuccess } from 'src/redux/slice/usersSlice';
 import Cart from '../Cart';
 import noImage from 'src/assets/imgs'
 import routes from 'src/utils/routes';
+import { tabsNavigationHeader } from 'src/utils/const';
 
 const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [value, setValue] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsloading] = useState(false)
 
@@ -21,9 +21,13 @@ const Header = () => {
     const { user } = useSelector(state => state.auth)
     const open = Boolean(anchorEl)
     const navigate = useNavigate()
+    const location = useLocation();
+
+    const activeTab = tabsNavigationHeader.findIndex(tab => tab.value === location.pathname)
+
     // Handlers
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        navigate(`${newValue}`)
     };
 
     const toggleDrawer = () => {
@@ -53,26 +57,23 @@ const Header = () => {
         }
     }
 
-
     return (
-        <AppBar className="header" position="sticky" color="transparent">
+        <AppBar className="header" position='sticky'>
             <Toolbar
                 className="header-wrapper"
-
             >
                 <Stack direction='row' alignItems='center' >
                     <Typography component={Link} to={routes.home.path} marginRight='20px' variant="h5">MyStore</Typography>
                     <Tabs
-                        textColor='primary'
-                        value={value}
+                        value={tabsNavigationHeader[activeTab]?.value}
                         onChange={handleChange}
                         aria-label="nav tabs example"
                         indicatorColor='secondary'
+                        textColor="secondary"
                     >
-                        <Tab label="Bài viết" component={Link} to={routes.blog.path} />
-                        <Tab label='Giới thiệu' component={Link} to={routes.about.path} />
-                        <Tab label='Liên hệ' component={Link} to={routes.contact.path} />
-                        <Tab label='sẩn phẩm' component={Link} to={routes.categories.path} />
+                        {tabsNavigationHeader.map((tab, index) => (
+                            <Tab key={index} label={tab.label} value={tab.value} />
+                        ))}
                     </Tabs>
                 </Stack >
                 <Stack direction='row'>

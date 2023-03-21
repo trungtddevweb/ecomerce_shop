@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import SpinnerAnimation from './components/SpinnerAnimation';
 import { ThemeProvider } from 'react-bootstrap';
 import { CssBaseline } from '@mui/material';
+import ErrorBoundaryCustom from './components/ErrorBoundary';
 const LazyApp = lazy(() => import('./App'))
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,14 +16,16 @@ root.render(
         <CssBaseline />
         <Provider store={store} >
             <PersistGate loading={null} persistor={persistor}>
-                <Suspense fallback={<SpinnerAnimation />}>
-                    <ThemeProvider
-                        breakpoints={['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']}
-                        minBreakpoint="xxs"
-                    >
-                        <LazyApp />
-                    </ThemeProvider>
-                </Suspense>
+                <ErrorBoundaryCustom>
+                    <Suspense fallback={<SpinnerAnimation />}>
+                        <ThemeProvider
+                            breakpoints={['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']}
+                            minBreakpoint="xxs"
+                        >
+                            <LazyApp />
+                        </ThemeProvider>
+                    </Suspense>
+                </ErrorBoundaryCustom>
             </PersistGate>
         </Provider>
     </React.StrictMode>
