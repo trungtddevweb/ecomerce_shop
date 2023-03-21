@@ -17,9 +17,6 @@ export default createBrowserRouter([
                 element: routes.register.element
             },
             {
-                element: routes.logout.path
-            },
-            {
                 path: routes.forgot.path,
                 element: routes.forgot.element
             }
@@ -44,7 +41,29 @@ export default createBrowserRouter([
             {
                 path: routes.blog.path,
                 element: routes.blog.element
+            },
+            {
+                path: routes.contact.path,
+                element: routes.contact.element
+            },
+            {
+                path: routes.search.path,
+                element: routes.search.element
+            },
+            {
+                path: routes.cart.path,
+                element: routes.cart.element
+            },
+            {
+                path: routes.categories.path,
+                element: routes.categories.element
+            },
+            {
+                path: routes.dashboard.path,
+                element: routes.dashboard.element
             }
+
+
         ]
     }
 ])

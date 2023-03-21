@@ -7,6 +7,9 @@ import LoginPage from '~/pages/LoginPage'
 import ProductPage from '~/pages/ProductPage'
 import RegisterPage from '~/pages/RegisterPage'
 import SearchPage from '~/pages/SearchPage'
+import CartPage from '~/pages/CartPage'
+import CategoriesPage from '~/pages/CategoriesPage'
+import DashboardPage from '~/pages/DashboardPage'
 
 const routes = {
     home: {
@@ -20,9 +23,6 @@ const routes = {
     register: {
         path: '/register',
         element: <RegisterPage />
-    },
-    logout: {
-        path: '/logout'
     },
     forgot: {
         path: '/forgot',
@@ -47,6 +47,18 @@ const routes = {
     about: {
         path: '/about',
         element: <AboutPage />
+    },
+    cart: {
+        path: '/cart',
+        element: <CartPage />
+    },
+    categories: {
+        path: '/categories',
+        element: <CategoriesPage />
+    },
+    dashboard: {
+        path: '/dashboard',
+        element: <DashboardPage />
     }
 }
 
