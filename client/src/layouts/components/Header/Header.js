@@ -1,102 +1,177 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons"
-import Search from "../Search"
-import { Container, Nav, NavDropdown, Navbar, NavbarBrand } from "react-bootstrap"
-import { LinkContainer } from "react-router-bootstrap"
-import Button from "~/components/Button"
-import { ExitToApp } from "@mui/icons-material"
-import { useDispatch } from "react-redux"
-import { useState } from "react"
-import { logoutSuccess } from "src/redux/slice/usersSlice"
-import Loading from "~/components/CustomLoading/CustomLoading"
-import { logout } from "~/api/main"
-import { useNavigate } from "react-router-dom"
-import { useEffect } from "react"
+import { useState } from 'react'
+import { Box, AppBar, Toolbar, MenuItem, Typography, Tab, Tabs, Avatar, Stack, Menu, Fade, ListItemIcon, Tooltip } from "@mui/material"
+import { Inventory, Logout } from "@mui/icons-material";
+import { Link, useNavigate } from 'react-router-dom';
+import Search from '../Search/Search';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '~/api/main';
+import CustomBackDrop from '~/components/BackDrop';
+import { logoutSuccess } from 'src/redux/slice/usersSlice';
+import Cart from '../Cart';
+import noImage from 'src/assets/imgs'
+import routes from 'src/utils/routes';
 
 const Header = () => {
-    const dispatch = useDispatch()
-    const [errors, setErrors] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
-    const user = JSON.parse(localStorage.getItem('user'))
-    const navigate = useNavigate()
-    useEffect(() => {
-        if (!user) return navigate('/login')
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [value, setValue] = useState(0);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [isLoading, setIsloading] = useState(false)
 
-    }, [user, navigate])
+    const dispatch = useDispatch()
+    const { user } = useSelector(state => state.auth)
+    const open = Boolean(anchorEl)
+    const navigate = useNavigate()
+    // Handlers
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+    const toggleDrawer = () => {
+        setIsDrawerOpen(!isDrawerOpen);
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget)
+    }
 
     const handleLogout = async () => {
-        setIsLoading(true)
+        setIsloading(true)
+        handleClose()
         try {
             await logout()
             dispatch(logoutSuccess())
-            setIsLoading(false)
+            setIsloading(false)
+            navigate('/login')
         } catch (error) {
-            setIsLoading(false)
-            setErrors(error.message)
-            console.log("Error", errors)
+            setIsloading(false)
+            console.log("Error; ", error)
         }
     }
 
-    return (
-        <Navbar expand="lg" sticky="top" className="header bg-light">
-            <Container className="header-wrapper">
-                <LinkContainer to="/">
-                    <NavbarBrand>
-                        <h2>Dream Store</h2>
-                    </NavbarBrand>
-                </LinkContainer>
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="navigation me-auto gap-3">
-                        <LinkContainer to="/">
-                            <Nav.Link>
-                                Home
-                            </Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to="/blogs">
-                            <Nav.Link>
-                                Blog
-                            </Nav.Link>
-                        </LinkContainer>
-                        <LinkContainer to="/about">
-                            <Nav.Link>
-                                About
-                            </Nav.Link>
-                        </LinkContainer>
-                        <NavDropdown title="Category" id="collasible-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">
-                                Another action
-                            </NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">
-                                Separated link
-                            </NavDropdown.Item>
-                        </NavDropdown>
-                    </Nav>
-                    <Nav className="d-flex gap-2">
-                        <Search />
-                        {
-                            isLoading ? (
-                                <div>
-                                    <Loading />
-                                </div>
-                            ) : (
-                                <Button rightIcon={<ExitToApp onClick={handleLogout} />}>
-                                    {user?.name}
-                                </Button>
-                            )
-                        }
-                        <Nav className="cart-shopping p-2">
-                            <FontAwesomeIcon icon={faCartShopping} />
-                            <div className="count-product bg-danger text-var(--white) p-1 fw-bold rounded-circle">10</div>
-                        </Nav>
-                    </Nav>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
-    )
 
+    return (
+        <AppBar className="header" position="sticky" color="transparent">
+            <Toolbar
+                className="header-wrapper"
+
+            >
+                <Stac >
+                    <Typography component={Link} to="/" variant="h5">MyStore</Typography>
+                    <Tabs
+                        textColor='primary'
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="nav tabs example"
+                        indicatorColor='secondary'
+                    >
+                        {/* <Tab label="Trang chủ" component={Link} to={routes.home.path} /> */}
+                        <Tab label="Bài viết" component={Link} to={routes.blog.path} />
+                        <Tab label='Giới thiệu' component={Link} to={routes.about.path} />
+                        <Tab label='Liên hệ' component={Link} to={routes.contact.path} />
+                        <Tab label='sẩn phẩm' component={Link} to={routes.categories.path} />
+                    </Tabs>
+                </Stac >
+                <Box sx={{
+                    margin: 'auto'
+                }}>
+                    <Search />
+                </Box>
+                <Stack
+                    id="fade-button"
+                    aria-controls={open ? 'fade-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                    direction="row"
+                    alignItems='center'
+                >
+                    <Tooltip title="Cài đặt tài khoản">
+                        <Stack
+                            direction='row'
+                            onClick={handleClick}
+                            size="small"
+                            sx={{ ml: 2, cursor: 'pointer' }}
+                            alignItems='center'
+                            gap='8px'
+                        >
+                            <Avatar sx={{ width: 32, height: 32 }}>
+                                <Avatar src={user?.picture || noImage} alt={user?.name} />
+                            </Avatar>
+                            <Typography className='username-header' variant='inherit'>{user?.name}</Typography>
+                        </Stack>
+                    </Tooltip>
+                </Stack>
+                <Menu
+                    id="fade-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'fade-button',
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    TransitionComponent={Fade}
+                    PaperProps={{
+                        elevation: 0,
+                        sx: {
+                            overflow: 'visible',
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                            mt: 1.5,
+                            '& .MuiAvatar-root': {
+                                width: 32,
+                                height: 32,
+                                ml: -0.5,
+                                mr: 1,
+                            },
+                            '&:before': {
+                                content: '""',
+                                display: 'block',
+                                position: 'absolute',
+                                top: 0,
+                                right: 14,
+                                width: 10,
+                                height: 10,
+                                bgcolor: 'background.paper',
+                                transform: 'translateY(-50%) rotate(45deg)',
+                                zIndex: 0,
+                            },
+                        },
+                    }}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+
+                >
+                    <MenuItem onClick={handleClose}>
+                        <Avatar /> Thông tin
+                    </MenuItem>
+                    <MenuItem
+                        component={Link}
+                        to={routes.dashboard.path}
+                        hidden={!user?.isAdmin}
+                        onClick={handleClose}
+                    >
+                        <ListItemIcon>
+                            <Inventory fontSize="small" />
+                        </ListItemIcon>
+                        Quản lý sản phẩm
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                        <ListItemIcon>
+                            <Logout fontSize="small" />
+                        </ListItemIcon>
+                        Đăng xuất
+                    </MenuItem>
+
+                </Menu>
+                <Cart component={Link} to={routes.cart.path} />
+            </Toolbar>
+            <CustomBackDrop open={isLoading} />
+        </AppBar>
+    )
 }
+
 export default Header
