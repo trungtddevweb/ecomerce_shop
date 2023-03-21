@@ -60,8 +60,8 @@ const Header = () => {
                 className="header-wrapper"
 
             >
-                <Stack >
-                    <Typography component={Link} to="/" variant="h5">MyStore</Typography>
+                <Stack direction='row' alignItems='center' >
+                    <Typography component={Link} to={routes.home.path} marginRight='20px' variant="h5">MyStore</Typography>
                     <Tabs
                         textColor='primary'
                         value={value}
@@ -69,105 +69,102 @@ const Header = () => {
                         aria-label="nav tabs example"
                         indicatorColor='secondary'
                     >
-                        {/* <Tab label="Trang chủ" component={Link} to={routes.home.path} /> */}
                         <Tab label="Bài viết" component={Link} to={routes.blog.path} />
                         <Tab label='Giới thiệu' component={Link} to={routes.about.path} />
                         <Tab label='Liên hệ' component={Link} to={routes.contact.path} />
                         <Tab label='sẩn phẩm' component={Link} to={routes.categories.path} />
                     </Tabs>
                 </Stack >
-                <Box sx={{
-                    margin: 'auto'
-                }}>
+                <Stack direction='row'>
                     <Search />
-                </Box>
-                <Stack
-                    id="fade-button"
-                    aria-controls={open ? 'fade-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
-                    direction="row"
-                    alignItems='center'
-                >
-                    <Tooltip title="Cài đặt tài khoản">
-                        <Stack
-                            direction='row'
-                            onClick={handleClick}
-                            size="small"
-                            sx={{ ml: 2, cursor: 'pointer' }}
-                            alignItems='center'
-                            gap='8px'
-                        >
-                            <Avatar sx={{ width: 32, height: 32 }}>
-                                <Avatar src={user?.picture || noImage} alt={user?.name} />
-                            </Avatar>
-                            <Typography className='username-header' variant='inherit'>{user?.name}</Typography>
-                        </Stack>
-                    </Tooltip>
-                </Stack>
-                <Menu
-                    id="fade-menu"
-                    MenuListProps={{
-                        'aria-labelledby': 'fade-button',
-                    }}
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    TransitionComponent={Fade}
-                    PaperProps={{
-                        elevation: 0,
-                        sx: {
-                            overflow: 'visible',
-                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                            mt: 1.5,
-                            '& .MuiAvatar-root': {
-                                width: 32,
-                                height: 32,
-                                ml: -0.5,
-                                mr: 1,
-                            },
-                            '&:before': {
-                                content: '""',
-                                display: 'block',
-                                position: 'absolute',
-                                top: 0,
-                                right: 14,
-                                width: 10,
-                                height: 10,
-                                bgcolor: 'background.paper',
-                                transform: 'translateY(-50%) rotate(45deg)',
-                                zIndex: 0,
-                            },
-                        },
-                    }}
-                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-
-                >
-                    <MenuItem onClick={handleClose}>
-                        <Avatar /> Thông tin
-                    </MenuItem>
-                    <MenuItem
-                        component={Link}
-                        to={routes.dashboard.path}
-                        hidden={!user?.isAdmin}
-                        onClick={handleClose}
+                    <Stack
+                        id="fade-button"
+                        aria-controls={open ? 'fade-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
+                        direction="row"
+                        alignItems='center'
                     >
-                        <ListItemIcon>
-                            <Inventory fontSize="small" />
-                        </ListItemIcon>
-                        Quản lý sản phẩm
-                    </MenuItem>
-                    <MenuItem onClick={handleLogout}>
-                        <ListItemIcon>
-                            <Logout fontSize="small" />
-                        </ListItemIcon>
-                        Đăng xuất
-                    </MenuItem>
+                        <Tooltip title="Cài đặt tài khoản">
+                            <Stack
+                                direction='row'
+                                onClick={handleClick}
+                                size="small"
+                                sx={{ ml: 2, cursor: 'pointer' }}
+                                alignItems='center'
+                                gap='8px'
+                            >
+                                <Avatar sx={{ width: 32, height: 32 }}>
+                                    <Avatar src={user?.picture || noImage} alt={user?.name} />
+                                </Avatar>
+                                <Typography className='username-header' variant='inherit'>{user?.name}</Typography>
+                            </Stack>
+                        </Tooltip>
+                    </Stack>
+                    <Menu
+                        id="fade-menu"
+                        MenuListProps={{
+                            'aria-labelledby': 'fade-button',
+                        }}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        TransitionComponent={Fade}
+                        PaperProps={{
+                            elevation: 0,
+                            sx: {
+                                overflow: 'visible',
+                                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                mt: 1.5,
+                                '& .MuiAvatar-root': {
+                                    width: 32,
+                                    height: 32,
+                                    ml: -0.5,
+                                    mr: 1,
+                                },
+                                '&:before': {
+                                    content: '""',
+                                    display: 'block',
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 14,
+                                    width: 10,
+                                    height: 10,
+                                    bgcolor: 'background.paper',
+                                    transform: 'translateY(-50%) rotate(45deg)',
+                                    zIndex: 0,
+                                },
+                            },
+                        }}
+                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 
-                </Menu>
-                <Cart component={Link} to={routes.cart.path} />
+                    >
+                        <MenuItem onClick={handleClose}>
+                            <Avatar /> Thông tin
+                        </MenuItem>
+                        <MenuItem
+                            component={Link}
+                            to={routes.dashboard.path}
+                            hidden={!user?.isAdmin}
+                            onClick={handleClose}
+                        >
+                            <ListItemIcon>
+                                <Inventory fontSize="small" />
+                            </ListItemIcon>
+                            Quản lý sản phẩm
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>
+                            <ListItemIcon>
+                                <Logout fontSize="small" />
+                            </ListItemIcon>
+                            Đăng xuất
+                        </MenuItem>
+
+                    </Menu>
+                    <Cart component={Link} to={routes.cart.path} />
+                </Stack >
             </Toolbar>
             <CustomBackDrop open={isLoading} />
         </AppBar>

@@ -3,7 +3,10 @@ import { Search as SearchIcon } from '@mui/icons-material'
 
 const Search = () => {
     return (
-        <Box component="form" noValidate autoComplete="off">
+        <Box component="form"
+            noValidate
+            autoComplete="off"
+        >
             <TextField
                 id="search"
                 label="Tìm sản phẩm..."

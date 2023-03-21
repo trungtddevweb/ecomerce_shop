@@ -5,6 +5,7 @@
     .header-wrapper {
         width: var(--main-width);
         color: var(--primary);
+        justify-content: space-between;
 
         .username-header {
             white-space: nowrap;
