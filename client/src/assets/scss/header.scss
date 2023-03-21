@@ -1,6 +1,7 @@
 .header {
     display: flex;
     align-items: center;
+    background-color: var(--white) !important;
 
     .header-wrapper {
         width: var(--main-width);

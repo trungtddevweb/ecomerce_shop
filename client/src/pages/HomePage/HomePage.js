@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import useDocumentTitle from "src/hooks/useDocumentTitle"
+import Sliders from "~/components/Slider"
 
 const HomePage = () => {
   useDocumentTitle('Trang chủ')
@@ -17,6 +18,7 @@ const HomePage = () => {
   }, [])
   return (
     <div>
+      <Sliders />
       <div>Hello</div>
     </div>
   )
