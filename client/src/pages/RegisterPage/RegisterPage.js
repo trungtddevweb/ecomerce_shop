@@ -2,18 +2,18 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import Button from 'src/components/Button'
-import Form from 'react-bootstrap/Form'
+import { Box, Button, FormGroup, Grid, InputLabel, Stack, TextField, Typography } from '@mui/material'
 import { registerAPI } from '~/api/main'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
-import Loading from '~/components/Loading'
+import CustomLoading from '~/components/CustomLoading'
 import routes from 'src/utils/routes'
 import { Add } from '@mui/icons-material'
 import images from '~/assets/imgs'
 import Image from '~/components/Image/Image'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
+import CustomBackDrop from '~/components/BackDrop'
 
 const registerData = yup.object().shape({
     name: yup.string().required(),
@@ -33,6 +33,7 @@ const RegisterPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm(
         { resolver: yupResolver(registerData) }
     )
+
 
     const onSubmitRegiser = async data => {
         const formData = new FormData()
@@ -56,20 +57,19 @@ const RegisterPage = () => {
 
 
     return (
-        <div className='register-page'>
-            <div className='form-container d-flex justify-content-center align-items-center'>
-                <Form onSubmit={handleSubmit(onSubmitRegiser)} className='shadow p-4 rounded form-wrap'>
+        <Grid container className='register-page'>
+            <Grid item className='form-container d-flex justify-content-center align-items-center'>
+                <Box component='form' onSubmit={handleSubmit(onSubmitRegiser)} className='shadow py-5 px-4 rounded form-wrap'>
                     {/* <div className='mb-3 img-wrap'>
                         <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </div> */}
-                    <div className='mb-3 text-center'>
-                        <h3>Đăng Kí</h3>
-                    </div>
-                    <div className="choose-image my-3 m-auto">
-                        <div className='d-flex align-items-center justify-content-center'>
+                    <Typography variant='h5' className='mb-3 text-center'>
+                        Đăng Kí
+                    </Typography>
+                    <Stack className="choose-image my-3 m-auto">
+                        <FormGroup className='d-flex align-items-center justify-content-center'>
                             <Image alt="" src={previewImg || images.registerLogo} className='register-profile-pic' />
-                            <input
-                                name="picture"
+                            <TextField
                                 type="file"
                                 id="image-upload"
                                 hidden
@@ -81,60 +81,64 @@ const RegisterPage = () => {
                                     }
                                 })}
                             />
-                        </div>
-                        <label htmlFor="image-upload" className='image-upload-label bg-primary' >
+                        </FormGroup>
+                        <InputLabel htmlFor="image-upload" className='image-upload-label bg-primary' >
                             <Add className="upload-btn" />
-                        </label>
-                    </div>
-                    <p className='text-danger'>{error}</p>
-                    <div className='mb-3'>
-                        <input
+                        </InputLabel>
+                    </Stack>
+                    <Typography variant='inherit' className='text-danger mb-2'>{error}</Typography>
+                    <FormGroup className='mb-3'>
+                        <TextField
+                            required
+                            label="Tên"
                             type='text'
-                            className='form-control'
-                            placeholder='Tên'
+                            error={errors.name}
                             {...register('name', { required: true })}
                         />
                         <ErrorMessages errors={errors} fieldName="name" />
-                    </div>
-                    <div className='mb-3'>
-                        <input
+                    </FormGroup>
+                    <FormGroup className='mb-3'>
+                        <TextField
+                            required
                             type='email'
-                            className='form-control'
-                            placeholder='Email'
+                            label="Email"
+                            error={errors.email}
                             {...register('email', { required: true })}
                         />
                         <ErrorMessages errors={errors} fieldName='email' />
-                    </div>
-                    <div className='mb-3'>
-                        <input
+                    </FormGroup>
+                    <FormGroup className='mb-3'>
+                        <TextField
+                            required
                             type='password'
-                            className='form-control'
-                            placeholder='Mật khẩu'
+                            label='Mật khẩu'
+                            error={errors.password}
                             {...register('password', { required: true })}
                         />
                         <ErrorMessages errors={errors} fieldName="password" />
-                    </div>
-
-                    <div className='mb-3'>
-                        <input
+                    </FormGroup>
+                    <FormGroup className='mb-3'>
+                        <TextField
+                            required
                             type='password'
-                            className='form-control'
-                            placeholder='Xác nhận mật khẩu'
+                            label='Xác nhận mật khẩu'
+                            error={errors.confirmPassword}
                             {...register('confirmPassword', { required: true })}
                         />
                         <ErrorMessages errors={errors} fieldName="confirmPassword" />
-                    </div>
-                    <div className='mb-3 '>Đã có tài khoản.<Button className="text-primary" to={routes.login.path}> Đăng nhập ngay!</Button> </div>
+                    </FormGroup>
+                    <Typography variant="inherit" className='mb-3 '>Đã có tài khoản. <Link className="text-primary" to={routes.login.path}> Đăng nhập!</Link></Typography>
                     {loading ? (
-                        <Loading />
+                        <CustomLoading />
                     ) : (
-                        <Button type='submit' variant='primary' className='btn'>
+                        <Button type='submit' variant='contained' className='btn'>
                             Tạo tài khoản
                         </Button>
                     )}
-                </Form>
-            </div>
-        </div>
+                </Box>
+                <CustomBackDrop open={loading} />
+            </Grid>
+        </Grid>
     )
 }
 

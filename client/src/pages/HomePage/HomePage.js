@@ -1,24 +1,25 @@
-import { useEffect } from 'react'
-import Sliders from '~/components/Slider/Sliders'
+import { useEffect } from "react"
+import useDocumentTitle from "src/hooks/useDocumentTitle"
 
 const HomePage = () => {
-    // const [data, setData] = useState([])
-    useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                // const res = await getAllProducts()
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        fetchPost()
-    }, [])
-    return (
-        <div>
-            <div>Hello</div>
-            <Sliders />
-        </div>
-    )
+  useDocumentTitle('Trang chủ')
+
+  // const [data, setData] = useState([])
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        // const res = await getAllProducts()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchPost()
+  }, [])
+  return (
+    <div>
+      <div>Hello</div>
+    </div>
+  )
 }
 
 export default HomePage

@@ -3,15 +3,16 @@ import { useDispatch } from 'react-redux'
 import { loginAPI } from '~/api/main'
 import { loginSuccess, loginFailed } from 'src/redux/slice/usersSlice'
 import { useForm } from 'react-hook-form'
-import Button from '~/components/Button/Button'
-import Form from 'react-bootstrap/Form'
+import { Box, Button, Grid, Stack, TextField, Typography, FormGroup } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { useNavigate } from 'react-router-dom'
-import Loading from '~/components/Loading'
+import { Link, useNavigate } from 'react-router-dom'
+import Loading from '~/components/CustomLoading'
 import routes from 'src/utils/routes'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
+import Image from '~/components/Image'
+import CustomBackDrop from '~/components/BackDrop'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
@@ -49,47 +50,50 @@ const Login = () => {
     }
 
     return (
-        <div className='login-page'>
-            <div className='form-container d-flex justify-content-center align-items-center '>
-                <Form onSubmit={handleSubmit(onSubmit)} className='shadow rounded p-4 form-wrap '>
-                    <div className='img-wrap mb-3'>
-                        <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
-                    </div>
-                    <p className='text-danger'>{error}</p>
-                    <div className='mb-3'>
-                        <input
+        <Grid className='login-page'>
+            <Grid className='form-container d-flex justify-content-center align-items-center '>
+                <Box component="form" onSubmit={handleSubmit(onSubmit)} className='shadow rounded py-5 px-4 form-wrap '>
+                    <Stack className='img-wrap mb-3'>
+                        <Image src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
+                    </Stack>
+                    <Typography variant='inherit' className='text-danger mb-2'>{error}</Typography>
+                    <FormGroup className='mb-3' >
+                        <TextField
                             type='email'
-                            className='form-control'
-                            placeholder='Email'
+                            required
+                            label='Email'
+                            error={errors.email}
                             {...register('email', { required: true })}
                         />
                         <ErrorMessages errors={errors} fieldName="email" />
-                    </div>
-                    <div className='mb-3'>
-                        <input
+                    </FormGroup>
+                    <FormGroup className='mb-3'>
+                        <TextField
                             type='password'
-                            className='form-control'
-                            placeholder='Password'
+                            error={errors.password}
+                            label='Mật khẩu'
+                            required
                             {...register('password', { required: true })}
                         />
                         <ErrorMessages errors={errors} fieldName="password" />
-                    </div>
-                    <div className='d-flex justify-content-between'>
-                        <p>Quên mật khẩu?</p>
-                        <Button to={routes.register.path}>
-                            <p className='text-primary'>Đăng kí ngay!</p>
-                        </Button>
-                    </div>
+                    </FormGroup>
+                    <Stack marginBottom="12px" direction="row" justifyContent="space-between">
+                        <Typography variant='inherit' >Quên mật khẩu?</Typography>
+                        <Link className='text-primary' to={routes.register.path}>
+                            Đăng kí ngay!
+                        </Link>
+                    </Stack>
                     {loading ? (
                         <Loading />
                     ) : (
-                        <Button type='submit' variant='primary' className='btn'>
+                        <Button type='submit' variant='contained' className='btn' >
                             Đăng nhập
                         </Button>
                     )}
-                </Form>
-            </div>
-        </div>
+                </Box>
+                <CustomBackDrop open={loading} />
+            </Grid>
+        </Grid>
     )
 }
 

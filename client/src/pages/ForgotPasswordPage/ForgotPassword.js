@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import Loading from '~/components/Loading'
+import Loading from '~/components/CustomLoading'
 
 const registerData = yup.object().shape({
     oldPass: yup.string().required().min(6),
