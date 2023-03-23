@@ -16,6 +16,8 @@ const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsloading] = useState(false)
+    // const [value, setValue] = useState(false);
+
 
     const dispatch = useDispatch()
     const { user } = useSelector(state => state.auth)
@@ -53,7 +55,7 @@ const Header = () => {
             navigate('/login')
         } catch (error) {
             setIsloading(false)
-            console.log("Error; ", error)
+            console.error("Error; ", error)
         }
     }
 
@@ -65,7 +67,7 @@ const Header = () => {
                 <Stack direction='row' alignItems='center' >
                     <Typography component={Link} to={routes.home.path} marginRight='20px' variant="h5">MyStore</Typography>
                     <Tabs
-                        value={tabsNavigationHeader[activeTab]?.value}
+                        value={tabsNavigationHeader[activeTab]?.value || false}
                         onChange={handleChange}
                         aria-label="nav tabs example"
                         indicatorColor='secondary'
@@ -147,14 +149,14 @@ const Header = () => {
                         </MenuItem>
                         <MenuItem
                             component={Link}
-                            to={routes.dashboard.path}
+                            to="/dashboard/blogs"
                             hidden={!user?.isAdmin}
                             onClick={handleClose}
                         >
                             <ListItemIcon>
                                 <Inventory fontSize="small" />
                             </ListItemIcon>
-                            Quản lý sản phẩm
+                            Quản lý danh mục
                         </MenuItem>
                         <MenuItem onClick={handleLogout}>
                             <ListItemIcon>
