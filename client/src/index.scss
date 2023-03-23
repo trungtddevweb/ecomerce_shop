@@ -1,12 +1,11 @@
 @import '../node_modules/bootstrap/scss/bootstrap';
-@import 'bootstrap/dist/css/bootstrap.min.css';
 
 @import './assets/scss/variables';
 // SCSS files
-@import './assets/scss/loader.scss';
 @import './assets/scss/header.scss';
 @import './assets/scss/login.scss';
 @import './assets/scss/register.scss';
+@import './assets/scss/dashboard.scss';
 
 body {
     margin: 0;

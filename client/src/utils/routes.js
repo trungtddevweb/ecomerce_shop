@@ -70,7 +70,7 @@ const routes = {
         element: <CategoriesPage />
     },
     dashboard: {
-        path: '/dashboard',
+        path: '/dashboard/:managerId',
         element: <DashboardPage />
     }
 }

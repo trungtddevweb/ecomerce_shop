@@ -1,10 +1,6 @@
 import mainAPI from "./base"
 
-export const getAllProducts = async () => {
-    const res = await mainAPI.get('/products')
-    return res.data
-}
-
+// Auth APIs
 export const registerAPI = (data) => {
     return mainAPI.post("/auth/register", data)
 }
@@ -22,4 +18,10 @@ export const logout = async () => {
     if (res) {
         localStorage.removeItem('user')
     }
+}
+
+// Manage APIs
+export const getDataByDashboardType = async (param) => {
+    const res = await mainAPI.get(`${param}`)
+    return res.data
 }
