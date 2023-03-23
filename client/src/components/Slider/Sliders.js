@@ -1,11 +1,11 @@
-import React from 'react'
 import Slider from 'react-slick'
+import { Grid } from '@mui/material'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import banner1 from '~/assets/imgs/banner1.png'
 import banner2 from '~/assets/imgs/banner2.jpg'
 import banner3 from '~/assets/imgs/banner3.png'
-import '~/assets/scss/sliders.scss'
+import Image from '../Image/Image'
 
 const Sliders = () => {
     const settings = {
@@ -18,6 +18,8 @@ const Sliders = () => {
         autoplay: true,
         autoplaySpeed: 3000,
         draggable: false,
+        fade: true,
+        lazyLoad: true,
         responsive: [
             {
                 breakpoint: 480,
@@ -28,14 +30,19 @@ const Sliders = () => {
             }
         ]
     }
+    const imagesSlider = [
+        { src: banner1, alt: 'Slider 1' },
+        { src: banner2, alt: 'Slider 2' },
+        { src: banner3, alt: 'Slider 3' },
+    ]
     return (
-        <div className='slide-container'>
+        <Grid className='slide-container'>
             <Slider {...settings}>
-                <img src={banner1} alt='' />
-                <img src={banner2} alt='' />
-                <img src={banner3} alt='' />
+                {imagesSlider.map(slider => (
+                    <Image key={slider.src} src={slider.src} alt={slider.alt} />
+                ))}
             </Slider>
-        </div>
+        </Grid>
     )
 }
 
