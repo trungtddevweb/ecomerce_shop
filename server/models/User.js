@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import mongoosePageinate from 'mongoose-paginate-v2'
+
 
 const { Schema } = mongoose;
 
@@ -29,9 +31,12 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   }
-}, {
-  timestamps: true
-});
+},
+  { timestamps: true }
+);
+
+UserSchema.plugin(mongoosePageinate)
+
 
 const User = mongoose.model('User', UserSchema);
 export default User;
