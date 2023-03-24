@@ -11,12 +11,12 @@ export const register = async (req, res, next) => {
     try {
         const user = await User.findOne({ email });
         if (user) {
-            return next(responseHandler.badRequest(res, "Email has been taken by another user"))
+            return next(responseHandler.badRequest(res, "Email đã được sử dụng!"))
         }
         const salt = bcrypt.genSaltSync(10)
         const hashPassword = bcrypt.hashSync(password, salt)
         if (password !== confirmPassword) {
-            return next(responseHandler.badRequest(res, "Confirm password not equal to your password!"))
+            return next(responseHandler.badRequest(res, "Xác nhận mật khẩu không giống mật khẩu!"))
         }
         const newUser = await User({
             ...req.body,

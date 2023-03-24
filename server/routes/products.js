@@ -1,11 +1,12 @@
 import express from 'express'
 import { getAProduct, createAProduct, getAllProduct } from '../controllers/product.js'
 import { verifyAdmin } from '../middleware/verify.js'
+import uploadCloud from '../middleware/cloudinary.js'
 
 const router = express.Router()
 
 // CREATE A PRODUCT
-router.post('/', verifyAdmin, createAProduct)
+router.post('/', verifyAdmin, uploadCloud.single('picture'), createAProduct)
 
 // GET ALL PRODUCTS
 router.get('/', getAllProduct)

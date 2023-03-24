@@ -4,10 +4,6 @@ import mongoosePageinate from 'mongoose-paginate-v2'
 const { Schema } = mongoose;
 
 const ProductSchema = new Schema({
-    userId: {
-        type: String,
-        ref: "User",
-    },
     name: {
         type: String,
         required: true,
@@ -28,6 +24,11 @@ const ProductSchema = new Schema({
         type: Number,
         required: true,
         default: 0,
+    },
+    category: {
+        type: String,
+        enum: ['male', 'femfale', 'children', 'student', 'jewellery', 'shirt', 'sandal', 'all'],
+        default: 'all'
     }
 
 }, { timestamps: true })
