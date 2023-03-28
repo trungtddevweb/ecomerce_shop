@@ -1,6 +1,7 @@
 import express from "express";
 import { register, login, logout } from "../controllers/auth.js";
 import uploadCloud from '../middleware/cloudinary.js'
+import { verifyUser } from "../middleware/verify.js";
 
 const router = express.Router();
 
@@ -11,6 +12,6 @@ router.post("/register", uploadCloud.single('picture'), register);
 router.post("/login", login);
 
 // LOGOUT
-router.post("/logout", logout);
+router.post("/logout", verifyUser, logout);
 
 export default router;

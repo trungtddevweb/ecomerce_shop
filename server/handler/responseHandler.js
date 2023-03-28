@@ -3,7 +3,7 @@ const responseWithData = (res, statusCode, data) => res.status(statusCode).json(
 const error = (res, error) => responseWithData(res, 500, {
     status: 500,
     message: "Oopps! Something went wrong!",
-    error: error.errors.name.message || error
+    error,
 
 })
 

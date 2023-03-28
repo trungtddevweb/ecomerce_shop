@@ -8,8 +8,8 @@ const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
-    min: 1,
-    max: 50,
+    minlength: 1,
+    maxLength: 50,
   },
   email: {
     type: String,
@@ -20,8 +20,6 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true,
-    min: 6,
-    max: 24,
   },
   picture: {
     type: String,
@@ -30,7 +28,10 @@ const UserSchema = new Schema({
   isAdmin: {
     type: Boolean,
     default: false,
-  }
+  },
+  tokens: [
+    { type: Object }
+  ]
 },
   { timestamps: true }
 );
