@@ -57,7 +57,7 @@ export const login = async (req, res, next) => {
             email: user.email,
             picture: user.picture ? user.picture : '',
         }
-        res.status(200).json({ user: { userInfo, token } })
+        res.status(200).json({ userInfo, token })
     } catch (error) {
         next(responseHandler.error(error))
     }
