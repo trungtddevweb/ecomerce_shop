@@ -4,9 +4,9 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 const MainLayout = () => {
     // Check if don't exist user in LocalStorage navigate to login/register pages
-    const user = localStorage.getItem('user')
+    const token = localStorage.getItem('token')
 
-    if (!user) return <Navigate to="/login" replace />
+    if (!token) return <Navigate to="/login" replace />
 
     return (
         <>

@@ -6,3 +6,5 @@ export const tabsNavigationHeader = [
     { label: 'Liên hệ', value: '/contact' },
     { label: 'Sản phẩm', value: '/categories' }
 ]
+
+export const getToken = (state) => state.auth.user.token

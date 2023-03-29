@@ -22,8 +22,8 @@ export const verifyAdmin = (req, res, next) => {
 
 export const verifyUser = async (req, res, next) => {
     if (req.headers?.authorization) {
-        const token = req.headers.authorization
-
+        const authHeaders = req.headers.authorization
+        const token = authHeaders.split(' ')[1]
         if (!token) return next(responseHandler.tokenNotValid(res))
         jwt.verify(token, process.env.JWT_KEY, async (err, payload) => {
             if (err) {

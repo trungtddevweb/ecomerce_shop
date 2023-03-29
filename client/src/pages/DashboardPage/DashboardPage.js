@@ -5,6 +5,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import { getDataByDashboardType } from '~/api/main'
+import EnhancedTable from '~/components/EnhancedTable'
 
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
@@ -30,6 +31,7 @@ const DashboardPage = () => {
             setIsLoading(true)
             try {
                 const response = await getDataByDashboardType(selectedParam)
+                console.log(response)
                 setData(response.docs)
                 setIsLoading(false)
             } catch (error) {
@@ -114,12 +116,7 @@ const DashboardPage = () => {
                 </Grid>
                 <Grid item xs={8} >
                     <Paper elevation={6}>
-                        {isLoading && <div>Loading...</div>}
-                        <List>
-                            {data?.map(item => (
-                                <div key={item._id}>{item.name}</div>
-                            ))}
-                        </List>
+                        <EnhancedTable />
                     </Paper>
                 </Grid>
             </Grid>
