@@ -10,12 +10,13 @@ import { logoutSuccess } from 'src/redux/slice/usersSlice';
 import Cart from '../Cart';
 import noImage from 'src/assets/imgs'
 import routes from 'src/utils/routes';
-import { tabsNavigationHeader } from 'src/utils/const';
+import { getToken, tabsNavigationHeader } from 'src/utils/const';
 
 const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsloading] = useState(false)
+    // const token = useSelector(getToken)
     // const [value, setValue] = useState(false);
 
 

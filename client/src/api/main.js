@@ -7,17 +7,21 @@ export const registerAPI = (data) => {
 
 export const loginAPI = async (data) => {
     const response = await mainAPI.post("/auth/login", data)
-    if (response.data.user.token) {
-        localStorage.setItem("token", JSON.stringify(response.data.user.token))
+    if (response.data.token) {
+        localStorage.setItem("token", JSON.stringify(response.data.token))
     }
     return response.data
 }
 
-export const logout = async () => {
-    const res = await mainAPI.post('/auth/logout')
-    if (res) {
-        localStorage.removeItem('token')
-    }
+export const logout = async (token) => {
+    const res = await mainAPI.post('/auth/logout', {
+        headers: {
+            'Authorization': token
+        }
+    })
+    // if (res) {
+    //     localStorage.removeItem('token')
+    // }
 }
 
 // Manage APIs

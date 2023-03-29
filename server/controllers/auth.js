@@ -67,7 +67,8 @@ export const logout = async (req, res) => {
     if (!req.headers?.authorization) {
         return
     }
-    const token = req.headers.authorization
+    const authHeaders = req.headers.authorization
+    const token = authHeaders.split(' ')[1]
     if (!token) {
         return res
             .status(401)
