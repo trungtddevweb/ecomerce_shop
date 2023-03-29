@@ -7,8 +7,8 @@ export const registerAPI = (data) => {
 
 export const loginAPI = async (data) => {
     const response = await mainAPI.post("/auth/login", data)
-    if (response.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data))
+    if (response.data.user.token) {
+        localStorage.setItem("token", JSON.stringify(response.data.user.token))
     }
     return response.data
 }
@@ -16,7 +16,7 @@ export const loginAPI = async (data) => {
 export const logout = async () => {
     const res = await mainAPI.post('/auth/logout')
     if (res) {
-        localStorage.removeItem('user')
+        localStorage.removeItem('token')
     }
 }
 
