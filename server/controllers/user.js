@@ -14,6 +14,5 @@ export const getAllUsers = async (req, res, next) => {
         responseHandler.getData(res, users)
     } catch (error) {
         next(responseHandler.error(res, error))
-        // console.error(error)
     }
 }
