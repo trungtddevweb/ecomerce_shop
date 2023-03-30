@@ -2,9 +2,9 @@ import { Navigate, Outlet } from "react-router-dom"
 
 const AuthLayout = () => {
     // Check if exist a user navigate to home page
-    const user = localStorage.getItem('user')
+    const token = localStorage.getItem('token')
 
-    if (user) {
+    if (token) {
         return <Navigate to='/' replace />
     }
 

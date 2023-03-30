@@ -14,14 +14,16 @@ export const loginAPI = async (data) => {
 }
 
 export const logout = async (token) => {
-    const res = await mainAPI.post('/auth/logout', {
-        headers: {
-            'Authorization': token
+    try {
+        const response = await mainAPI.post('/auth/logout', null, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+        if (response) {
+            localStorage.removeItem('token')
         }
-    })
-    // if (res) {
-    //     localStorage.removeItem('token')
-    // }
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 // Manage APIs
