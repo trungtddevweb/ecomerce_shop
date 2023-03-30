@@ -10,14 +10,10 @@ export const register = async (req, res, next) => {
 
     try {
         const user = await User.findOne({ email });
-        if (user) {
-            return next(responseHandler.badRequest(res, "Email has been taken by another user"))
-        }
+        if (user) return next(responseHandler.badRequest(res, "Email đã được sử dụng!"))
         const salt = bcrypt.genSaltSync(10)
         const hashPassword = bcrypt.hashSync(password, salt)
-        if (password !== confirmPassword) {
-            return next(responseHandler.badRequest(res, "Confirm password not equal to your password!"))
-        }
+        if (password !== confirmPassword) return next(responseHandler.badRequest(res, "Xác nhận mật khẩu không giống mật khẩu!"))
         const newUser = await User({
             ...req.body,
             picture: picture?.path,
@@ -33,28 +29,57 @@ export const register = async (req, res, next) => {
 
 // LOGIN
 export const login = async (req, res, next) => {
+    const { email } = req.body
     try {
-        const { email } = req.body
-        const user = await User.findOne({ email });
-        if (!user) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"));
-        const checkPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!checkPassword) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"));
-        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { expiresIn: "3d" })
-        const { password, ...other } = user._doc;
-        res.cookie("access_token", token, {
-            httpOnly: true,
-            expires: new Date(Date.now() + 8 * 3600000)
-        }).status(200).json({ ...other, token })
+        const user = await User.findOne({ email })
+        if (!user) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"))
+        const checkPassword = await bcrypt.compare(req.body.password, user.password)
+        if (!checkPassword) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"))
+
+        const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { expiresIn: "1d" })
+
+        let oldTokens = user.tokens || []
+        if (oldTokens.length) {
+            oldTokens = oldTokens.filter(t => {
+                const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000
+                if (timeDiff < 86400) {
+                    return t
+                }
+            })
+        }
+        await User.findByIdAndUpdate(user._id, {
+            tokens: [...oldTokens, {
+                token, signedAt: Date.now().toString()
+            }]
+        })
+        const userInfo = {
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            picture: user.picture ? user.picture : '',
+        }
+        res.status(200).json({ userInfo, token })
     } catch (error) {
         next(responseHandler.error(error))
     }
 }
 
 export const logout = async (req, res) => {
-    res.clearCookie('access_token', {
-        sameSite: "none",
-        secure: true
-    }).status(200).json({
-        massage: "You are has been logout!"
-    })
+    if (!req.headers?.authorization) {
+        return
+    }
+    const authHeaders = req.headers.authorization
+    const token = authHeaders.split(' ')[1]
+    if (!token) {
+        return res
+            .status(401)
+            .json({ success: false, message: 'Token không hợp lệ!' })
+    }
+
+    const tokens = req.user.tokens
+    const newTokens = tokens.filter(t => t.token !== token)
+
+    await User.findByIdAndUpdate(req.user._id, { tokens: newTokens })
+    res.json({ success: true, message: 'Đăng xuất thành công!' })
+
 }

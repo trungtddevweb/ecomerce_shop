@@ -34,7 +34,14 @@ app.use((err, req, res, next) => {
 
 app.use('/api', routes)
 
-app.listen(process.env.PORT || 5001, () => {
+
+
+const server = app.listen(process.env.PORT || 5001, () => {
   connectDB();
   console.log(`Back-end server listening on port ${process.env.PORT}`);
 });
+
+process.on("unhandledRejection", err => {
+  console.error(`An error occurred: ${err.message}`)
+  server.close(() => process.exit(1))
+})

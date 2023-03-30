@@ -1,7 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, lazy } from 'react'
+import { useSelector } from 'react-redux'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import Product from 'src/layouts/components/Product'
-import Sliders from '~/components/Slider'
+import { getToken } from 'src/utils/const'
+
+const Sliders = lazy(() => import('~/components/Slider'))
 
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
@@ -20,7 +22,7 @@ const HomePage = () => {
     return (
         <div>
             <Sliders />
-            <Product />
+            <div>Hello</div>
         </div>
     )
 }

@@ -10,15 +10,19 @@ import { logoutSuccess } from 'src/redux/slice/usersSlice';
 import Cart from '../Cart';
 import noImage from 'src/assets/imgs'
 import routes from 'src/utils/routes';
-import { tabsNavigationHeader } from 'src/utils/const';
+import { getToken, tabsNavigationHeader } from 'src/utils/const';
 
 const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsloading] = useState(false)
+    const token = useSelector(getToken)
+    // const [value, setValue] = useState(false);
+
 
     const dispatch = useDispatch()
     const { user } = useSelector(state => state.auth)
+    console.log(user)
     const open = Boolean(anchorEl)
     const navigate = useNavigate()
     const location = useLocation();
@@ -47,13 +51,13 @@ const Header = () => {
         setIsloading(true)
         handleClose()
         try {
-            await logout()
+            await logout(token)
             dispatch(logoutSuccess())
             setIsloading(false)
             navigate('/login')
         } catch (error) {
             setIsloading(false)
-            console.log("Error; ", error)
+            console.error("Error; ", error)
         }
     }
 
@@ -65,7 +69,7 @@ const Header = () => {
                 <Stack direction='row' alignItems='center' >
                     <Typography component={Link} to={routes.home.path} marginRight='20px' variant="h5">MyStore</Typography>
                     <Tabs
-                        value={tabsNavigationHeader[activeTab]?.value}
+                        value={tabsNavigationHeader[activeTab]?.value || false}
                         onChange={handleChange}
                         aria-label="nav tabs example"
                         indicatorColor='secondary'
@@ -147,14 +151,14 @@ const Header = () => {
                         </MenuItem>
                         <MenuItem
                             component={Link}
-                            to={routes.dashboard.path}
-                            hidden={!user?.isAdmin}
+                            to="/dashboard/blogs"
+                            hidden={!user?.userInfo.isAdmin}
                             onClick={handleClose}
                         >
                             <ListItemIcon>
                                 <Inventory fontSize="small" />
                             </ListItemIcon>
-                            Quản lý sản phẩm
+                            Quản lý danh mục
                         </MenuItem>
                         <MenuItem onClick={handleLogout}>
                             <ListItemIcon>

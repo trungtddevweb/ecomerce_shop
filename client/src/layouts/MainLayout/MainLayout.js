@@ -1,18 +1,12 @@
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import { Outlet, useNavigate } from 'react-router-dom'
-import { useLayoutEffect } from 'react'
+import { Navigate, Outlet } from 'react-router-dom'
 
 const MainLayout = () => {
-    // Check if don't exist user in LocalStorage navigate to login/register page
-    const user = localStorage.getItem('user')
-    const navigate = useNavigate()
+    // Check if don't exist user in LocalStorage navigate to login/register pages
+    const token = localStorage.getItem('token')
 
-    useLayoutEffect(() => {
-        if (!user) {
-            return navigate('/login')
-        }
-    }, [user, navigate])
+    if (!token) return <Navigate to="/login" replace />
 
     return (
         <>
