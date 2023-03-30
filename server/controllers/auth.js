@@ -55,6 +55,7 @@ export const login = async (req, res, next) => {
         const userInfo = {
             name: user.name,
             email: user.email,
+            isAdmin: user.isAdmin,
             picture: user.picture ? user.picture : '',
         }
         res.status(200).json({ userInfo, token })

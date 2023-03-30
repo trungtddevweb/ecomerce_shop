@@ -16,12 +16,13 @@ const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsloading] = useState(false)
-    // const token = useSelector(getToken)
+    const token = useSelector(getToken)
     // const [value, setValue] = useState(false);
 
 
     const dispatch = useDispatch()
     const { user } = useSelector(state => state.auth)
+    console.log(user)
     const open = Boolean(anchorEl)
     const navigate = useNavigate()
     const location = useLocation();
@@ -50,7 +51,7 @@ const Header = () => {
         setIsloading(true)
         handleClose()
         try {
-            await logout()
+            await logout(token)
             dispatch(logoutSuccess())
             setIsloading(false)
             navigate('/login')
@@ -151,7 +152,7 @@ const Header = () => {
                         <MenuItem
                             component={Link}
                             to="/dashboard/blogs"
-                            hidden={!user?.isAdmin}
+                            hidden={!user?.userInfo.isAdmin}
                             onClick={handleClose}
                         >
                             <ListItemIcon>
