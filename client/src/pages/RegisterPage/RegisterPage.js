@@ -5,7 +5,6 @@ import * as yup from 'yup'
 import { Box, Button, FormGroup, Grid, InputLabel, Stack, TextField, Typography } from '@mui/material'
 import { registerAPI } from '~/api/main'
 import { Link, useNavigate } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
 import CustomLoading from '~/components/CustomLoading'
 import routes from 'src/utils/routes'
 import { Add } from '@mui/icons-material'
@@ -13,27 +12,35 @@ import images from '~/assets/imgs'
 import Image from '~/components/Image/Image'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
-import CustomBackDrop from '~/components/BackDrop'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const registerData = yup.object().shape({
     name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().required().min(6),
-    confirmPassword: yup.string().required().oneOf([yup.ref('password'), null])
+    confirmPassword: yup
+        .string()
+        .required()
+        .oneOf([yup.ref('password'), null])
 })
 
-
 const RegisterPage = () => {
+    const notify = () =>
+        toast.success('Bạn đã đăng ký thành công!', {
+            autoClose: 5000
+        })
     useDocumentTitle('Đăng kí')
     const [previewImg, setPreviewImg] = useState(null)
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const { register, handleSubmit, formState: { errors } } = useForm(
-        { resolver: yupResolver(registerData) }
-    )
-
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm({ resolver: yupResolver(registerData) })
 
     const onSubmitRegiser = async data => {
         const formData = new FormData()
@@ -47,7 +54,10 @@ const RegisterPage = () => {
             const res = await registerAPI(formData)
             if (res) {
                 setLoading(false)
-                navigate('/login')
+                setTimeout(() => {
+                    navigate('/login')
+                }, 6000)
+                notify()
             }
         } catch (err) {
             setLoading(false)
@@ -55,53 +65,58 @@ const RegisterPage = () => {
         }
     }
 
-
     return (
         <Grid container className='register-page'>
             <Grid item className='form-container d-flex justify-content-center align-items-center'>
-                <Box component='form' onSubmit={handleSubmit(onSubmitRegiser)} className='shadow py-5 px-4 rounded form-wrap'>
+                <Box
+                    component='form'
+                    onSubmit={handleSubmit(onSubmitRegiser)}
+                    className='shadow py-5 px-4 rounded form-wrap'
+                >
                     {/* <div className='mb-3 img-wrap'>
                         <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </div> */}
                     <Typography variant='h5' className='mb-3 text-center'>
                         Đăng Kí
                     </Typography>
-                    <Stack className="choose-image my-3 m-auto">
+                    <Stack className='choose-image my-3 m-auto'>
                         <FormGroup className='d-flex align-items-center justify-content-center'>
-                            <Image alt="" src={previewImg || images.registerLogo} className='register-profile-pic' />
+                            <Image alt='' src={previewImg || images.registerLogo} className='register-profile-pic' />
                             <TextField
-                                type="file"
-                                id="image-upload"
+                                type='file'
+                                id='image-upload'
                                 hidden
-                                accept="image/png, image/jpeg"
+                                accept='image/png, image/jpeg'
                                 {...register('picture', {
                                     required: true,
-                                    onChange: (e) => {
+                                    onChange: e => {
                                         setPreviewImg(URL.createObjectURL(e.target.files[0]))
                                     }
                                 })}
                             />
                         </FormGroup>
-                        <InputLabel htmlFor="image-upload" className='image-upload-label bg-primary' >
-                            <Add className="upload-btn" />
+                        <InputLabel htmlFor='image-upload' className='image-upload-label bg-primary'>
+                            <Add className='upload-btn' />
                         </InputLabel>
                     </Stack>
-                    <Typography variant='inherit' className='text-danger mb-2'>{error}</Typography>
+                    <Typography variant='inherit' className='text-danger mb-2'>
+                        {error}
+                    </Typography>
                     <FormGroup className='mb-3'>
                         <TextField
                             required
-                            label="Tên"
+                            label='Tên'
                             type='text'
                             error={errors.name}
                             {...register('name', { required: true })}
                         />
-                        <ErrorMessages errors={errors} fieldName="name" />
+                        <ErrorMessages errors={errors} fieldName='name' />
                     </FormGroup>
                     <FormGroup className='mb-3'>
                         <TextField
                             required
                             type='email'
-                            label="Email"
+                            label='Email'
                             error={errors.email}
                             {...register('email', { required: true })}
                         />
@@ -115,7 +130,7 @@ const RegisterPage = () => {
                             error={errors.password}
                             {...register('password', { required: true })}
                         />
-                        <ErrorMessages errors={errors} fieldName="password" />
+                        <ErrorMessages errors={errors} fieldName='password' />
                     </FormGroup>
                     <FormGroup className='mb-3'>
                         <TextField
@@ -125,18 +140,24 @@ const RegisterPage = () => {
                             error={errors.confirmPassword}
                             {...register('confirmPassword', { required: true })}
                         />
-                        <ErrorMessages errors={errors} fieldName="confirmPassword" />
+                        <ErrorMessages errors={errors} fieldName='confirmPassword' />
                     </FormGroup>
-                    <Typography variant="inherit" className='mb-3 '>Đã có tài khoản. <Link className="text-primary" to={routes.login.path}> Đăng nhập!</Link></Typography>
+                    <Typography variant='inherit' className='mb-3 '>
+                        Đã có tài khoản.{' '}
+                        <Link className='text-primary' to={routes.login.path}>
+                            {' '}
+                            Đăng nhập!
+                        </Link>
+                    </Typography>
                     {loading ? (
-                        <CustomLoading />
+                        <CustomLoading autoClose={5000} />
                     ) : (
                         <Button type='submit' variant='contained' className='btn'>
                             Tạo tài khoản
                         </Button>
                     )}
                 </Box>
-                <CustomBackDrop open={loading} />
+                <ToastContainer />
             </Grid>
         </Grid>
     )
