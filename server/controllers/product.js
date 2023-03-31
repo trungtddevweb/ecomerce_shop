@@ -2,9 +2,11 @@ import responseHandler from "../handler/responseHandler.js"
 import Product from "../models/Product.js";
 
 export const createAProduct = async (req, res, next) => {
+    const picture = req.file
     try {
         const newProduct = await Product({
-            ...req.body
+            ...req.body,
+            productImg: picture?.path
         })
         await newProduct.save()
         responseHandler.created(res, newProduct)
@@ -30,6 +32,26 @@ export const getAllProduct = async (req, res, next) => {
         const products = await Product.paginate({}, { limit, page })
         responseHandler.getData(res, products)
     } catch (error) {
-        next(responseHandler.error(error));
+        next(responseHandler.error(error))
+    }
+}
+
+export const deletedProduct = async (req, res, next) => {
+    try {
+        const { selectedIds } = req.body
+        const checkIds = await Product.find({
+            _id: {
+                $in: selectedIds
+            }
+        }).exec()
+        const existingIds = checkIds.map(id => id.id)
+        const nonExistingIds = selectedIds.filter((id) => !existingIds.includes(id))
+        if (nonExistingIds.length > 0) return next(responseHandler.notFound(res))
+
+        await Product.deleteMany({ _id: { $in: selectedIds } })
+        res.status(200).json({ success: true, message: "List products has been deleted!" })
+    } catch (error) {
+        console.error(error)
+        next(responseHandler.error(error))
     }
 }

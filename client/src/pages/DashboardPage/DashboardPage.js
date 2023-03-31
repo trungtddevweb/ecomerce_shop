@@ -1,21 +1,33 @@
 import { Grid, Paper, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Divider, ListItem, ListItemAvatar, Avatar, Stack, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useState, lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import { getDataByDashboardType } from '~/api/main'
-import EnhancedTable from '~/components/EnhancedTable'
+import { getUser } from 'src/utils/const'
+import BlogsDashboard from './Blogs/BlogsDashboard'
+import ProductsDashboard from './Products/ProductsDashboard'
+import UsersDashBoard from './Users/UsersDashBoard'
+import { makeStyles } from '@mui/styles'
+
+const useStyles = makeStyles({
+    container: {
+        backgroundImage: 'url("/assets/imag")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+    },
+})
 
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
     const { managerId } = useParams()
     const navigate = useNavigate()
-    const user = useSelector(state => state.auth.user)
+    const user = useSelector(getUser)
+    const classes = useStyles()
     const isAdmin = user?.isAdmin
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [data, setData] = useState([])
+    // const [isLoading, setIsLoading] = useState(false)
     const [selectedParam, setSelectedParam] = useState(managerId);
 
     const handleListItemClick = (event, path) => {
@@ -26,28 +38,13 @@ const DashboardPage = () => {
 
 
     // Effects
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true)
-            try {
-                const response = await getDataByDashboardType(selectedParam)
-                console.log(response)
-                setData(response.docs)
-                setIsLoading(false)
-            } catch (error) {
-                setIsLoading(false)
-                console.error(error)
-            }
-        }
-        fetchData()
-    }, [selectedParam])
     if (!isAdmin) {
         return <Navigate to="/" replace />
     }
 
     return (
-        <Grid marginTop="40px" padding="0px" display='flex' justifyContent='center'>
-            <Grid container spacing={4} className="dashboard-page">
+        <Grid className="dashboard-page" padding="0px" display='flex' justifyContent='center'>
+            <Grid container spacing={4} margin="40px 0" className="dashboard-wrapper">
                 <Grid item xs={4}>
                     <Paper elevation={6}>
                         <List
@@ -116,7 +113,7 @@ const DashboardPage = () => {
                 </Grid>
                 <Grid item xs={8} >
                     <Paper elevation={6}>
-                        <EnhancedTable />
+                        {managerId === "blogs" ? <BlogsDashboard /> : managerId === "products" ? <ProductsDashboard /> : <UsersDashBoard />}
                     </Paper>
                 </Grid>
             </Grid>
