@@ -1,8 +1,8 @@
 import mainAPI from "./base"
 
 // Auth APIs
-export const registerAPI = (data) => {
-    return mainAPI.post("/auth/register", data)
+export const registerAPI = async (data) => {
+    return await mainAPI.post("/auth/register", data)
 }
 
 export const loginAPI = async (data) => {
@@ -27,7 +27,25 @@ export const logout = async (token) => {
 }
 
 // Manage APIs
-export const getDataByDashboardType = async (param) => {
-    const res = await mainAPI.get(`${param}`)
-    return res.data
+export const getAllUsers = async (token) => {
+    const response = await mainAPI.get('/users', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    return response.data
+}
+
+export const getAllProducts = async () => {
+    const response = await mainAPI.get('/products')
+    return response.data
+}
+
+export const getAllBlogs = async (token) => {
+    const response = await mainAPI.get('/blogs', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    return response.data
 }

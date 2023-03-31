@@ -4,7 +4,7 @@ import User from '../models/User.js'
 
 export const verifyAdmin = (req, res, next) => {
     const authHeaders = req.headers.authorization
-    const token = authHeaders.split(' ')[1]
+    const token = authHeaders?.split(' ')[1]
 
     if (token) {
         jwt.verify(token, process.env.JWT_KEY, (err, payload) => {
