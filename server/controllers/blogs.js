@@ -35,3 +35,23 @@ export const getAllPosts = async (req, res, next) => {
         next(responseHandler.error(res, error))
     }
 }
+
+export const deletedPosts = async (req, res, next) => {
+    try {
+        const { selectedIds } = req.body
+        const checkIds = await Blog.find({
+            _id: {
+                $in: selectedIds
+            }
+        }).exec()
+        const existingIds = checkIds.map(id => id.id)
+        const nonExistingIds = selectedIds.filter((id) => !existingIds.includes(id))
+        if (nonExistingIds.length > 0) return next(responseHandler.notFound(res))
+
+        await Blog.deleteMany({ _id: { $in: selectedIds } })
+        res.status(200).json({ success: true, message: "List blogs has been deleted!" })
+    } catch (error) {
+        console.error(error)
+        next(responseHandler.error(error))
+    }
+}
