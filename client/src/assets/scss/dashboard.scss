@@ -1,6 +1,6 @@
 .dashboard-page {
     height: 100%;
-    min-height: 80vh;
+    min-height: calc(71vh - 1px);
     background: url('/assets/imgs/dashboard-main.jpg');
     background-size: cover;
 

@@ -12,16 +12,14 @@ import routes from 'src/utils/routes'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
 import Image from '~/components/Image'
-import CustomBackDrop from '~/components/BackDrop'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required().min(6)
 })
 
-
 const Login = () => {
-    useDocumentTitle("Đăng nhập")
+    useDocumentTitle('Đăng nhập')
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -52,12 +50,14 @@ const Login = () => {
     return (
         <Grid className='login-page'>
             <Grid className='form-container d-flex justify-content-center align-items-center '>
-                <Box component="form" onSubmit={handleSubmit(onSubmit)} className='shadow rounded py-5 px-4 form-wrap '>
+                <Box component='form' onSubmit={handleSubmit(onSubmit)} className='shadow rounded py-5 px-4 form-wrap '>
                     <Stack className='img-wrap mb-3'>
                         <Image src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </Stack>
-                    <Typography variant='inherit' className='text-danger mb-2'>{error}</Typography>
-                    <FormGroup className='mb-3' >
+                    <Typography variant='inherit' className='text-danger mb-2'>
+                        {error}
+                    </Typography>
+                    <FormGroup className='mb-3'>
                         <TextField
                             type='email'
                             required
@@ -65,7 +65,7 @@ const Login = () => {
                             error={errors.email}
                             {...register('email', { required: true })}
                         />
-                        <ErrorMessages errors={errors} fieldName="email" />
+                        <ErrorMessages errors={errors} fieldName='email' />
                     </FormGroup>
                     <FormGroup className='mb-3'>
                         <TextField
@@ -75,10 +75,10 @@ const Login = () => {
                             required
                             {...register('password', { required: true })}
                         />
-                        <ErrorMessages errors={errors} fieldName="password" />
+                        <ErrorMessages errors={errors} fieldName='password' />
                     </FormGroup>
-                    <Stack marginBottom="12px" direction="row" justifyContent="space-between">
-                        <Typography variant='inherit' >Quên mật khẩu?</Typography>
+                    <Stack marginBottom='12px' direction='row' justifyContent='space-between'>
+                        <Typography variant='inherit'>Quên mật khẩu?</Typography>
                         <Link className='text-primary' to={routes.register.path}>
                             Đăng kí ngay!
                         </Link>
@@ -86,12 +86,11 @@ const Login = () => {
                     {loading ? (
                         <Loading />
                     ) : (
-                        <Button type='submit' variant='contained' className='btn' >
+                        <Button type='submit' variant='contained' className='btn'>
                             Đăng nhập
                         </Button>
                     )}
                 </Box>
-                <CustomBackDrop open={loading} />
             </Grid>
         </Grid>
     )
