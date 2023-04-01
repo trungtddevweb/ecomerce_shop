@@ -8,23 +8,12 @@ import { getUser } from 'src/utils/const'
 import BlogsDashboard from './Blogs/BlogsDashboard'
 import ProductsDashboard from './Products/ProductsDashboard'
 import UsersDashBoard from './Users/UsersDashBoard'
-import { makeStyles } from '@mui/styles'
-
-const useStyles = makeStyles({
-    container: {
-        backgroundImage: 'url("/assets/imag")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '100vh',
-    },
-})
 
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
     const { managerId } = useParams()
     const navigate = useNavigate()
     const user = useSelector(getUser)
-    const classes = useStyles()
     const isAdmin = user?.isAdmin
 
     // const [isLoading, setIsLoading] = useState(false)
