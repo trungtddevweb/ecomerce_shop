@@ -8,11 +8,12 @@ import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import { getAllProducts } from '~/api/main'
 import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
-import { TablePagination, TableRow } from '@mui/material';
+import { IconButton, TablePagination, TableRow, Tooltip } from '@mui/material';
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
+import { Edit } from '@mui/icons-material'
 
 const ProductsDashboard = () => {
     const [data, setData] = useState([])
@@ -98,6 +99,12 @@ const ProductsDashboard = () => {
             disablePadding: false,
             label: 'Ngày đăng',
         },
+        {
+            id: 'settings',
+            numeric: true,
+            disablePadding: false,
+            label: 'Chỉnh sửa',
+        }
     ]
 
     const handleRequestSort = (event, property) => {
@@ -108,7 +115,7 @@ const ProductsDashboard = () => {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = data?.map((n) => n.name)
+            const newSelected = data?.map((n) => n._id)
             setSelected(newSelected)
             return;
         }
@@ -134,7 +141,6 @@ const ProductsDashboard = () => {
 
         setSelected(newSelected);
     };
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -157,7 +163,7 @@ const ProductsDashboard = () => {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length} selectedItem={selected} />
                 {isLoading ? (
                     <LinearIndeterminate />
                 ) : (
@@ -180,17 +186,16 @@ const ProductsDashboard = () => {
                                 {stableSort(data, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
-                                        const isItemSelected = isSelected(row.name);
+                                        const isItemSelected = isSelected(row._id);
                                         const labelId = `enhanced-table-checkbox-${index}`
-
                                         return (
                                             <TableRow
                                                 hover
-                                                onClick={(event) => handleClick(event, row.name)}
+                                                onClick={(event) => handleClick(event, row._id)}
                                                 role="checkbox"
                                                 aria-checked={isItemSelected}
                                                 tabIndex={-1}
-                                                key={row.name}
+                                                key={row._id}
                                                 selected={isItemSelected}
                                                 sx={{ cursor: 'pointer' }}
                                             >
@@ -215,6 +220,15 @@ const ProductsDashboard = () => {
                                                 <TableCell align="right">{row.price}</TableCell>
                                                 <TableCell align="right">{row.category}</TableCell>
                                                 <TableCell align="right">{row.createdAt?.split('T')[0]}</TableCell>
+                                                <TableCell sx={{
+                                                    padding: '8px'
+                                                }} align="right">
+                                                    <Tooltip title="Sửa">
+                                                        <IconButton>
+                                                            <Edit />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </TableCell>
                                             </TableRow>
                                         );
                                     })}

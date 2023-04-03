@@ -39,6 +39,7 @@ export const getAllProduct = async (req, res, next) => {
 export const deletedProduct = async (req, res, next) => {
     try {
         const { selectedIds } = req.body
+        if (!selectedIds) return res.status(400).json({ status: false, message: 'selectedIds is not specified' })
         const checkIds = await Product.find({
             _id: {
                 $in: selectedIds

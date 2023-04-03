@@ -1,10 +1,11 @@
 import EmailIcon from '@mui/icons-material/Email'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PhoneIcon from '@mui/icons-material/Phone'
+import { Box } from '@mui/material'
 
 const Footer = () => {
     return (
-        <div style={{ backgroundColor: '#6699CC' }} className='py-3'>
+        <Box position="relative" sx={{ backgroundColor: '#6699CC', zIndex: 99 }} className='py-3'>
             <div className='text-white'>
                 <div className='container '>
                     <div className='row gx-5'>
@@ -21,7 +22,7 @@ const Footer = () => {
                         <div className='col'>
                             <div className=''>
                                 <h3>Liên hệ với chúng tôi</h3>
-                                <ul class='list-unstyled'>
+                                <ul className='list-unstyled'>
                                     <li className='mb-2'>
                                         <LocationOnIcon className='me-2' />
                                         Gia Lâm, Hà Nội, Việt Nam
@@ -40,7 +41,7 @@ const Footer = () => {
                         <div className='col'>
                             <div className=''>
                                 <h3>Giờ mở cửa</h3>
-                                <ul class='list-unstyled'>
+                                <ul className='list-unstyled'>
                                     <li className='d-flex justify-content-between mb-2'>
                                         <span>Thứ 2 -Thứ 5:</span> <span>8:00 - 21:00</span>
                                     </li>
@@ -57,7 +58,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className='text-center text-white'>© 2023   MyStore. All rights reserved</div>
-        </div>
+        </Box>
     )
 }
 

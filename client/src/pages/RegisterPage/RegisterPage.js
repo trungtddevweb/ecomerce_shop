@@ -13,7 +13,9 @@ import Image from '~/components/Image/Image'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
 import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { useDispatch } from 'react-redux'
+import { showToast } from 'src/redux/slice/toastSlice'
+
 
 const registerData = yup.object().shape({
     name: yup.string().required(),
@@ -26,11 +28,9 @@ const registerData = yup.object().shape({
 })
 
 const RegisterPage = () => {
-    const notify = () =>
-        toast.success('Bạn đã đăng ký thành công!', {
-            autoClose: 5000
-        })
     useDocumentTitle('Đăng kí')
+
+    const dispatch = useDispatch()
     const [previewImg, setPreviewImg] = useState(null)
     const navigate = useNavigate()
     const [error, setError] = useState('')
@@ -51,16 +51,13 @@ const RegisterPage = () => {
         formData.append('confirmPassword', data.confirmPassword)
         setLoading(true)
         try {
-            const res = await registerAPI(formData)
-            if (res) {
-                setLoading(false)
-                setTimeout(() => {
-                    navigate('/login')
-                }, 6000)
-                notify()
-            }
+            await registerAPI(formData)
+            setLoading(false)
+            dispatch(showToast({ type: 'success', message: "Đăng ký thành công!" }))
+            navigate('/login')
         } catch (err) {
             setLoading(false)
+            dispatch(showToast({ type: 'error', message: "Đăng ký thất bại!" }))
             setError(err.response.data.message)
         }
     }

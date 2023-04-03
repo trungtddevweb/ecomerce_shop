@@ -12,9 +12,8 @@ import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { getToken } from 'src/utils/const'
 import { getAllUsers } from '~/api/main'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
 const UsersDashBoard = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -25,12 +24,13 @@ const UsersDashBoard = () => {
     const [dense, setDense] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [data, setData] = useState([])
-    const token = useSelector(getToken)
+    // const token = useSelector(state => state.auth.user.token)
+
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
             try {
-                const response = await getAllUsers(token)
+                const response = await getAllUsers()
                 setData(response.docs)
                 setIsLoading(false)
             } catch (error) {
@@ -39,7 +39,7 @@ const UsersDashBoard = () => {
             }
         }
         fetchData()
-    }, [token])
+    }, [])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -93,7 +93,7 @@ const UsersDashBoard = () => {
             numeric: true,
             disablePadding: false,
             label: 'Ngày tạo',
-        },
+        }
     ];
 
     const handleRequestSort = (event, property) => {
