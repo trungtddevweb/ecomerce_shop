@@ -27,8 +27,12 @@ export const logout = async (token) => {
 }
 
 // Manage APIs
-export const getAllUsers = async () => {
-    const response = await mainAPI.get('/users')
+export const getAllUsers = async (token) => {
+    const response = await mainAPI.get('/users', {
+        headers:{
+            'Authorization': `Bearer ${token}`
+        }
+    })
     return response.data
 }
 
@@ -47,7 +51,6 @@ export const deleteItemByParams = async (params, token, selectedItem) => {
     return await mainAPI.delete(`/${params}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
-
         },
         data: {
             selectedIds: selectedItem

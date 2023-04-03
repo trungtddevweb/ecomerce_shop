@@ -9,6 +9,7 @@ import { showToast } from 'src/redux/slice/toastSlice'
 import { deleteItemByParams } from '~/api/main'
 import { useState } from 'react'
 import CustomBackDrop from '../BackDrop/CustomBackDrop'
+import axios from 'axios'
 
 function EnhancedTableToolbar(props) {
     const [isLoading, setIsLoading] = useState(false)
@@ -16,11 +17,19 @@ function EnhancedTableToolbar(props) {
     const { numSelected, selectedItem } = props;
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
-    console.log(selectedItem)
+
     const handleDelete = async () => {
         try {
             setIsLoading(true)
-            await deleteItemByParams(managerId, token, selectedItem)
+            // await deleteItemByParams(managerId, token, selectedItem)
+            await axios.delete(`http://localhost:5000/api/${managerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                data: {
+                    selectedIds: selectedItem
+                }
+            })
             setIsLoading(false)
             dispatch(showToast({ type: 'success', message: 'Xóa thành công!' }))
         } catch (error) {

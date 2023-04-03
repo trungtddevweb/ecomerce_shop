@@ -12,6 +12,7 @@ import routes from 'src/utils/routes'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
 import Image from '~/components/Image'
+import { showToast } from 'src/redux/slice/toastSlice'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
@@ -43,6 +44,7 @@ const Login = () => {
         } catch (error) {
             dispatch(loginFailed(error))
             setLoading(false)
+            dispatch(showToast({type: 'error', message: `${error.message}`}))
             setError(error.response?.data.message)
         }
     }
