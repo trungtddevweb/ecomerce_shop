@@ -161,7 +161,7 @@ const BlogsDashboard = () => {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length} selectedItem={selected} />
                 {isLoading ? (
                     <LinearIndeterminate />
                 ) : (

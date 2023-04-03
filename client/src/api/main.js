@@ -43,8 +43,8 @@ export const getAllBlogs = async () => {
 }
 
 // Deleted array of products
-export const deleteProductByIdAPI = async (token, selectedItem) => {
-    return await mainAPI.delete('/products', {
+export const deleteItemByParams = async (params, token, selectedItem) => {
+    return await mainAPI.delete(`/${params}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
 

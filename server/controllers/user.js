@@ -20,6 +20,7 @@ export const getAllUsers = async (req, res, next) => {
 export const deleteUsers = async (req, res, next) => {
     try {
         const { selectedIds } = req.body
+        if (selectedIds) return res.status(400).json({ success: false, message: 'SelectedIds is not specified!' })
         const checkIds = await User.find({
             _id: {
                 $in: selectedIds

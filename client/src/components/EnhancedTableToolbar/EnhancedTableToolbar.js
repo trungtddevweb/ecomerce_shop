@@ -6,10 +6,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Add } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
-import { deleteProductByIdAPI } from '~/api/main'
+import { deleteItemByParams } from '~/api/main'
 import { useState } from 'react'
 import CustomBackDrop from '../BackDrop/CustomBackDrop'
-import axios from 'axios'
 
 function EnhancedTableToolbar(props) {
     const [isLoading, setIsLoading] = useState(false)
@@ -17,10 +16,11 @@ function EnhancedTableToolbar(props) {
     const { numSelected, selectedItem } = props;
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
+    console.log(selectedItem)
     const handleDelete = async () => {
         try {
             setIsLoading(true)
-            await deleteProductByIdAPI(token, selectedItem)
+            await deleteItemByParams(managerId, token, selectedItem)
             setIsLoading(false)
             dispatch(showToast({ type: 'success', message: 'Xóa thành công!' }))
         } catch (error) {
@@ -29,6 +29,7 @@ function EnhancedTableToolbar(props) {
             dispatch(showToast({ type: "error", message: `${error.message}` }))
         }
     }
+
     return (
         <Toolbar
             sx={{
