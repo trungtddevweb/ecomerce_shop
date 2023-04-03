@@ -8,7 +8,7 @@ export const registerAPI = async (data) => {
 export const loginAPI = async (data) => {
     const response = await mainAPI.post("/auth/login", data)
     if (response.data.token) {
-        localStorage.setItem("token", JSON.stringify(response.data.token))
+        localStorage.setItem("token", response.data.token)
     }
     return response.data
 }
@@ -18,7 +18,7 @@ export const logout = async (token) => {
         const response = await mainAPI.post('/auth/logout', null, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
-        if (response) {
+        if (response.data.success) {
             localStorage.removeItem('token')
         }
     } catch (error) {
@@ -27,12 +27,8 @@ export const logout = async (token) => {
 }
 
 // Manage APIs
-export const getAllUsers = async (token) => {
-    const response = await mainAPI.get('/users', {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
+export const getAllUsers = async () => {
+    const response = await mainAPI.get('/users')
     return response.data
 }
 
@@ -41,11 +37,21 @@ export const getAllProducts = async () => {
     return response.data
 }
 
-export const getAllBlogs = async (token) => {
-    const response = await mainAPI.get('/blogs', {
+export const getAllBlogs = async () => {
+    const response = await mainAPI.get('/blogs')
+    return response.data
+}
+
+// Deleted array of products
+export const deleteProductByIdAPI = async (token, selectedItem) => {
+    return await mainAPI.delete('/products', {
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+
+        },
+        data: {
+            selectedIds: selectedItem
         }
     })
-    return response.data
+
 }

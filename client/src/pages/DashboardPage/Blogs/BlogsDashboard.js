@@ -7,14 +7,14 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { TablePagination, TableRow } from '@mui/material';
+import { IconButton, TablePagination, TableRow, Tooltip } from '@mui/material';
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { getToken } from 'src/utils/const'
 import { getAllBlogs } from '~/api/main'
 import { useSelector } from 'react-redux'
+import { Edit } from '@mui/icons-material'
 
 const BlogsDashboard = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -25,7 +25,7 @@ const BlogsDashboard = () => {
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const [data, setData] = useState([])
-    const token = useSelector(getToken)
+    const token = useSelector(state => state.auth.user.token)
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
@@ -94,6 +94,14 @@ const BlogsDashboard = () => {
             disablePadding: false,
             label: 'Ngày tạo',
         },
+        {
+            id: 'settings',
+            numeric: true,
+            disablePadding: false,
+            label: 'Chỉnh sửa',
+        },
+
+
     ];
 
     const handleRequestSort = (event, property) => {
@@ -211,6 +219,13 @@ const BlogsDashboard = () => {
                                                 <TableCell align="right">{row.title}</TableCell>
                                                 <TableCell align="right">{row.author}</TableCell>
                                                 <TableCell align="right">{row.createdAt?.split('T')[0]}</TableCell>
+                                                <TableCell align="right">
+                                                    <Tooltip title="Sửa">
+                                                        <IconButton>
+                                                            <Edit />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </TableCell>
                                             </TableRow>
                                         );
                                     })}

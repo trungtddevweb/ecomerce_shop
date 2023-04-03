@@ -9,13 +9,14 @@ import { ThemeProvider } from '@mui/styles';
 import theme from 'src/theme/theme'
 import { CssBaseline } from '@mui/material';
 import ErrorBoundaryCustom from './components/ErrorBoundary';
+import { ToastContainer } from 'react-toastify';
 const LazyApp = lazy(() => import('./App'))
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <CssBaseline />
         <Provider store={store} >
+            <CssBaseline />
             <PersistGate loading={null} persistor={persistor}>
                 <ErrorBoundaryCustom>
                     <Suspense fallback={<SpinnerAnimation />}>
@@ -25,6 +26,10 @@ root.render(
                     </Suspense>
                 </ErrorBoundaryCustom>
             </PersistGate>
+            <ToastContainer
+                position="bottom-left"
+                limit={5}
+            />
         </Provider>
     </React.StrictMode>
 
