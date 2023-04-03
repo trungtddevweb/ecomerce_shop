@@ -7,13 +7,15 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { TablePagination, TableRow } from '@mui/material';
+import { TablePagination, TableRow, Typography } from '@mui/material';
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
 import { getAllUsers } from '~/api/main'
-// import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import Image from '~/components/Image/Image'
+import images from '~/assets/imgs'
 
 const UsersDashBoard = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -24,13 +26,14 @@ const UsersDashBoard = () => {
     const [dense, setDense] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [data, setData] = useState([])
-    // const token = useSelector(state => state.auth.user.token)
+    
+    const token = useSelector(state => state.auth.user.token)
 
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
             try {
-                const response = await getAllUsers()
+                const response = await getAllUsers(token)
                 setData(response.docs)
                 setIsLoading(false)
             } catch (error) {
@@ -39,7 +42,7 @@ const UsersDashBoard = () => {
             }
         }
         fetchData()
-    }, [])
+    }, [token])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -224,6 +227,12 @@ const UsersDashBoard = () => {
                                 )}
                             </TableBody>
                         </Table>
+                        {data.length === 0 && (
+                                    <Box margin='auto' display='flex' flexDirection='column' alignItems='center' justifyContent='center' marginTop='20px'>
+                                        <Typography variant='inherit' >Danh sách rỗng</Typography>
+                                        <Image className="w-25" src={images.emptyFolder} alt="Null" />
+                                    </Box>
+                                )}
                     </TableContainer>
                 )}
                 <TablePagination

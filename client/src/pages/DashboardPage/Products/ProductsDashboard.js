@@ -8,12 +8,14 @@ import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import { getAllProducts } from '~/api/main'
 import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
-import { IconButton, TablePagination, TableRow, Tooltip } from '@mui/material';
+import { IconButton, Stack, TablePagination, TableRow, Tooltip, Typography } from '@mui/material';
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
 import { Edit } from '@mui/icons-material'
+import Image from '~/components/Image/Image'
+import images from '~/assets/imgs'
 
 const ProductsDashboard = () => {
     const [data, setData] = useState([])
@@ -24,6 +26,7 @@ const ProductsDashboard = () => {
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
+    
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
@@ -241,8 +244,15 @@ const ProductsDashboard = () => {
                                         <TableCell colSpan={6} />
                                     </TableRow>
                                 )}
+                             
                             </TableBody>
                         </Table>
+                        {data.length === 0 && (
+                                    <Box margin='auto' display='flex' flexDirection='column' alignItems='center' justifyContent='center' marginTop='20px'>
+                                        <Typography variant='inherit' >Danh sách rỗng</Typography>
+                                        <Image className="w-25" src={images.emptyFolder} alt="Null" />
+                                    </Box>
+                                )}
                     </TableContainer>
                 )}
                 <TablePagination

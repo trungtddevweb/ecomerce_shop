@@ -39,7 +39,7 @@ export const getAllPosts = async (req, res, next) => {
 export const deletedPosts = async (req, res, next) => {
     try {
         const { selectedIds } = req.body
-        if (selectedIds) return res.status(400).json({ success: false, message: 'SelectedIds is not specified!' })
+        if (!selectedIds) return res.status(400).json({ success: false, message: 'SelectedIds is not specified!' })
         const checkIds = await Blog.find({
             _id: {
                 $in: selectedIds
