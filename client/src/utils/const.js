@@ -7,5 +7,3 @@ export const tabsNavigationHeader = [
     { label: 'Sản phẩm', value: '/categories' }
 ]
 
-
-export const getUser = (state) => state.auth.user.userInfo

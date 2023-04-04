@@ -10,18 +10,18 @@ import { logoutSuccess } from 'src/redux/slice/usersSlice';
 import Cart from '../Cart';
 import noImage from 'src/assets/imgs'
 import routes from 'src/utils/routes';
-import { getUser, tabsNavigationHeader } from 'src/utils/const';
+import { tabsNavigationHeader } from 'src/utils/const';
 
 const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsloading] = useState(false)
-    const token = useSelector(state => state.auth.user.token)
+    const token = localStorage.getItem('token')
     // const [value, setValue] = useState(false);
 
 
     const dispatch = useDispatch()
-    const user = useSelector(getUser)
+    const user = useSelector(state => state.auth?.user?.userInfo)
     const open = Boolean(anchorEl)
     const navigate = useNavigate()
     const location = useLocation();
@@ -151,7 +151,7 @@ const Header = () => {
                         <MenuItem
                             component={Link}
                             to="/dashboard/blogs"
-                            hidden={!user.isAdmin}
+                            hidden={!user?.isAdmin}
                             onClick={handleClose}
                         >
                             <ListItemIcon>

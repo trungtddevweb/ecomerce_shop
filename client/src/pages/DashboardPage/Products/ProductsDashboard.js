@@ -16,8 +16,9 @@ import LinearIndeterminate from 'src/fallback/LinearProgress'
 import { Edit } from '@mui/icons-material'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
+import EditModal from '~/components/EditModal/EditModal'
 
-const ProductsDashboard = () => {
+const ProductsDashboard = ({ dataModal, onEdit }) => {
     const [data, setData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [order, setOrder] = useState('asc')
@@ -26,7 +27,25 @@ const ProductsDashboard = () => {
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    
+
+    // Modal
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalData, setModalData] = useState(null)
+
+    const handleModalOpen = (data) => {
+        setModalData(data);
+        setModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setModalOpen(false);
+        setModalData(null);
+    };
+
+    const handleModalSave = (value) => {
+        onEdit(modalData.id, value);
+    };
+    // End modal
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true)
@@ -228,7 +247,7 @@ const ProductsDashboard = () => {
                                                 }} align="right">
                                                     <Tooltip title="Sửa">
                                                         <IconButton>
-                                                            <Edit />
+                                                            <Edit onClick={() => handleModalOpen(row)} />
                                                         </IconButton>
                                                     </Tooltip>
                                                 </TableCell>
@@ -244,16 +263,24 @@ const ProductsDashboard = () => {
                                         <TableCell colSpan={6} />
                                     </TableRow>
                                 )}
-                             
+
                             </TableBody>
                         </Table>
                         {data.length === 0 && (
-                                    <Box margin='auto' display='flex' flexDirection='column' alignItems='center' justifyContent='center' marginTop='20px'>
-                                        <Typography variant='inherit' >Danh sách rỗng</Typography>
-                                        <Image className="w-25" src={images.emptyFolder} alt="Null" />
-                                    </Box>
-                                )}
+                            <Box margin='auto' display='flex' flexDirection='column' alignItems='center' justifyContent='center' marginTop='20px'>
+                                <Typography variant='inherit' >Danh sách rỗng</Typography>
+                                <Image className="w-25" src={images.emptyFolder} alt="Null" />
+                            </Box>
+                        )}
                     </TableContainer>
+                )}
+                {modalData && (
+                    <EditModal
+                        open={modalOpen}
+                        handleClose={handleModalClose}
+                        handleSave={handleModalSave}
+                        value={modalData.name}
+                    />
                 )}
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}

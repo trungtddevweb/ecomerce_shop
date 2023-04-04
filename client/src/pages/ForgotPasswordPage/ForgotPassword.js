@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
+import { Box, Button } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import axios from 'axios'
@@ -39,7 +38,7 @@ const ForgotPassword = () => {
     return (
         <>
             <div className='form-container d-flex justify-content-center align-items-center '>
-                <Form onSubmit={handleSubmit(forgotPass)} className='shadow rounded p-4 form-wrap '>
+                <Box component='form' onSubmit={handleSubmit(forgotPass)} className='shadow rounded p-4 form-wrap '>
                     <div className='img-wrap mb-3'>
                         <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </div>
@@ -72,7 +71,7 @@ const ForgotPassword = () => {
                             Login
                         </Button>
                     )}
-                </Form>
+                </Box>
             </div>
         </>
     )

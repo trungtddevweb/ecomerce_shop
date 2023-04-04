@@ -13,7 +13,7 @@ const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
     const { managerId } = useParams()
     const navigate = useNavigate()
-    const user = useSelector(getUser)
+    const user = useSelector(state => state.auth?.user?.userInfo)
     const isAdmin = user?.isAdmin
 
     // const [isLoading, setIsLoading] = useState(false)

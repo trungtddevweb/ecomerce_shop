@@ -2,7 +2,6 @@ import axios from 'axios'
 import { baseURL } from 'src/utils/const'
 
 const token = localStorage.getItem('token')
-console.log(token)
 
 const mainAPI = axios.create({
     baseURL,
