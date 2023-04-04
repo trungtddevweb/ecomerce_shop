@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 
 const MainLayout = () => {
     // Check if don't exist user in LocalStorage navigate to login/register pages
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth?.user?.token)
 
     if (!token) return <Navigate to="/login" replace />
 
