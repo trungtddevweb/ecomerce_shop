@@ -1,34 +1,36 @@
+import { Box, Stack } from '@mui/material'
 import { useEffect, lazy } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+// import { useDispatch, useSelector } from 'react-redux'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import { showToast } from 'src/redux/slice/toastSlice'
-// import { getToken } from 'src/utils/const'
+import ListPostsBlog from '~/components/ListPostsBlog'
 
 const Sliders = lazy(() => import('~/components/Slider'))
 
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
-    const dispatch = useDispatch()
-    function handleClick() {
-        dispatch(showToast({ type: 'error', message: 'Hello world!' }));
-    }
-    // const [data, setData] = useState([])
     useEffect(() => {
         const fetchPost = async () => {
             try {
                 // const res = await getAllProducts()
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
         }
         fetchPost()
     }, [])
     return (
-        <div>
+        <Box className="homePage" flexDirection='column'>
             <Sliders />
-            <div>Hello</div>
-            <button onClick={handleClick}>Click me!</button>
-        </div>
+            <Stack direction='column' className="homePage-container">
+                <div>Hello</div>
+                <div>Product 1</div>
+                <div>Product hot</div>
+                <div>Banner</div>
+                <div>Other product</div>
+                <div>New letter</div>
+                <ListPostsBlog />
+            </Stack>
+        </Box>
     )
 }
 

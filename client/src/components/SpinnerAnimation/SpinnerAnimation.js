@@ -1,10 +1,9 @@
-import { Box } from "@mui/material"
-import { Spinner } from "react-bootstrap"
+import { Box, CircularProgress } from "@mui/material"
 
 const SpinnerAnimation = () => {
     return (
         <Box className="vw-100 vh-100 d-flex align-items-center justify-content-center">
-            <Spinner />
+            <CircularProgress />
         </Box>
     )
 }

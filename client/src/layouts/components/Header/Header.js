@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AppBar, Toolbar, MenuItem, Typography, Tab, Tabs, Avatar, Stack, Menu, Fade, ListItemIcon, Tooltip } from "@mui/material"
-import { Inventory, Logout } from "@mui/icons-material";
+import { CleanHands, Inventory, Logout } from "@mui/icons-material";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Search from '../Search';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isLoading, setIsloading] = useState(false)
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth?.user?.token)
     // const [value, setValue] = useState(false);
 
 
@@ -50,10 +50,13 @@ const Header = () => {
         setIsloading(true)
         handleClose()
         try {
-            await logout(token)
-            dispatch(logoutSuccess())
-            setIsloading(false)
-            navigate('/login')
+            const res = await logout(token)
+            if (res.status === 200) {
+                dispatch(logoutSuccess())
+                setIsloading(false)
+                navigate('/login')
+            }
+
         } catch (error) {
             setIsloading(false)
             console.error("Error; ", error)
