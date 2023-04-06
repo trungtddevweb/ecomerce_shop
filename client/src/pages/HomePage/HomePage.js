@@ -2,8 +2,8 @@ import { Box, Stack } from '@mui/material'
 import { useEffect, lazy } from 'react'
 // import { useDispatch, useSelector } from 'react-redux'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import ListPostsBlog from '~/components/ListPostsBlog'
 
+const ListPostsBlog = lazy(() => import('~/components/ListPostsBlog'))
 const Sliders = lazy(() => import('~/components/Slider'))
 
 const HomePage = () => {
