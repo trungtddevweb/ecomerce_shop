@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Box, Button } from '@mui/material'
+import { Button, Box } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import axios from 'axios'
@@ -36,44 +36,42 @@ const ForgotPassword = () => {
             })
     }
     return (
-        <>
-            <div className='form-container d-flex justify-content-center align-items-center '>
-                <Box component='form' onSubmit={handleSubmit(forgotPass)} className='shadow rounded p-4 form-wrap '>
-                    <div className='img-wrap mb-3'>
-                        <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
-                    </div>
+        <div className='form-container d-flex justify-content-center align-items-center '>
+            <Box component="form" onSubmit={handleSubmit(forgotPass)} className='shadow rounded p-4 form-wrap '>
+                <div className='img-wrap mb-3'>
+                    <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
+                </div>
 
-                    <div className='mb-3'>
-                        <input
-                            type='password'
-                            className='form-control'
-                            placeholder='Oldpass'
-                            {...register('oldPass', { required: true })}
-                        />
-                    </div>
-                    {errors.oldPass && <p className='text-danger'>{errors.oldPass.message}</p>}
-                    <div className='mb-3'>
-                        <input
-                            type='password'
-                            className='form-control'
-                            placeholder='NewPassword'
-                            {...register('newPass', { required: true })}
-                        />
-                    </div>
-                    {errors.newPass && <p className='text-danger'>{errors.newPass.message}</p>}
+                <div className='mb-3'>
+                    <input
+                        type='password'
+                        className='form-control'
+                        placeholder='Oldpass'
+                        {...register('oldPass', { required: true })}
+                    />
+                </div>
+                {errors.oldPass && <p className='text-danger'>{errors.oldPass.message}</p>}
+                <div className='mb-3'>
+                    <input
+                        type='password'
+                        className='form-control'
+                        placeholder='NewPassword'
+                        {...register('newPass', { required: true })}
+                    />
+                </div>
+                {errors.newPass && <p className='text-danger'>{errors.newPass.message}</p>}
 
-                    {/* <p className='text-danger'>{error}</p> */}
+                {/* <p className='text-danger'>{error}</p> */}
 
-                    {loading ? (
-                        <Loading />
-                    ) : (
-                        <Button type='submit' variant='primary' className='btn'>
-                            Login
-                        </Button>
-                    )}
-                </Box>
-            </div>
-        </>
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <Button type='submit' variant='primary' className='btn'>
+                        Login
+                    </Button>
+                )}
+            </Box>
+        </div>
     )
 }
 

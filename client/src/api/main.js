@@ -21,6 +21,7 @@ export const logout = async (token) => {
         if (response.data.success) {
             localStorage.removeItem('token')
         }
+        return response
     } catch (error) {
         console.error(error)
     }
@@ -29,7 +30,7 @@ export const logout = async (token) => {
 // Manage APIs
 export const getAllUsers = async (token) => {
     const response = await mainAPI.get('/users', {
-        headers:{
+        headers: {
             'Authorization': `Bearer ${token}`
         }
     })
@@ -42,7 +43,9 @@ export const getAllProducts = async () => {
 }
 
 export const getAllBlogs = async () => {
-    const response = await mainAPI.get('/blogs')
+    const response = await mainAPI.get('/blogs?limit=4&page=1', {
+
+    })
     return response.data
 }
 
