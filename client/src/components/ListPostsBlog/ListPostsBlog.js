@@ -1,22 +1,25 @@
-import { AccessTime, Person2 } from '@mui/icons-material'
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, Grid, Icon, ListItem, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, Grid, Icon, ListItem, ListItemIcon, ListItemText, Skeleton, Stack, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { getAllBlogs } from '~/api/main'
 
 const ListPostsBlog = () => {
     const [listBlogs, setListBlogs] = useState([])
     const dispatch = useDispatch()
-
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
         const fetchPosts = async () => {
             try {
+                setIsLoading(true)
                 const response = await getAllBlogs()
+                setIsLoading(false)
                 setListBlogs(response.docs)
             } catch (error) {
+                setIsLoading(false)
                 dispatch(showToast({ type: 'error', message: error.message }))
             }
         }
@@ -31,41 +34,49 @@ const ListPostsBlog = () => {
                 <Typography variant="subtitle2" component={Link} to="/" color="blue" >Xem thêm {'>>'}</Typography>
             </Stack>
             <Grid container marginBottom={5}>
-                {listBlogs.map(item => (
-                    <Grid item key={item._id} xs={3}>
+                {(isLoading ? Array.from(new Array(4)) : listBlogs).map((item, index) => (
+                    <Grid item key={item?._id || index} xs={3}>
                         <Card sx={{ maxWidth: 340 }}>
                             <CardActionArea>
-                                <CardMedia
-                                    component="img"
-                                    height="140"
-                                    image={item.picture}
-                                    alt="green iguana"
-                                />
+                                {item ? (
+                                    <CardMedia
+                                        component="img"
+                                        height="200"
+                                        image={item?.picture}
+                                    />
+                                ) : (<SkeletonFallback key={index} sx={{ height: 200 }} variant="rectangular" />)}
                                 <CardContent>
-                                    <Typography gutterBottom variant="h6" minHeight={64} component="p">
-                                        {item.title}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        sx={{
-                                            display: '-webkit-box',
-                                            WebkitBoxOrient: "vertical",
-                                            WebkitLineClamp: 4,
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                        }}
-                                    >
-                                        {item.desc}
-                                    </Typography>
-                                    <Typography marginTop={2} color="text.secondary" component="p" textAlign="right" fontSize={14} >Ngày đăng:
-                                        <Typography fontSize={14} component="span" > {item.createdAt.split("T")[0]}
-                                        </Typography>
-                                    </Typography>
-
+                                    {item ? (
+                                        <>
+                                            <Typography gutterBottom variant="h6" minHeight={64} component="p">
+                                                {item?.title}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                                component="div"
+                                                sx={{
+                                                    display: '-webkit-box',
+                                                    WebkitBoxOrient: "vertical",
+                                                    WebkitLineClamp: 4,
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }}
+                                            >{item?.desc}
+                                            </Typography>
+                                            <Typography marginTop={2} color="text.secondary" component="p" textAlign="right" fontSize={14} >Ngày đăng:
+                                                <Typography fontSize={14} component="span" > {item?.createdAt.split("T")[0]}
+                                                </Typography>
+                                            </Typography></>
+                                    ) : (
+                                        <Box>
+                                            <SkeletonFallback />
+                                            <SkeletonFallback height={100} />
+                                            <SkeletonFallback width="80%" />
+                                        </Box>
+                                    )}
                                 </CardContent>
                             </CardActionArea>
-
                             <Divider />
                             <CardActions>
                                 <Button size="small" color="primary">
@@ -74,8 +85,7 @@ const ListPostsBlog = () => {
                             </CardActions>
                         </Card>
                     </Grid>
-                ))
-                }
+                ))}
             </Grid >
         </Stack>
     )

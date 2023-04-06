@@ -16,7 +16,6 @@ function EnhancedTableToolbar(props) {
     const { numSelected, selectedItem } = props;
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
-
     const handleDelete = async () => {
         try {
             setIsLoading(true)

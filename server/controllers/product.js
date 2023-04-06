@@ -56,3 +56,11 @@ export const deletedProduct = async (req, res, next) => {
         next(responseHandler.error(error))
     }
 }
+
+export const updatedProduct = async (req, res, next) => {
+    try {
+        const { productId } = req.body
+    } catch (error) {
+        next(responseHandler.error(error))
+    }
+}

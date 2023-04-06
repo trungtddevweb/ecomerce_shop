@@ -8,12 +8,14 @@
 @import './assets/scss/register.scss';
 @import './assets/scss/dashboard.scss';
 @import './assets/scss/sliders.scss';
+@import './assets/scss/footer.scss';
 
 
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 
 // Scrollbar CSS
