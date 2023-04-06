@@ -22,12 +22,12 @@ const HomePage = () => {
         <Box className="homePage" flexDirection='column'>
             <Sliders />
             <Stack direction='column' className="homePage-container">
-                <div>Hello</div>
+                <div>Shipping</div> {/*<---------Viết shipping ở đây---------->*/}
                 <div>Product 1</div>
                 <div>Product hot</div>
                 <div>Banner</div>
                 <div>Other product</div>
-                <div>New letter</div>
+                <div>New letter</div> {/*<----------Viết newLetters ở đây-------->*/}
                 <ListPostsBlog />
             </Stack>
         </Box>

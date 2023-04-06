@@ -11,7 +11,6 @@ const ListPostsBlog = () => {
     const [listBlogs, setListBlogs] = useState([])
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(false)
-
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -39,7 +38,7 @@ const ListPostsBlog = () => {
                     <Grid item key={item?._id || index} xs={3}>
                         <Card sx={{ maxWidth: 340 }}>
                             <CardActionArea>
-                                {item || listBlogs === null ? (
+                                {item ? (
                                     <CardMedia
                                         component="img"
                                         height="200"
@@ -47,7 +46,7 @@ const ListPostsBlog = () => {
                                     />
                                 ) : (<SkeletonFallback key={index} sx={{ height: 200 }} variant="rectangular" />)}
                                 <CardContent>
-                                    {item || listBlogs === null ? (
+                                    {item ? (
                                         <>
                                             <Typography gutterBottom variant="h6" minHeight={64} component="p">
                                                 {item?.title}
