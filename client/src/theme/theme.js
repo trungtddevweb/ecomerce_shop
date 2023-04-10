@@ -1,4 +1,5 @@
-import { createTheme } from "@mui/material";
+import { createTheme } from '@mui/material'
+import { grey } from '@mui/material/colors'
 
 const theme = createTheme({
     palette: {
@@ -6,7 +7,7 @@ const theme = createTheme({
             light: '#757ce8',
             main: '#3f50b5',
             dark: '#002884',
-            contrastText: '#fff',
+            contrastText: '#fff'
         },
         secondary: {
             light: '#ff7961',
@@ -14,7 +15,22 @@ const theme = createTheme({
             dark: '#ba000d',
             contrastText: '#000',
             lightgray: '#b0bec5'
-        },
+        }
+    },
+    hover: {
+        icon: {
+            bgColor: {
+                whiteSmoke: grey[400],
+                black: '#000',
+                transparent: 'transparent'
+            }
+        }
+    },
+    colors: {
+        primary: {
+            lightGray: grey[100],
+            white: 'white'
+        }
     },
     typography: {
         fontFamily: [
@@ -27,8 +43,8 @@ const theme = createTheme({
             'sans-serif',
             '"Apple Color Emoji"',
             '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-        ].join(','),
+            '"Segoe UI Symbol"'
+        ].join(',')
     },
     spacing: [0, 4, 8, 16, 32, 64],
     breakpoints: {
@@ -36,75 +52,75 @@ const theme = createTheme({
             mobile: 0,
             tablet: 640,
             laptop: 1024,
-            desktop: 1200,
-        },
+            desktop: 1200
+        }
     },
     components: {
         MuiButton: {
             defaultProps: {
-                size: 'small',
-            },
+                size: 'small'
+            }
         },
         MuiFilledInput: {
             defaultProps: {
-                margin: 'dense',
-            },
+                margin: 'dense'
+            }
         },
         MuiFormControl: {
             defaultProps: {
-                margin: 'dense',
-            },
+                margin: 'dense'
+            }
         },
         MuiFormHelperText: {
             defaultProps: {
-                margin: 'dense',
-            },
+                margin: 'dense'
+            }
         },
         MuiIconButton: {
             defaultProps: {
-                size: 'small',
-            },
+                size: 'small'
+            }
         },
         MuiInputBase: {
             defaultProps: {
-                margin: 'dense',
-            },
+                margin: 'dense'
+            }
         },
         MuiInputLabel: {
             defaultProps: {
-                margin: 'dense',
-            },
+                margin: 'dense'
+            }
         },
         MuiListItem: {
             defaultProps: {
-                dense: true,
-            },
+                dense: true
+            }
         },
         MuiOutlinedInput: {
             defaultProps: {
-                margin: 'dense',
-            },
+                margin: 'dense'
+            }
         },
         MuiFab: {
             defaultProps: {
-                size: 'small',
-            },
+                size: 'small'
+            }
         },
         MuiTable: {
             defaultProps: {
-                size: 'small',
-            },
+                size: 'small'
+            }
         },
         MuiTextField: {
             defaultProps: {
-                margin: 'dense',
-            },
+                margin: 'dense'
+            }
         },
         MuiToolbar: {
             defaultProps: {
-                variant: 'dense',
-            },
-        },
+                variant: 'dense'
+            }
+        }
     },
     transitions: {
         duration: {
@@ -118,7 +134,7 @@ const theme = createTheme({
             // recommended when something is entering screen
             enteringScreen: 225,
             // recommended when something is leaving screen
-            leavingScreen: 195,
+            leavingScreen: 195
         },
         easing: {
             // This is the most common easing curve.
@@ -129,10 +145,9 @@ const theme = createTheme({
             // Objects leave the screen at full velocity. They do not decelerate when off-screen.
             easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
             // The sharp curve is used by objects that may return to the screen at any time.
-            sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
-        },
-    },
-
+            sharp: 'cubic-bezier(0.4, 0, 0.6, 1)'
+        }
+    }
 })
 
 export default theme
