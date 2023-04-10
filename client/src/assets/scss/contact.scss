@@ -1,0 +1,12 @@
+.contact-page {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: lightgray;
+
+    .contact-wrapper {
+        width: 1000px;
+        margin: var(--margin-x);
+        border-radius: 12px !important;
+    }
+}

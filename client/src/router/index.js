@@ -43,6 +43,11 @@ export default createBrowserRouter([
                 element: routes.blog.element
             },
             {
+                path: routes.blogDetail.path,
+                element: routes.blogDetail.element
+
+            },
+            {
                 path: routes.contact.path,
                 element: routes.contact.element
             },
@@ -61,7 +66,7 @@ export default createBrowserRouter([
             {
                 path: routes.dashboard.path,
                 element: routes.dashboard.element
-            }
+            },
 
 
         ]
