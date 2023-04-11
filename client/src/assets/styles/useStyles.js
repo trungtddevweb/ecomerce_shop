@@ -10,6 +10,25 @@ const useStyles = makeStyles(theme =>
                 color: theme.colors.primary.white
             },
             transition: 'ease .4s'
+        },
+        itemOnboarding: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '150px',
+            height: '150px',
+            border: '1px solid black',
+            borderRadius: '50%',
+            margin: 'auto',
+            transition: 'all ease-in-out 0.5s',
+            '&:hover': {
+                transform: 'scale(1.1)'
+            }
+        },
+        flexBox: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
         }
     })
 )

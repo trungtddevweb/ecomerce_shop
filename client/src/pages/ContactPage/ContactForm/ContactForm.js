@@ -83,7 +83,7 @@ const ContactForm = () => {
                                 </Grid>
                                 <Grid item xs={12} marginTop={2}>
                                     <Button type='submit' variant='contained' color='primary' fullWidth>
-                                        Submit
+                                        Gửi
                                     </Button>
                                 </Grid>
                             </Grid>
