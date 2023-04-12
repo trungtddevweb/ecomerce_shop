@@ -3,14 +3,13 @@ import { createAPost, deletedPosts, getAPost, getAllPosts } from '../controllers
 import { verifyAdmin } from '../middleware/verify.js'
 import uploadCloud from '../middleware/cloudinary.js'
 
-
 const router = express.Router()
 
-// Create A Post 
+// Create A Post
 router.post('/', verifyAdmin, uploadCloud.single('picture'), createAPost)
 
 // Get A Post
-router.get('/:blogId', getAPost)
+router.get('/find/:blogId', getAPost)
 
 // Get All Posts
 router.get('/', getAllPosts)
