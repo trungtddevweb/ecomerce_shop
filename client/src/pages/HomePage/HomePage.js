@@ -1,12 +1,12 @@
 import { Box, Stack } from '@mui/material'
 import { useEffect, lazy } from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 
 const ListPostsBlog = lazy(() => import('~/components/ListPostsBlog'))
 const Sliders = lazy(() => import('~/components/Slider'))
 const NewLetters = lazy(() => import('~/components/NewLetters'))
 const Onboarding = lazy(() => import('./Onboading'))
+const ListProducts = lazy(() => import('~/components/ListProducts'))
 
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
@@ -21,12 +21,12 @@ const HomePage = () => {
         fetchPost()
     }, [])
     return (
-        <Box className='homePage' flexDirection='column'>
+        <Box>
             <Sliders />
             <Stack direction='column' className='homePage-container'>
-                <div>Product 1</div>
+                <ListProducts title='Sản phẩm mới nhất' />
                 <Onboarding />
-                <div>Product hot</div>
+                <div>Product 1</div>
                 <div>Banner</div>
                 <div>Other product</div>
                 <NewLetters />
