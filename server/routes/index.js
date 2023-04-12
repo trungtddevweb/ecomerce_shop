@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 import authRoutes from './auth.js'
 import productsRoutes from './products.js'
 import blogRoutes from './blogs.js'
@@ -14,4 +14,4 @@ router.use('/blogs', blogRoutes)
 
 router.use('/users', userRoutes)
 
-export default router;
+export default router

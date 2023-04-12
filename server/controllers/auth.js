@@ -1,29 +1,29 @@
-import User from "../models/User.js"
+import User from '../models/User.js'
 import bcrypt from 'bcryptjs'
-import responseHandler from "../handler/responseHandler.js"
+import responseHandler from '../handler/responseHandler.js'
 import jwt from 'jsonwebtoken'
 
 // REGISTER
 export const register = async (req, res, next) => {
-    const { email, password, confirmPassword } = req.body;
+    const { email, password, confirmPassword } = req.body
     const picture = req.file
 
     try {
-        const user = await User.findOne({ email });
-        if (user) return next(responseHandler.badRequest(res, "Email đã được sử dụng!"))
+        const user = await User.findOne({ email })
+        if (user) return responseHandler.badRequest(res, 'Email đã được sử dụng!')
         const salt = bcrypt.genSaltSync(10)
         const hashPassword = bcrypt.hashSync(password, salt)
-        if (password !== confirmPassword) return next(responseHandler.badRequest(res, "Xác nhận mật khẩu không giống mật khẩu!"))
+        if (password !== confirmPassword)
+            return responseHandler.badRequest(res, 'Xác nhận mật khẩu không giống mật khẩu!')
         const newUser = await User({
             ...req.body,
             picture: picture?.path,
-            password: hashPassword,
+            password: hashPassword
         })
         await newUser.save()
         responseHandler.created(res, newUser)
-
     } catch (error) {
-        next(responseHandler.error(res, error))
+        responseHandler.error(res, error)
     }
 }
 
@@ -32,11 +32,11 @@ export const login = async (req, res, next) => {
     const { email } = req.body
     try {
         const user = await User.findOne({ email })
-        if (!user) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"))
+        if (!user) return responseHandler.badRequest(res, 'Tài khoản hoặc mật khẩu chưa chính xác!')
         const checkPassword = await bcrypt.compare(req.body.password, user.password)
-        if (!checkPassword) return next(responseHandler.badRequest(res, "Tài khoản hoặc mật khẩu chưa chính xác!"))
+        if (!checkPassword) return responseHandler.badRequest(res, 'Tài khoản hoặc mật khẩu chưa chính xác!')
 
-        const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { expiresIn: "1d" })
+        const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { expiresIn: '1d' })
 
         let oldTokens = user.tokens || []
         if (oldTokens.length) {
@@ -48,19 +48,23 @@ export const login = async (req, res, next) => {
             })
         }
         await User.findByIdAndUpdate(user._id, {
-            tokens: [...oldTokens, {
-                token, signedAt: Date.now().toString()
-            }]
+            tokens: [
+                ...oldTokens,
+                {
+                    token,
+                    signedAt: Date.now().toString()
+                }
+            ]
         })
         const userInfo = {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
-            picture: user.picture ? user.picture : '',
+            picture: user.picture ? user.picture : ''
         }
         res.status(200).json({ userInfo, token })
     } catch (error) {
-        next(responseHandler.error(error))
+        responseHandler.error(res, error)
     }
 }
 
@@ -71,9 +75,7 @@ export const logout = async (req, res) => {
     const authHeaders = req.headers.authorization
     const token = authHeaders.split(' ')[1]
     if (!token) {
-        return res
-            .status(401)
-            .json({ success: false, message: 'Token không hợp lệ!' })
+        return res.status(401).json({ success: false, message: 'Token không hợp lệ!' })
     }
 
     const tokens = req.user.tokens
@@ -81,5 +83,4 @@ export const logout = async (req, res) => {
 
     await User.findByIdAndUpdate(req.user._id, { tokens: newTokens })
     res.json({ success: true, message: 'Đăng xuất thành công!' })
-
 }

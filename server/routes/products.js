@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAProduct, createAProduct, getAllProduct, deletedProduct } from '../controllers/product.js'
+import { getAProduct, createAProduct, getAllProduct, deletedProduct, updatedProduct } from '../controllers/product.js'
 import { verifyAdmin } from '../middleware/verify.js'
 import uploadCloud from '../middleware/cloudinary.js'
 
@@ -14,7 +14,10 @@ router.get('/', getAllProduct)
 // GET A PRODUCT
 router.get('/:productId', getAProduct)
 
-// DELETE MANY PRODUCTS
+// DELETED MANY PRODUCTS
 router.delete('/', verifyAdmin, deletedProduct)
+
+// UPDATED A PRODUCT
+router.put('/', verifyAdmin, updatedProduct)
 
 export default router

@@ -1,5 +1,5 @@
 import User from '../models/User.js'
-import responseHandler from "../handler/responseHandler.js"
+import responseHandler from '../handler/responseHandler.js'
 
 export const getAllUsers = async (req, res, next) => {
     const limit = parseInt(req.query.limit, 10) || 10
@@ -13,7 +13,7 @@ export const getAllUsers = async (req, res, next) => {
         const users = await User.paginate({ isAdmin: false }, options)
         responseHandler.getData(res, users)
     } catch (error) {
-        next(responseHandler.error(res, error))
+        responseHandler.error(res, error)
     }
 }
 
@@ -27,13 +27,12 @@ export const deleteUsers = async (req, res, next) => {
             }
         }).exec()
         const existingIds = checkIds.map(id => id.id)
-        const nonExistingIds = selectedIds.filter((id) => !existingIds.includes(id))
+        const nonExistingIds = selectedIds.filter(id => !existingIds.includes(id))
         if (nonExistingIds.length > 0) return next(responseHandler.notFound(res))
 
         await User.deleteMany({ _id: { $in: selectedIds } })
-        res.status(200).json({ success: true, message: "List users has been deleted!" })
+        res.status(200).json({ success: true, message: 'List users has been deleted!' })
     } catch (error) {
-        console.error(error)
-        next(responseHandler.error(error))
+        responseHandler.error(error)
     }
 }
