@@ -1,17 +1,17 @@
-import responseHandler from "../handler/responseHandler.js"
-import Product from "../models/Product.js";
+import responseHandler from '../handler/responseHandler.js'
+import Product from '../models/Product.js'
 
 export const createAProduct = async (req, res, next) => {
-    const picture = req.file
+    const filepaths = req.files.map(file => file.path)
     try {
         const newProduct = await Product({
             ...req.body,
-            productImg: picture?.path
+            productImg: filepaths
         })
         await newProduct.save()
         responseHandler.created(res, newProduct)
     } catch (error) {
-        next(responseHandler.error(error))
+        responseHandler.error(res, error)
     }
 }
 
@@ -21,7 +21,7 @@ export const getAProduct = async (req, res, next) => {
         const product = await Product.findById(productId)
         res.status(200).json(product)
     } catch (error) {
-        next(responseHandler.error(error));
+        next(responseHandler.error(error))
     }
 }
 
@@ -46,11 +46,11 @@ export const deletedProduct = async (req, res, next) => {
             }
         }).exec()
         const existingIds = checkIds.map(id => id.id)
-        const nonExistingIds = selectedIds.filter((id) => !existingIds.includes(id))
+        const nonExistingIds = selectedIds.filter(id => !existingIds.includes(id))
         if (nonExistingIds.length > 0) return next(responseHandler.notFound(res))
 
         await Product.deleteMany({ _id: { $in: selectedIds } })
-        res.status(200).json({ success: true, message: "List products has been deleted!" })
+        res.status(200).json({ success: true, message: 'List products has been deleted!' })
     } catch (error) {
         console.error(error)
         next(responseHandler.error(error))

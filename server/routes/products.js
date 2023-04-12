@@ -6,7 +6,7 @@ import uploadCloud from '../middleware/cloudinary.js'
 const router = express.Router()
 
 // CREATE A PRODUCT
-router.post('/', verifyAdmin, uploadCloud.single('picture'), createAProduct)
+router.post('/', verifyAdmin, uploadCloud.array('picture'), createAProduct)
 
 // GET ALL PRODUCTS
 router.get('/', getAllProduct)
@@ -15,6 +15,6 @@ router.get('/', getAllProduct)
 router.get('/:productId', getAProduct)
 
 // DELETE MANY PRODUCTS
-router.delete("/", verifyAdmin, deletedProduct)
+router.delete('/', verifyAdmin, deletedProduct)
 
 export default router
