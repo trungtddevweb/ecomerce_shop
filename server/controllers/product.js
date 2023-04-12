@@ -67,3 +67,39 @@ export const updatedProduct = async (req, res) => {
         responseHandler.error(res, error)
     }
 }
+
+// Query
+export const searchByName = async (req, res) => {
+    const queryValue = decodeURIComponent(req.query.q)
+    const { limit, page } = req.query
+    const query = { name: { $regex: new RegExp(queryValue, 'i') } }
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: -1 }
+    }
+    try {
+        const products = await Product.paginate(query, options)
+        responseHandler.success(res, products)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
+export const searchByField = async (req, res) => {
+    const { page, limit } = req.query
+    const queryField = Object.keys(req.query)[0]
+    const queryValue = req.query[queryField]
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: -1 }
+    }
+    try {
+        const query = { [queryField]: { $regex: new RegExp(queryValue, 'i') } }
+        const collection = await Product.paginate(query, options)
+        responseHandler.success(res, collection)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
