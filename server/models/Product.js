@@ -11,18 +11,18 @@ const ProductSchema = new Schema(
             unique: true
         },
         desc: {
-            type: String
+            type: String,
+            required: true
         },
-        color: {
-            type: [String],
-            default: 'trắng'
+        colors: {
+            type: [],
+            required: true
         },
         brand: {
             type: String,
-            unique: true,
             required: true
         },
-        productImg: {
+        productImages: {
             type: [String],
             default: ''
         },
@@ -38,26 +38,10 @@ const ProductSchema = new Schema(
         },
         category: {
             type: String,
-            enum: [
-                'nam',
-                'nữ',
-                'trẻ con',
-                'học sinh',
-                'vòng cổ',
-                'áo sơ mi',
-                'áo thun',
-                'tất cả',
-                'váy',
-                'đầm',
-                'hoodie',
-                'mũ',
-                'quần short',
-                'giày cao gót'
-            ],
-            default: 'all'
+            default: 'tất cả'
         },
-        size: {
-            type: String,
+        sizes: {
+            type: [String],
             enum: ['s', 'm', 'l', 'xl', 'xxl', '3xl', '4xl'],
             default: 'l'
         },
