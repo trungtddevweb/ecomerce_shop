@@ -15,7 +15,7 @@ const ProductSchema = new Schema(
             required: true
         },
         colors: {
-            type: [],
+            type: [String],
             required: true
         },
         brand: {
@@ -47,7 +47,7 @@ const ProductSchema = new Schema(
         },
         isHot: {
             type: Boolean,
-            default: false
+            default: true
         }
     },
     { timestamps: true }

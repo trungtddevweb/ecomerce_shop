@@ -1,5 +1,5 @@
 import express from 'express'
-import { createAPost, deletedPosts, getAPost, getAllPosts } from '../controllers/blogs.js'
+import { createAPost, deletedPosts, getAPost, getAllPosts, searchByTitle } from '../controllers/blogs.js'
 import { verifyAdmin } from '../middleware/verify.js'
 import uploadCloud from '../middleware/cloudinary.js'
 
@@ -16,5 +16,8 @@ router.get('/', getAllPosts)
 
 // Delete Many Posts
 router.delete('/', verifyAdmin, deletedPosts)
+
+// SEARCH BLOG
+router.get('/search', searchByTitle)
 
 export default router

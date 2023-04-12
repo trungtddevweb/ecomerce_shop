@@ -67,3 +67,21 @@ export const deletedPosts = async (req, res) => {
         responseHandler.error(error)
     }
 }
+
+// QUERY
+export const searchByTitle = async (req, res) => {
+    const { limit, page } = req.query
+    const titleValues = req.query.title
+    const options = {
+        limit: parseInt(limit, 10) || 4,
+        page: parseInt(page, 10) || 1
+    }
+    try {
+        const query = { title: { $regex: new RegExp(titleValues, 'i') } }
+        console.log(query)
+        const collections = await Blog.paginate(query, options)
+        responseHandler.success(res, collections)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
