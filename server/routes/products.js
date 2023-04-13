@@ -6,7 +6,8 @@ import {
     deletedProduct,
     updatedProduct,
     searchByName,
-    searchByField
+    searchByField,
+    getProductsByHot
 } from '../controllers/product.js'
 import { verifyAdmin } from '../middleware/verify.js'
 import uploadCloud from '../middleware/cloudinary.js'
@@ -33,5 +34,8 @@ router.get('/search', searchByName)
 
 // QUERY BY FILEDNAME
 router.get('/fields/search', searchByField)
+
+//QUERY BY isHOT PRODUCT
+router.get('/search/hots', getProductsByHot)
 
 export default router

@@ -36,6 +36,17 @@ export const getAllProduct = async (req, res) => {
     }
 }
 
+export const getProductsByHot = async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit, 10) || 5
+        const page = parseInt(req.query.page, 10) || 1
+        const products = await Product.paginate({ isHot: true }, { limit, page })
+        responseHandler.getData(res, products)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
 export const deletedProduct = async (req, res) => {
     try {
         const { selectedIds } = req.body
