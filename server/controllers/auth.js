@@ -56,12 +56,8 @@ export const login = async (req, res, next) => {
                 }
             ]
         })
-        const userInfo = {
-            name: user.name,
-            email: user.email,
-            isAdmin: user.isAdmin,
-            picture: user.picture ? user.picture : ''
-        }
+        const { password, ...userInfo } = user
+        console.log(user)
         res.status(200).json({ userInfo, token })
     } catch (error) {
         responseHandler.error(res, error)
