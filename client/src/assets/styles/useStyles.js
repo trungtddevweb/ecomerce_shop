@@ -29,6 +29,22 @@ const useStyles = makeStyles(theme =>
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
+        },
+        limitLines: {
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 4,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+        },
+        title: {
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 4,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            fontWeight: 600,
+            fontSize: '16px'
         }
     })
 )

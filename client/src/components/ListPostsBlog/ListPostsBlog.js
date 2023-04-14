@@ -8,11 +8,6 @@ import {
     CardMedia,
     Divider,
     Grid,
-    Icon,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Skeleton,
     Stack,
     Typography
 } from '@mui/material'
@@ -23,11 +18,14 @@ import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { getAllBlogs } from '~/api/main'
+import useStyles from '~/assets/styles/useStyles'
 
 const ListPostsBlog = () => {
     const [listBlogs, setListBlogs] = useState([])
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(false)
+    const classes = useStyles()
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -37,7 +35,7 @@ const ListPostsBlog = () => {
                 setListBlogs(response.docs)
             } catch (error) {
                 setIsLoading(false)
-                dispatch(showToast({ type: 'error', message: error.message }))
+                dispatch(showToast({ type: 'error', message: `Lấy dữ liệu các bài blogs thất bại!` }))
             }
         }
         fetchPosts()
@@ -46,7 +44,7 @@ const ListPostsBlog = () => {
     return (
         <Stack width={1400} margin='auto'>
             <Stack direction='row' alignItems='center' justifyContent='space-between'>
-                <Typography variant='h6' fontWeight={600}>
+                <Typography variant='h6' color='primary.main'>
                     Bài viết nổi bật
                 </Typography>
                 <Typography variant='subtitle2' component={Link} to='/' color='blue'>
@@ -73,13 +71,7 @@ const ListPostsBlog = () => {
                                                 variant='body2'
                                                 color='text.secondary'
                                                 component='div'
-                                                sx={{
-                                                    display: '-webkit-box',
-                                                    WebkitBoxOrient: 'vertical',
-                                                    WebkitLineClamp: 4,
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis'
-                                                }}
+                                                className={classes.limitLines}
                                             >
                                                 {item?.desc}
                                             </Typography>

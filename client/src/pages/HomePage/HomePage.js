@@ -24,7 +24,7 @@ const HomePage = () => {
         <Box>
             <Sliders />
             <Stack direction='column' className='homePage-container'>
-                <ListProducts title='Sản phẩm hot nhất' query='' />
+                <ListProducts title='Sản phẩm hot nhất' />
                 <Onboarding />
                 <div>Product 1</div>
                 <div>Banner</div>

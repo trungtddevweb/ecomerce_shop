@@ -11,19 +11,6 @@ import CartPage from '~/pages/CartPage'
 import CategoriesPage from '~/pages/CategoriesPage'
 import DashboardPage from '~/pages/DashboardPage'
 import BlogDetailPage from '~/pages/BlogDetailPage'
-// import { lazy } from "react"
-// const DashboardPage = lazy(() => import('~/pages/DashboardPage'))
-// const AboutPage = lazy(() => import('~/pages/AboutPage'))
-// const BlogPage = lazy(() => import('~/pages/BlogPage'))
-// const ContactPage = lazy(() => import('~/pages/ContactPage'))
-// const ForgotPassword = lazy(() => import('~/pages/ForgotPasswordPage'))
-// const HomePage = lazy(() => import('~/pages/HomePage'))
-// const LoginPage = lazy(() => import('~/pages/LoginPage'))
-// const RegisterPage = lazy(() => import('~/pages/RegisterPage'))
-// const ProductPage = lazy(() => import('~/pages/ProductPage'))
-// const SearchPage = lazy(() => import('~/pages/SearchPage'))
-// const CartPage = lazy(() => import('~/pages/CartPage'))
-// const CategoriesPage = lazy(() => import('~/pages/CategoriesPage'))
 
 const routes = {
     home: {
@@ -50,6 +37,10 @@ const routes = {
         path: '/blogs',
         element: <BlogPage />
     },
+    blogDetail: {
+        path: '/blogs/:blogId',
+        element: <BlogDetailPage />
+    },
     contact: {
         path: '/contact',
         element: <ContactPage />
@@ -73,10 +64,6 @@ const routes = {
     dashboard: {
         path: '/dashboard/:managerId',
         element: <DashboardPage />
-    },
-    blogDetail: {
-        path: '/blogs/:blogId',
-        element: <BlogDetailPage />
     }
 }
 

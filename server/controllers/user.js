@@ -36,3 +36,47 @@ export const deleteUsers = async (req, res, next) => {
         responseHandler.error(error)
     }
 }
+
+export const addProductToUser = async (req, res) => {
+    const { productId } = req.body
+    const userId = req.user._id
+    try {
+        const updateValues = await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { products: productId }, $inc: { totalItems: 1 } },
+            { new: true }
+        ).populate('products')
+        responseHandler.success(res, updateValues)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
+export const removeProductFromCart = async (req, res) => {
+    const { productId } = req.body
+    const userId = req.user._id
+    try {
+        const updateValues = await User.findByIdAndUpdate(
+            userId,
+            { $pull: { products: productId }, $inc: { totalItems: -1 } },
+            { new: true }
+        ).populate('products')
+        responseHandler.success(res, updateValues)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
+export const removeAllProducts = async (req, res) => {
+    const userId = req.user._id
+    try {
+        const updateValues = await User.findByIdAndUpdate(
+            userId,
+            { $set: { products: [] }, $inc: { totalItems: 0 } },
+            { new: true }
+        )
+        responseHandler.success(res, updateValues)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
