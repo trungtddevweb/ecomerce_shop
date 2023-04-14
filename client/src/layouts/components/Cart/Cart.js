@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { IconButton, Tooltip } from '@mui/material'
 import Badge from '@mui/material/Badge'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
@@ -6,6 +5,7 @@ import { useSelector } from 'react-redux'
 
 const Cart = ({ onClick, ...props }) => {
     const cartCount = useSelector(state => state.auth.totalItems)
+    console.log(useSelector(state => state.auth))
 
     return (
         <IconButton
