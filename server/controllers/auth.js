@@ -56,7 +56,7 @@ export const login = async (req, res, next) => {
                 }
             ]
         })
-        const { password, ...userInfo } = user
+        const { password, ...userInfo } = user._doc
         console.log(user)
         res.status(200).json({ userInfo, token })
     } catch (error) {
