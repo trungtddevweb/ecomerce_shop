@@ -2,10 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import usersReducer from './slice/usersSlice'
 import toastReducer from './slice/toastSlice'
 import storage from 'redux-persist/lib/storage'
-import {
-    persistStore,
-    persistReducer, FLUSH, PAUSE, REHYDRATE, PERSIST, PURGE, REGISTER
-} from "redux-persist";
+import { persistStore, persistReducer, FLUSH, PAUSE, REHYDRATE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 
 const rootReducer = combineReducers({ auth: usersReducer, toast: toastReducer })
 
@@ -19,12 +16,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
+    middleware: getDefaultMiddleware =>
         getDefaultMiddleware({
             serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-            },
-        }),
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+            }
+        })
 })
 
 export const persistor = persistStore(store)

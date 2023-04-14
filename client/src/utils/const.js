@@ -7,3 +7,7 @@ export const tabsNavigationHeader = [
     { label: 'Sản phẩm', value: '/categories' }
 ]
 
+export const optionsQuery = {
+    limit: 5,
+    page: 1
+}
