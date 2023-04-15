@@ -1,11 +1,19 @@
 import { IconButton, Tooltip } from '@mui/material'
 import Badge from '@mui/material/Badge'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { setCart } from 'src/redux/slice/usersSlice'
+import { addProductIdToCart } from '~/api/main'
 
 const Cart = ({ onClick, ...props }) => {
     const cartCount = useSelector(state => state.auth.totalItems)
-    console.log(useSelector(state => state.auth))
+    const dispath = useDispatch()
+    // console.log(useSelector(state => state.auth))
+    // useEffect(() => {
+    //     // const response = await addProductIdToCart()
+    // }, [dispath, cartCount])
 
     return (
         <IconButton

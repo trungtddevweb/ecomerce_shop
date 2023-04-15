@@ -3,6 +3,20 @@ import mongoosePageinate from 'mongoose-paginate-v2'
 
 const { Schema } = mongoose
 
+const ProductItem = new Schema(
+    {
+        productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        },
+        quantity: {
+            type: Number,
+            required: true
+        }
+    },
+    { timestamps: true }
+)
+
 const UserSchema = new Schema(
     {
         name: {
@@ -29,7 +43,7 @@ const UserSchema = new Schema(
             type: Boolean,
             default: false
         },
-        products: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
+        products: [ProductItem],
         totalItems: {
             type: Number,
             default: 0
@@ -38,7 +52,6 @@ const UserSchema = new Schema(
     },
     { timestamps: true }
 )
-
 UserSchema.plugin(mongoosePageinate)
 
 const User = mongoose.model('User', UserSchema)

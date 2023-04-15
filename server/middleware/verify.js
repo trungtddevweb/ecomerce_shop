@@ -26,7 +26,7 @@ export const verifyUser = async (req, res, next) => {
         jwt.verify(token, process.env.JWT_KEY, async (err, payload) => {
             if (err) {
                 if (err.name === 'JsonWebTokenError')
-                    return res.json({ success: false, message: 'unauthorized access!' })
+                    return res.json({ success: false, message: 'Bạn không có quyền truy cập!' })
                 if (err.name === 'TokenExpiredError')
                     return res.json({
                         success: false,

@@ -4,7 +4,9 @@ import {
     deleteUsers,
     getAllUsers,
     removeAllProducts,
-    removeProductFromCart
+    removeMutiplesProductId,
+    removeProductIdFromCart,
+    removeQuantityProductIdFromCart
 } from '../controllers/user.js'
 import { verifyAdmin, verifyUser } from '../middleware/verify.js'
 
@@ -19,8 +21,14 @@ router.delete('/', verifyAdmin, deleteUsers)
 // Add productId to products field
 router.patch('/add', verifyUser, addProductToUser)
 
-// Remove productId to products field
-router.patch('/remove', verifyUser, removeProductFromCart)
+// Remove quantity of productId to products field
+router.delete('/remove-quantity', verifyUser, removeQuantityProductIdFromCart)
+
+// Remove productId from products field
+router.delete('/remove', verifyUser, removeProductIdFromCart)
+
+// Remove mutiple productId from products
+router.patch('/remove-mutiple', verifyUser, removeMutiplesProductId)
 
 // Remove all products from the cart
 router.patch('/remove-all', verifyUser, removeAllProducts)

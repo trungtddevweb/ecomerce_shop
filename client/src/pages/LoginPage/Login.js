@@ -44,7 +44,7 @@ const Login = () => {
         } catch (error) {
             dispatch(loginFailed(error))
             setLoading(false)
-            dispatch(showToast({type: 'error', message: `${error.message}`}))
+            dispatch(showToast({ type: 'error', message: `${error.message}` }))
             setError(error.response?.data.message)
         }
     }

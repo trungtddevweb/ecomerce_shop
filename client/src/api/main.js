@@ -10,6 +10,7 @@ export const loginAPI = async data => {
     if (response.data.token) {
         localStorage.setItem('token', response.data.token)
     }
+
     return response.data
 }
 
@@ -63,4 +64,9 @@ export const deleteItemByParams = async (params, token, selectedItem) => {
 export const getProductsByHot = async (limit, page) => {
     const response = await mainAPI.get(`/products/search/hots?limit=${limit}&page=${page}`)
     return response.data
+}
+
+// Add productId to cart
+export const addProductIdToCartAPI = async productId => {
+    return await mainAPI.patch('/users/add', { productId })
 }
