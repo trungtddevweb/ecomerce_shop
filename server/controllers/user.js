@@ -1,4 +1,5 @@
 import User from '../models/User.js'
+import Product from '../models/Product.js'
 import responseHandler from '../handler/responseHandler.js'
 
 export const getAllUsers = async (req, res, next) => {
@@ -20,7 +21,7 @@ export const getAllUsers = async (req, res, next) => {
 export const deleteUsers = async (req, res, next) => {
     try {
         const { selectedIds } = req.body
-        if (!selectedIds) return res.status(400).json({ success: false, message: 'SelectedIds is not specified!' })
+        if (!selectedIds) return res.status(400).json({ success: false, message: 'SelectedIds chưa được định nghĩa!' })
         const checkIds = await User.find({
             _id: {
                 $in: selectedIds
@@ -31,37 +32,157 @@ export const deleteUsers = async (req, res, next) => {
         if (nonExistingIds.length > 0) return next(responseHandler.notFound(res))
 
         await User.deleteMany({ _id: { $in: selectedIds } })
-        res.status(200).json({ success: true, message: 'List users has been deleted!' })
-    } catch (error) {
-        responseHandler.error(error)
-    }
-}
-
-export const addProductToUser = async (req, res) => {
-    const { productId } = req.body
-    const userId = req.user._id
-    try {
-        const updateValues = await User.findByIdAndUpdate(
-            userId,
-            { $addToSet: { products: productId }, $inc: { totalItems: 1 } },
-            { new: true }
-        ).populate('products')
-        responseHandler.success(res, updateValues)
+        res.status(200).json({ success: true, message: 'Danh sách user được chọn đã được xóa!' })
     } catch (error) {
         responseHandler.error(res, error)
     }
 }
 
-export const removeProductFromCart = async (req, res) => {
+export const addProductToUser = async (req, res) => {
     const { productId } = req.body
-    const userId = req.user._id
+    const { _id: userId } = req.user
+
     try {
-        const updateValues = await User.findByIdAndUpdate(
+        // Tìm kiếm người dùng theo userId
+        const user = await User.findById(userId).populate('products.productId')
+
+        if (!user) {
+            return res.status(404).json({ message: 'Không tìm thấy người dùng' })
+        }
+
+        if (!productId) return res.status(404).json({ message: 'productId chưa được nhập' })
+
+        // Tìm kiếm sản phẩm trong giỏ hàng của người dùng
+        const productIndex = user.products.findIndex(p => p.productId._id.toString() === productId.toString())
+
+        if (productIndex === -1) {
+            // Nếu sản phẩm chưa có trong giỏ hàng, thêm sản phẩm mới vào giỏ hàng
+            const product = await Product.findById(productId)
+            if (!product) {
+                return res.status(404).json({ message: 'Sản phẩm không tồn tại!' })
+            }
+
+            user.products.push({ productId: product._id, quantity: 1 })
+        } else {
+            // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên 1
+            user.products[productIndex].quantity += 1
+        }
+
+        // Cập nhật số lượng sản phẩm trong giỏ hàng và lưu vào cơ sở dữ liệu
+        user.totalItems = user.products.reduce((acc, product) => acc + product.quantity, 0)
+
+        await user.save()
+
+        // Trả về thông tin người dùng đã được cập nhật thành công
+        responseHandler.success(res, user)
+    } catch (error) {
+        // Nếu có lỗi xảy ra, trả về thông báo lỗi và mã trạng thái 500
+        responseHandler.error(res, error)
+    }
+}
+
+export const removeQuantityProductIdFromCart = async (req, res) => {
+    const { _id: userId } = req.user
+    const { productId } = req.body
+
+    try {
+        const user = await User.findById(userId).populate('products.productId')
+        if (!user) {
+            return res.status(404).json({ message: 'Không tìm thấy người dùng' })
+        }
+
+        // Tìm vị trí của sản phẩm có _id là productId trong mảng products của người dùng
+        const productIndex = user.products.findIndex(productItem => productItem.productId._id.toString() === productId)
+        const product = user.products[productIndex]
+        if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm trong giỏ hàng' })
+
+        // Nếu tìm thấy sản phẩm, xóa nó ra khỏi mảng products của người dùng
+        if (product.quantity >= 2) {
+            product.quantity--
+            user.totalItems--
+        } else {
+            user.products.splice(productIndex, 1)
+            user.totalItems -= product.quantity
+        }
+        await user.save()
+
+        return responseHandler.success(res, user)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
+export const removeProductIdFromCart = async (req, res) => {
+    const { _id: userId } = req.user
+    const { productId } = req.body
+
+    try {
+        const user = await User.findById(userId).populate('products.productId')
+        if (!user) {
+            return res.status(404).json({ message: 'Không tìm thấy người dùng' })
+        }
+
+        // Tìm vị trí của sản phẩm có _id là productId trong mảng products của người dùng
+        const productIndex = user.products.findIndex(productItem => productItem.productId._id.toString() === productId)
+
+        // Nếu tìm thấy sản phẩm, xóa nó ra khỏi mảng products của người dùng
+        if (productIndex >= 0) {
+            user.products.splice(productIndex, 1)
+
+            // Cập nhật lại totalItems
+            const totalItems = user.products.reduce((total, productItem) => {
+                return total + productItem.quantity
+            }, 0)
+
+            user.totalItems = totalItems
+
+            // Lưu lại thông tin người dùng
+            await user.save()
+
+            // Trả về kết quả cho client
+            responseHandler.success(res, user)
+        } else {
+            return res.status(404).json({ message: 'Sản phẩm không tồn tại trong giỏ hàng' })
+        }
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
+export const removeMutiplesProductId = async (req, res) => {
+    try {
+        const { _id: userId } = req.user
+        const { productIds } = req.body
+
+        // Kiểm tra xem user có tồn tại không
+        const user = await User.findById(userId).populate('products.productId')
+        if (!user) {
+            return res.status(404).json({ message: 'Không tìm thấy người dùng' })
+        }
+
+        // Kiểm tra xem productIds có trong giỏ hàng không
+        const productIdsInCart = user.products.map(product => String(product.productId._id))
+        const invalidProductIds = productIds.filter(productId => !productIdsInCart.includes(productId))
+        if (invalidProductIds.length) {
+            return res
+                .status(404)
+                .json({ message: `Không thể tìm thấy Id sản phẩm sau trong giỏ hàng: ${invalidProductIds.join(', ')}` })
+        }
+
+        // Xóa sản phẩm trong giỏ hàng
+        const updatedProducts = user.products.filter(product => !productIds.includes(String(product.productId._id)))
+
+        // Cập nhật tổng số sản phẩm trong giỏ hàng
+        const updatedTotalItems = updatedProducts.reduce((total, product) => total + product.quantity, 0)
+
+        // Cập nhật giỏ hàng mới cho người dùng
+        const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { $pull: { products: productId }, $inc: { totalItems: -1 } },
+            { products: updatedProducts, totalItems: updatedTotalItems },
             { new: true }
-        ).populate('products')
-        responseHandler.success(res, updateValues)
+        )
+
+        responseHandler.success(res, updatedUser)
     } catch (error) {
         responseHandler.error(res, error)
     }
@@ -72,7 +193,7 @@ export const removeAllProducts = async (req, res) => {
     try {
         const updateValues = await User.findByIdAndUpdate(
             userId,
-            { $set: { products: [] }, $inc: { totalItems: 0 } },
+            { $set: { products: [], totalItems: 0 } },
             { new: true }
         )
         responseHandler.success(res, updateValues)

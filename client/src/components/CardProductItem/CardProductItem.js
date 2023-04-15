@@ -14,14 +14,27 @@ import imageFallback from '~/assets/imgs/noImage.png'
 import { Link } from 'react-router-dom'
 import { AddShoppingCart } from '@mui/icons-material'
 import { useDispatch } from 'react-redux'
-import { addProductToCart } from 'src/redux/slice/usersSlice'
+import { addProductIdToCartAPI } from '~/api/main'
+import { addProductToCart, updateTotalItems } from 'src/redux/slice/usersSlice'
+import { showToast } from 'src/redux/slice/toastSlice'
 
 const CardProductItem = ({ data }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
-    const handleAdd = product => {
-        dispatch(addProductToCart(product))
+    const handleAdd = async productId => {
+        try {
+            const res = await addProductIdToCartAPI(productId)
+            if (res.status === 200) {
+                dispatch(addProductToCart(res.data))
+                dispatch(updateTotalItems(res.data))
+                dispatch(showToast({ type: 'success', message: 'Thêm sản phẩm thành công!' }))
+            } else {
+                dispatch(showToast({ type: 'error', message: 'Thêm sản phẩm thất bại!' }))
+            }
+        } catch (error) {
+            dispatch(showToast({ type: 'error', message: 'Thêm sản phẩm thất bại!' }))
+        }
     }
 
     return (
@@ -56,7 +69,7 @@ const CardProductItem = ({ data }) => {
                 <Stack spacing={3} direction='row'>
                     <Button
                         color='secondary'
-                        onClick={() => handleAdd(data)}
+                        onClick={() => handleAdd(data._id)}
                         startIcon={<AddShoppingCart />}
                         size='small'
                         variant='contained'
