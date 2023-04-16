@@ -45,6 +45,11 @@ const useStyles = makeStyles(theme =>
             textOverflow: 'ellipsis',
             fontWeight: 600,
             fontSize: '16px'
+        },
+        hoverItem: {
+            '&:hover': {
+                color: 'CurrentColor'
+            }
         }
     })
 )

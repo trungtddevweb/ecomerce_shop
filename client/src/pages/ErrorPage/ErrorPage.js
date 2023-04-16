@@ -1,27 +1,40 @@
-import { useRouteError } from 'react-router-dom'
-import routes from 'src/utils/routes';
-import Button from '~/components/Button';
+import { Home } from '@mui/icons-material'
+import { Box, Typography, Button } from '@mui/material'
+import { Link, useRouteError } from 'react-router-dom'
+import useStyles from '~/assets/styles/useStyles'
 
 const ErrorPage = () => {
-    const error = useRouteError();
+    const error = useRouteError()
+    const classes = useStyles()
 
     return (
-        <div className="d-flex align-items-center justify-content-center vh-100">
-            <div className="text-center">
-                <h1 className="display-1 fw-bold">404</h1>
-                <p className="fs-3"> <span className="text-danger">Opps!</span> Page not found.</p>
-                <p className="lead">
-                    The page you’re looking for doesn’t exist.
-                </p>
-                <p>
-                    <i>{error.statusText || error.message}</i>
-                </p>
-                <Button to={routes.home.path} className="btn btn-primary">Go Home</Button>
-            </div>
-        </div>
+        <Box className={classes.flexBox} height='100vh'>
+            <Box textAlign='center'>
+                <Typography variant='h2' fontWeight={600}>
+                    404
+                </Typography>
+                <Typography component='p' className='fs-3'>
+                    {' '}
+                    <Typography component='span' variant='h4' className='text-danger'>
+                        Có lỗi!
+                    </Typography>{' '}
+                    Trang bạn tìm kiếm hiện không tồn tại
+                </Typography>
+                <Typography component='p' className='lead'>
+                    Có vẻ như trang bạn tìm kiếm đang trong quá trình nâng cấp hoặc đã bị xóa, vui lòng quay lại trang
+                    trước!
+                </Typography>
+                <Typography component='p'>
+                    <Typography margin={2} fontStyle='italic'>
+                        {error.statusText || error.message}
+                    </Typography>
+                </Typography>
+                <Button startIcon={<Home />} aria-label='go-home-button' component={Link} to='/' variant='contained'>
+                    Go Home
+                </Button>
+            </Box>
+        </Box>
     )
 }
-
-
 
 export default ErrorPage

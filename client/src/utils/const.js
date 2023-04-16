@@ -11,3 +11,5 @@ export const optionsQuery = {
     limit: 5,
     page: 1
 }
+
+export const stepsCart = ['Chọn sản phẩm', 'Chọn phương thức thanh toán', 'Xác thực']

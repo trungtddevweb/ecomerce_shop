@@ -3,6 +3,7 @@
     min-height: calc(71vh - 1px);
     background: url('/assets/imgs/dashboard-main.jpg');
     background-size: cover;
+    position: relative;
 
     &::before {
         content: "";

@@ -16,7 +16,6 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
-import { showToast } from 'src/redux/slice/toastSlice'
 import { getAllBlogs } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
@@ -35,7 +34,7 @@ const ListPostsBlog = () => {
                 setListBlogs(response.docs)
             } catch (error) {
                 setIsLoading(false)
-                dispatch(showToast({ type: 'error', message: `Lấy dữ liệu các bài blogs thất bại!` }))
+                console.error(error)
             }
         }
         fetchPosts()

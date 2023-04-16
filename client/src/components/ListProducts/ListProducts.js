@@ -31,7 +31,7 @@ const ListProducts = ({ title, ...props }) => {
             <Box width={1400}>
                 <Stack direction='row' alignItems='center' justifyContent='space-between'>
                     <Typography variant='h6' color='primary.main'>
-                        Bài viết nổi bật
+                        {title}
                     </Typography>
                     <Typography variant='subtitle2' component={Link} to='/' color='blue'>
                         Xem thêm {'>>'}

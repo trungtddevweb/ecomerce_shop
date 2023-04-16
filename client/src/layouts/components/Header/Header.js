@@ -24,12 +24,14 @@ import Cart from '../Cart'
 import noImage from 'src/assets/imgs'
 import routes from 'src/utils/routes'
 import { tabsNavigationHeader } from 'src/utils/const'
+import useStyles from '~/assets/styles/useStyles'
 
 const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
     const [isLoading, setIsloading] = useState(false)
     const token = localStorage.getItem('token')
+    const classes = useStyles()
     // const [value, setValue] = useState(false);
 
     const dispatch = useDispatch()
@@ -77,7 +79,13 @@ const Header = () => {
         <AppBar className='header' position='sticky'>
             <Toolbar className='header-wrapper'>
                 <Stack direction='row' alignItems='center'>
-                    <Typography component={Link} to={routes.home.path} marginRight='20px' variant='h5'>
+                    <Typography
+                        className={classes.hoverItem}
+                        component={Link}
+                        to={routes.home.path}
+                        marginRight='20px'
+                        variant='h5'
+                    >
                         MyStore
                     </Typography>
                     <Tabs
@@ -159,16 +167,22 @@ const Header = () => {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                        <MenuItem onClick={handleClose}>
+                        <MenuItem className={classes.hoverItem} onClick={handleClose}>
                             <Avatar /> Thông tin
                         </MenuItem>
-                        <MenuItem component={Link} to='/dashboard/blogs' hidden={!user?.isAdmin} onClick={handleClose}>
+                        <MenuItem
+                            className={classes.hoverItem}
+                            component={Link}
+                            to='/dashboard/blogs'
+                            hidden={!user?.isAdmin}
+                            onClick={handleClose}
+                        >
                             <ListItemIcon>
                                 <Inventory fontSize='small' />
                             </ListItemIcon>
                             Quản lý danh mục
                         </MenuItem>
-                        <MenuItem onClick={handleLogout}>
+                        <MenuItem className={classes.hoverItem} onClick={handleLogout}>
                             <ListItemIcon>
                                 <Logout fontSize='small' />
                             </ListItemIcon>

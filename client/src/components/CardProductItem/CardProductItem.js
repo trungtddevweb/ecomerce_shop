@@ -13,25 +13,25 @@ import useStyles from '~/assets/styles/useStyles'
 import imageFallback from '~/assets/imgs/noImage.png'
 import { Link } from 'react-router-dom'
 import { AddShoppingCart } from '@mui/icons-material'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addProductIdToCartAPI } from '~/api/main'
-import { addProductToCart, updateCart, updateTotalItems } from 'src/redux/slice/usersSlice'
+import { addProductToCart } from 'src/redux/slice/usersSlice'
 import { showToast } from 'src/redux/slice/toastSlice'
 
 const CardProductItem = ({ data }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.user.token)
 
     const handleAdd = async productId => {
         try {
-            const res = await addProductIdToCartAPI(productId)
-            console.log(res)
-            // if (res.status === 200) {
-            //     dispatch(updateCart(res.data))
-            //     dispatch(showToast({ type: 'success', message: 'Thêm sản phẩm thành công!' }))
-            // } else {
-            //     dispatch(showToast({ type: 'error', message: 'Thêm sản phẩm thất bại!' }))
-            // }
+            const res = await addProductIdToCartAPI(productId, token)
+            if (res.status === 200) {
+                dispatch(addProductToCart(res.data))
+                dispatch(showToast({ type: 'success', message: 'Thêm sản phẩm thành công!' }))
+            } else {
+                dispatch(showToast({ type: 'error', message: 'Thêm sản phẩm thất bại!' }))
+            }
         } catch (error) {
             dispatch(showToast({ type: 'error', message: 'Thêm sản phẩm thất bại!' }))
         }
