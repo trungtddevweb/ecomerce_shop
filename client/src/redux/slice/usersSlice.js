@@ -33,9 +33,11 @@ export const userSlice = createSlice({
         },
         addProductToCart: (state, action) => {
             state.products = action.payload.products
+            console.log('add', action.payload.products)
         },
         updateTotalItems: (state, action) => {
             state.totalItems = action.payload.totalItems
+            console.log('update', action.payload.totalItems)
         }
         // },
         // addProductToCart(state, action) {

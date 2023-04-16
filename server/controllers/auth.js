@@ -37,27 +37,24 @@ export const login = async (req, res, next) => {
         if (!checkPassword) return responseHandler.badRequest(res, 'Tài khoản hoặc mật khẩu chưa chính xác!')
 
         const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { expiresIn: '1d' })
+        const newToken = {
+            token,
+            signedAt: Date.now().toString()
+        }
 
         let oldTokens = user.tokens || []
         if (oldTokens.length) {
             oldTokens = oldTokens.filter(t => {
                 const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000
-                if (timeDiff < 86400) {
+                if (timeDiff < 86_400) {
                     return t
                 }
             })
         }
-        await User.findByIdAndUpdate(user._id, {
-            tokens: [
-                ...oldTokens,
-                {
-                    token,
-                    signedAt: Date.now().toString()
-                }
-            ]
-        })
-        const { password, ...userInfo } = user._doc
-        console.log(user)
+        const updatedUser = await User.findOneAndUpdate({ email }, { $push: { tokens: newToken } }, { new: true })
+
+        const userInfo = { ...updatedUser._doc }
+        delete userInfo.password
         res.status(200).json({ userInfo, token })
     } catch (error) {
         responseHandler.error(res, error)
