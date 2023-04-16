@@ -26,9 +26,9 @@ export const verifyUser = async (req, res, next) => {
         jwt.verify(token, process.env.JWT_KEY, async (err, payload) => {
             if (err) {
                 if (err.name === 'JsonWebTokenError')
-                    return res.json({ success: false, message: 'Bạn không có quyền truy cập!' })
+                    return res.status(400).json({ success: false, message: 'Token không đúng!' })
                 if (err.name === 'TokenExpiredError')
-                    return res.json({
+                    return res.status(400).json({
                         success: false,
                         message: 'Token đã hết hạn!'
                     })
@@ -40,5 +40,5 @@ export const verifyUser = async (req, res, next) => {
         })
         return
     }
-    return res.json({ success: false, message: 'Token không hợp lệ!' })
+    return res.status(400).json({ success: false, message: 'Token không hợp lệ!' })
 }
