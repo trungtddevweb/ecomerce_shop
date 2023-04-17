@@ -4,7 +4,7 @@ import responseHandler from '../handler/responseHandler.js'
 import jwt from 'jsonwebtoken'
 
 // REGISTER
-export const register = async (req, res, next) => {
+export const register = async (req, res) => {
     const { email, password, confirmPassword } = req.body
     const picture = req.file
 
@@ -28,7 +28,7 @@ export const register = async (req, res, next) => {
 }
 
 // LOGIN
-export const login = async (req, res, next) => {
+export const login = async (req, res) => {
     const { email } = req.body
     try {
         const user = await User.findOne({ email })

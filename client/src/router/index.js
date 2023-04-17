@@ -35,6 +35,10 @@ export default createBrowserRouter([
                 element: routes.product.element
             },
             {
+                path: routes.productDetails.path,
+                element: routes.productDetails.element
+            },
+            {
                 path: routes.about.path,
                 element: routes.about.element
             },
@@ -45,7 +49,6 @@ export default createBrowserRouter([
             {
                 path: routes.blogDetail.path,
                 element: routes.blogDetail.element
-
             },
             {
                 path: routes.contact.path,
@@ -66,9 +69,7 @@ export default createBrowserRouter([
             {
                 path: routes.dashboard.path,
                 element: routes.dashboard.element
-            },
-
-
+            }
         ]
     }
 ])

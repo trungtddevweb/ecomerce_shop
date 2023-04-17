@@ -31,16 +31,18 @@ export const userSlice = createSlice({
             state.products = []
             state.totalItems = 0
         },
-        updateCart: (state, action) => {
-            // state.totalItems = action.payload.totalItems
-            // state.products = action.payload.products
-            console.log('totalItems', action.payload.totalItems)
-            console.log('products', action.payload.products)
+        addProductToCart: (state, action) => {
+            state.totalItems = action.payload.totalItems
+            state.products = action.payload.products
+        },
+        clearCart: state => {
+            state.totalItems = 0
+            state.products = []
         }
     }
 })
 
-export const { loginSuccess, loginFailed, logoutSuccess, removeProductFromCart, updateCart, clearCart } =
+export const { loginSuccess, loginFailed, logoutSuccess, removeProductFromCart, addProductToCart, clearCart } =
     userSlice.actions
 
 export default userSlice.reducer

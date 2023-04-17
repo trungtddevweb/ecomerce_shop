@@ -10,6 +10,11 @@
 @import './assets/scss/sliders.scss';
 @import './assets/scss/footer.scss';
 @import './assets/scss/contact.scss';
+@import './assets/scss/cart.scss';
+@import './assets/scss/blogs.scss';
+@import './assets/scss/blogDetails.scss';
+@import './assets/scss/productDetails.scss';
+
 
 
 body {
@@ -52,7 +57,7 @@ p {
 }
 
 a:hover {
-    color: currentColor;
+    color: white;
 }
 
 input::-webkit-outer-spin-button,

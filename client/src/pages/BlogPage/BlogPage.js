@@ -1,8 +1,10 @@
-import React from 'react'
+import { Box } from '@mui/material'
 
 const BlogPage = () => {
     return (
-        <div>BlogPage</div>
+        <Box className='blogs-page'>
+            <Box className='blogs-wrapper'>Blogs Page</Box>
+        </Box>
     )
 }
 

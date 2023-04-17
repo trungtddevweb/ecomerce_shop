@@ -15,7 +15,7 @@ import ErrorMessages from '~/components/ErrorMessages'
 import { ToastContainer, toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
-
+import { LoadingButton } from '@mui/lab'
 
 const registerData = yup.object().shape({
     name: yup.string().required(),
@@ -53,11 +53,11 @@ const RegisterPage = () => {
         try {
             await registerAPI(formData)
             setLoading(false)
-            dispatch(showToast({ type: 'success', message: "Đăng ký thành công!" }))
+            dispatch(showToast({ type: 'success', message: 'Đăng ký thành công!' }))
             navigate('/login')
         } catch (err) {
             setLoading(false)
-            dispatch(showToast({ type: 'error', message: "Đăng ký thất bại!" }))
+            dispatch(showToast({ type: 'error', message: 'Đăng ký thất bại!' }))
             setError(err.response.data.message)
         }
     }
@@ -146,13 +146,9 @@ const RegisterPage = () => {
                             Đăng nhập!
                         </Link>
                     </Typography>
-                    {loading ? (
-                        <CustomLoading autoClose={5000} />
-                    ) : (
-                        <Button type='submit' variant='contained' className='btn'>
-                            Tạo tài khoản
-                        </Button>
-                    )}
+                    <LoadingButton variant='contained' size='large' type='submit' fullWidth loading={loading}>
+                        Tạo tài khoản
+                    </LoadingButton>
                 </Box>
                 <ToastContainer />
             </Grid>
