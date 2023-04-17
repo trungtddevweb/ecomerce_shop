@@ -13,7 +13,7 @@ import {
     ListItemIcon,
     Tooltip
 } from '@mui/material'
-import { CleanHands, Inventory, Logout } from '@mui/icons-material'
+import { Inventory, Logout } from '@mui/icons-material'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Search from '../Search'
 import { useDispatch, useSelector } from 'react-redux'

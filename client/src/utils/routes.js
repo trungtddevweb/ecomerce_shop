@@ -11,6 +11,7 @@ import CartPage from '~/pages/CartPage'
 import CategoriesPage from '~/pages/CategoriesPage'
 import DashboardPage from '~/pages/DashboardPage'
 import BlogDetailPage from '~/pages/BlogDetailPage'
+import ProductDetails from '~/pages/ProductDetails/ProductDetails'
 
 const routes = {
     home: {
@@ -30,8 +31,12 @@ const routes = {
         element: <ForgotPassword />
     },
     product: {
-        path: '/products/:productId',
+        path: '/products',
         element: <ProductPage />
+    },
+    productDetails: {
+        path: '/products/:productId',
+        element: <ProductDetails />
     },
     blog: {
         path: '/blogs',

@@ -3,16 +3,16 @@ import { useDispatch } from 'react-redux'
 import { loginAPI } from '~/api/main'
 import { loginSuccess, loginFailed } from 'src/redux/slice/usersSlice'
 import { useForm } from 'react-hook-form'
-import { Box, Button, Grid, Stack, TextField, Typography, FormGroup } from '@mui/material'
+import { Box, Grid, Stack, TextField, Typography, FormGroup } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Link, useNavigate } from 'react-router-dom'
-import Loading from '~/components/CustomLoading'
 import routes from 'src/utils/routes'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
 import Image from '~/components/Image'
 import { showToast } from 'src/redux/slice/toastSlice'
+import { LoadingButton } from '@mui/lab'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
@@ -51,7 +51,7 @@ const Login = () => {
 
     return (
         <Grid className='login-page'>
-            <Grid className='form-container d-flex justify-content-center align-items-center '>
+            <Grid className='form-container d-flex justify-content-center align-items-center'>
                 <Box component='form' onSubmit={handleSubmit(onSubmit)} className='shadow rounded py-5 px-4 form-wrap '>
                     <Stack className='img-wrap mb-3'>
                         <Image src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
@@ -85,13 +85,9 @@ const Login = () => {
                             Đăng kí ngay!
                         </Link>
                     </Stack>
-                    {loading ? (
-                        <Loading />
-                    ) : (
-                        <Button type='submit' variant='contained' className='btn'>
-                            Đăng nhập
-                        </Button>
-                    )}
+                    <LoadingButton fullWidth type='submit' loading={loading} variant='contained' size='large'>
+                        Đăng nhập
+                    </LoadingButton>
                 </Box>
             </Grid>
         </Grid>

@@ -4,7 +4,7 @@ export const tabsNavigationHeader = [
     { label: 'Bài viết', value: '/blogs' },
     { label: 'Giới thiệu', value: '/about' },
     { label: 'Liên hệ', value: '/contact' },
-    { label: 'Sản phẩm', value: '/categories' }
+    { label: 'Sản phẩm', value: '/products' }
 ]
 
 export const optionsQuery = {

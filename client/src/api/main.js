@@ -60,9 +60,10 @@ export const deleteItemByParams = async (params, token, selectedItem) => {
     })
 }
 
-// Get products by hot
-export const getProductsByHot = async (limit, page) => {
-    const response = await mainAPI.get(`/products/search/hots?limit=${limit}&page=${page}`)
+// PRODUCT APIs
+// GET A PRODUCT
+export const getProductByIdAPI = async productId => {
+    const response = await mainAPI.get(`/products/find/${productId}`)
     return response.data
 }
 
@@ -77,4 +78,10 @@ export const addProductIdToCartAPI = async (productId, token) => {
             }
         }
     )
+}
+
+// Get products by hot
+export const getProductsByHot = async (limit, page) => {
+    const response = await mainAPI.get(`/products/search/hots?limit=${limit}&page=${page}`)
+    return response.data
 }

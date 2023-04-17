@@ -1,10 +1,10 @@
-import { Grid } from '@mui/material'
+import { Box, Card, CardHeader, Grid } from '@mui/material'
 
 const CartItems = () => {
     return (
-        <Grid container>
-            <div className='row d-flex justify-content-center my-4'>
-                <div className='col-md-8'>
+        <Box>
+            <Grid container className='row d-flex justify-content-center my-4'>
+                <Grid item className='col-md-8'>
                     <div className='card mb-4'>
                         <div className='card-header py-3'>
                             <h5 className='mb-0'>Giỏ hàng</h5>
@@ -221,12 +221,10 @@ const CartItems = () => {
                             />
                         </div>
                     </div>
-                </div>
-                <div className='col-md-4'>
-                    <div className='card mb-4'>
-                        <div className='card-header py-3'>
-                            <h5 className='mb-0'>Summary</h5>
-                        </div>
+                </Grid>
+                <Grid item className='col-md-4'>
+                    <Card className='card mb-4'>
+                        <CardHeader title='Tổng giá' className='card-header py-3' />
                         <div className='card-body'>
                             <ul className='list-group list-group-flush'>
                                 <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0'>
@@ -253,10 +251,10 @@ const CartItems = () => {
                                 Go to checkout
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </Grid>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Box>
     )
 }
 

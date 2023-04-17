@@ -5,7 +5,9 @@ import { stepsCart } from 'src/utils/const'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import { Home } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
-import CartItems from './CartItems'
+import { lazy } from 'react'
+// import CartItems from './CartItems'
+const CartItems = lazy(() => import('./CartItems'))
 
 const CartPage = () => {
     useDocumentTitle('Giỏ hàng')
