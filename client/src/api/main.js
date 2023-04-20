@@ -68,16 +68,12 @@ export const getProductByIdAPI = async productId => {
 }
 
 // Add productId to cart
-export const addProductIdToCartAPI = async (productId, token) => {
-    return await mainAPI.patch(
-        '/users/add',
-        { productId },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+export const addProductIdToCartAPI = async (token, data) => {
+    return await mainAPI.post('/users/add', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
         }
-    )
+    })
 }
 
 // Get products by hot

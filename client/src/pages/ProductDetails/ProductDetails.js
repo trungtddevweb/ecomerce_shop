@@ -9,25 +9,26 @@ import {
     Stack,
     TextField,
     Typography,
-    RadioGroup,
     ToggleButtonGroup,
     ToggleButton
 } from '@mui/material'
 import useStyles from '~/assets/styles/useStyles'
 import { useEffect } from 'react'
-import { getProductByIdAPI } from '~/api/main'
+import { addProductIdToCartAPI, getProductByIdAPI } from '~/api/main'
 import { useState } from 'react'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import { AddShoppingCart, NavigateNext } from '@mui/icons-material'
 import { Image } from 'mui-image'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addProductToCart } from 'src/redux/slice/usersSlice'
+import { showToast } from 'src/redux/slice/toastSlice'
 
 const ProductDetails = () => {
     const { productId } = useParams()
     const classes = useStyles()
     const [product, setProduct] = useState({})
     const [countQuantity, setCountQuantity] = useState(1)
+    const token = useSelector(state => state.auth.user.userInfo.token)
     const dispatch = useDispatch()
     useDocumentTitle(product?.name)
 
@@ -79,10 +80,22 @@ const ProductDetails = () => {
         }
     }
 
-    const handleAddToCart = () => {}
-    const handleBuyNow = () => {
-        dispatch(addProductToCart())
+    const handleAddToCart = async () => {
+        try {
+            const data = {
+                productId: product._id,
+                quantity: countQuantity,
+                size: selectedSize,
+                color: selectedColor
+            }
+            const res = await addProductIdToCartAPI(token, data)
+            console.log('response', res)
+        } catch (error) {
+            console.error(error)
+            dispatch(showToast({ type: 'error', message: 'Thêm vào giỏ hàng thát bại!' }))
+        }
     }
+    const handleBuyNow = async () => {}
 
     return (
         <Box display='flex' justifyContent='center' marginY={4}>
@@ -112,7 +125,7 @@ const ProductDetails = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={5}>
                             <Paper elevation={6}>
-                                <Image src={product.productImages?.[0]} />
+                                <Image src={product.productImages?.[0]} alt={document.title} />
                             </Paper>
                             <Typography>Slide Image</Typography>
                         </Grid>
@@ -241,7 +254,7 @@ const ProductDetails = () => {
                                         startIcon={<AddShoppingCart fontSize='large' />}
                                         variant='contained'
                                         color='error'
-                                        onClick={() => handleAddToCart(product._id)}
+                                        onClick={handleAddToCart}
                                     >
                                         Thêm vào giỏ hàng
                                     </Button>
