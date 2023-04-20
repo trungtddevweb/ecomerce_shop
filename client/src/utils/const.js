@@ -12,4 +12,9 @@ export const optionsQuery = {
     page: 1
 }
 
+export const optionsQueryAnotherProduct = {
+    limit: 6,
+    page: 1
+}
+
 export const stepsCart = ['Chọn sản phẩm', 'Chọn phương thức thanh toán', 'Xác thực']

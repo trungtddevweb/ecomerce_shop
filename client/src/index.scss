@@ -1,6 +1,10 @@
 @import '../node_modules/bootstrap/scss/bootstrap';
 @import 'react-toastify/dist/ReactToastify.css';
 
+// React-Slick
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
 @import './assets/scss/variables';
 // SCSS files
 @import './assets/scss/header.scss';

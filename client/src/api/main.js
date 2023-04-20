@@ -81,3 +81,9 @@ export const getProductsByHot = async (limit, page) => {
     const response = await mainAPI.get(`/products/search/hots?limit=${limit}&page=${page}`)
     return response.data
 }
+
+// Get product by field
+export const getProductByFieldAPI = async (fields, value, limit, page) => {
+    const response = await mainAPI.get(`/products/fields/search/?${fields}=${value}&limit=${limit}&page=${page}`)
+    return response.data
+}
