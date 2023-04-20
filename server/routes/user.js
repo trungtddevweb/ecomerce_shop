@@ -19,7 +19,7 @@ router.get('/', verifyAdmin, getAllUsers)
 router.delete('/', verifyAdmin, deleteUsers)
 
 // Add productId to products field
-router.patch('/add', verifyUser, addProductToUser)
+router.post('/add', verifyUser, addProductToUser)
 
 // Remove quantity of productId to products field
 router.delete('/remove-quantity', verifyUser, removeQuantityProductIdFromCart)
