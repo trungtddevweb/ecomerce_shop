@@ -20,6 +20,10 @@ const ProductItem = new Schema(
         color: {
             type: String,
             required: true
+        },
+        totalPrice: {
+            type: Number,
+            required: true
         }
     },
     { timestamps: true }

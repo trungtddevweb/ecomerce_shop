@@ -19,7 +19,7 @@ const CardProductItem = ({ data }) => {
                         image={data.productImages[0] || imageFallback}
                     />
                     <CardContent>
-                        <Typography gutterBottom minHeight={64} className={classes.title}>
+                        <Typography gutterBottom minHeight={50} className={classes.title}>
                             {data.name}
                         </Typography>
                         <Typography variant='body2' color='text.secondary'>

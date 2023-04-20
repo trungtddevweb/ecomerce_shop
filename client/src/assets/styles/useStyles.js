@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme =>
         title: {
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 4,
+            WebkitLineClamp: 2,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             fontWeight: 600,

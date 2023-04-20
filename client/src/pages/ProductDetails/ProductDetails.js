@@ -5,7 +5,6 @@ import {
     Button,
     Grid,
     Link as LinkMUI,
-    Paper,
     Stack,
     TextField,
     Typography,
@@ -13,24 +12,26 @@ import {
     ToggleButton
 } from '@mui/material'
 import useStyles from '~/assets/styles/useStyles'
-import { useEffect } from 'react'
+import { useEffect, lazy, useState } from 'react'
 import { addProductIdToCartAPI, getProductByIdAPI } from '~/api/main'
-import { useState } from 'react'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import { AddShoppingCart, NavigateNext } from '@mui/icons-material'
-import { Image } from 'mui-image'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProductToCart } from 'src/redux/slice/usersSlice'
 import { showToast } from 'src/redux/slice/toastSlice'
+const AnotherProductByCategory = lazy(() => import('./AnotherProduct'))
+const SliderImagesProduct = lazy(() => import('./SlideImagesProduct'))
 
 const ProductDetails = () => {
     const { productId } = useParams()
     const classes = useStyles()
     const [product, setProduct] = useState({})
     const [countQuantity, setCountQuantity] = useState(1)
-    const token = useSelector(state => state.auth.user.userInfo.token)
+    const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
     useDocumentTitle(product?.name)
+    const totalPrice = Number(product.price * countQuantity)
+    const valueOfField = product.category?.split(' ')[0]
 
     const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '')
     const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || '')
@@ -86,21 +87,24 @@ const ProductDetails = () => {
                 productId: product._id,
                 quantity: countQuantity,
                 size: selectedSize,
-                color: selectedColor
+                color: selectedColor,
+                totalPrice
             }
             const res = await addProductIdToCartAPI(token, data)
-            console.log('response', res)
+            if (res.status === 200) {
+                dispatch(addProductToCart(res.data))
+                dispatch(showToast({ type: 'success', message: 'Thêm vào giỏ hàng thành công!' }))
+            }
         } catch (error) {
             console.error(error)
             dispatch(showToast({ type: 'error', message: 'Thêm vào giỏ hàng thát bại!' }))
         }
     }
     const handleBuyNow = async () => {}
-
     return (
         <Box display='flex' justifyContent='center' marginY={4}>
             <Box width={1400}>
-                <Box>
+                <Box paddingX={4}>
                     <Breadcrumbs separator={<NavigateNext fontSize='small' />} marginBottom={2} aria-label='breadcrumb'>
                         <LinkMUI
                             className={classes.hoverItem}
@@ -122,12 +126,9 @@ const ProductDetails = () => {
                         </LinkMUI>
                         <Typography color='primary'>Chi tiết sản phẩm</Typography>
                     </Breadcrumbs>
-                    <Grid container spacing={2}>
-                        <Grid item xs={5}>
-                            <Paper elevation={6}>
-                                <Image src={product.productImages?.[0]} alt={document.title} />
-                            </Paper>
-                            <Typography>Slide Image</Typography>
+                    <Grid marginBottom={16} container spacing={4}>
+                        <Grid item xs={4}>
+                            <SliderImagesProduct images={product} />
                         </Grid>
                         <Grid item xs={7}>
                             <Box component='form'>
@@ -136,7 +137,7 @@ const ProductDetails = () => {
                                 </Typography>
                                 <Typography
                                     className={classes.limitLines}
-                                    minHeight={180}
+                                    minHeight={120}
                                     variant='subtitle1'
                                     color='GrayText'
                                 >
@@ -145,7 +146,7 @@ const ProductDetails = () => {
                                 <Typography
                                     component='div'
                                     className={classes.limitLines}
-                                    minHeight={80}
+                                    minHeight={50}
                                     variant='body1'
                                     color='GrayText'
                                 >
@@ -157,7 +158,8 @@ const ProductDetails = () => {
                                 <Stack className={classes.limitLines} minHeight={80}>
                                     <Typography>Màu sắc : </Typography>
                                     <ToggleButtonGroup
-                                        color='secondary'
+                                        color='primary'
+                                        required
                                         value={selectedColor}
                                         exclusive
                                         onChange={handleChangeColor}
@@ -173,7 +175,7 @@ const ProductDetails = () => {
                                 <Stack className={classes.limitLines} minHeight={80}>
                                     <Typography>Kích thước : </Typography>
                                     <ToggleButtonGroup
-                                        color='secondary'
+                                        color='primary'
                                         value={selectedSize}
                                         exclusive
                                         onChange={handleChangeSize}
@@ -248,6 +250,9 @@ const ProductDetails = () => {
                                 <Typography color='GrayText' marginY={2} fontStyle='italic' variant='subtitle2'>
                                     Trong kho còn lại {product.quantity}
                                 </Typography>
+                                <Typography marginY={2} variant='h4' color='red'>
+                                    Giá: {totalPrice.toLocaleString('vi-VN')} VNĐ
+                                </Typography>
                                 <Stack direction='row' spacing={2}>
                                     <Button
                                         size='large'
@@ -265,7 +270,12 @@ const ProductDetails = () => {
                             </Box>
                         </Grid>
                     </Grid>
-                    <Typography>Another product </Typography>
+                    <AnotherProductByCategory
+                        fields='category'
+                        productId={productId}
+                        value={valueOfField}
+                        title='Các sản phẩm cùng loại'
+                    />
                 </Box>
             </Box>
         </Box>
