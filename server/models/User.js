@@ -12,6 +12,14 @@ const ProductItem = new Schema(
         quantity: {
             type: Number,
             required: true
+        },
+        size: {
+            type: String,
+            required: true
+        },
+        color: {
+            type: String,
+            required: true
         }
     },
     { timestamps: true }
@@ -44,10 +52,7 @@ const UserSchema = new Schema(
             default: false
         },
         products: [ProductItem],
-        totalItems: {
-            type: Number,
-            default: 0
-        },
+        totalItems: { type: Number, default: 0 },
         tokens: [{ type: Object }]
     },
     { timestamps: true }

@@ -39,7 +39,7 @@ export const deleteUsers = async (req, res, next) => {
 }
 
 export const addProductToUser = async (req, res) => {
-    const { productId } = req.body
+    const { productId, color, size, quantity } = req.body
     const { _id: userId } = req.user
 
     try {
@@ -53,7 +53,9 @@ export const addProductToUser = async (req, res) => {
         if (!productId) return res.status(404).json({ message: 'productId chưa được nhập' })
 
         // Tìm kiếm sản phẩm trong giỏ hàng của người dùng
-        const productIndex = user.products.findIndex(p => p.productId._id.toString() === productId.toString())
+        const productIndex = user.products.findIndex(
+            p => p.productId._id.toString() === productId.toString() && p.size === size && p.color === color
+        )
 
         if (productIndex === -1) {
             // Nếu sản phẩm chưa có trong giỏ hàng, thêm sản phẩm mới vào giỏ hàng
@@ -62,10 +64,10 @@ export const addProductToUser = async (req, res) => {
                 return res.status(404).json({ message: 'Sản phẩm không tồn tại!' })
             }
 
-            user.products.push({ productId: product._id, quantity: 1 })
+            user.products.push({ productId: product._id, quantity, size, color })
         } else {
             // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên 1
-            user.products[productIndex].quantity += 1
+            user.products[productIndex].quantity += quantity
         }
 
         // Cập nhật số lượng sản phẩm trong giỏ hàng và lưu vào cơ sở dữ liệu
