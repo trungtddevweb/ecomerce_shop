@@ -6,6 +6,11 @@ export const getAUser = async (req, res) => {
     const { _id: userId } = req.user
     try {
         const user = await User.findById({ _id: userId })
+            .populate({
+                path: 'products.productId',
+                model: 'Product'
+            })
+            .exec()
         responseHandler.success(res, user)
     } catch (error) {
         responseHandler.error(res, error)
