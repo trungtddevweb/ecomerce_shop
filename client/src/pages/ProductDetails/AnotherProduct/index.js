@@ -31,7 +31,6 @@ const AnotherProductByCategory = ({ title, fields, value, productId }) => {
         }
         fetchProducts()
     }, [fields, value])
-    console.log('render')
 
     const processedResult = useMemo(
         () => lists.filter(item => !(item._id && item._id === productId)),
