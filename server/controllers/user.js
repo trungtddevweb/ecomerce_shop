@@ -187,7 +187,7 @@ export const removeMutiplesProductId = async (req, res) => {
         }
 
         // Xóa sản phẩm trong giỏ hàng
-        const updatedProducts = user.products.filter(product => !productIds.includes(String(product.productId._id)))
+        const updatedProducts = user.products.filter(product => !productIds.includes(String(product._id)))
 
         // Cập nhật tổng số sản phẩm trong giỏ hàng
         const updatedTotalItems = updatedProducts.reduce((total, product) => total + product.quantity, 0)
