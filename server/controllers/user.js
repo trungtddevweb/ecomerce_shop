@@ -178,7 +178,7 @@ export const removeMutiplesProductId = async (req, res) => {
         }
 
         // Kiểm tra xem productIds có trong giỏ hàng không
-        const productIdsInCart = user.products.map(product => String(product.productId._id))
+        const productIdsInCart = user.products.map(product => String(product._id))
         const invalidProductIds = productIds.filter(productId => !productIdsInCart.includes(productId))
         if (invalidProductIds.length) {
             return res
