@@ -28,6 +28,15 @@ export const logout = async token => {
     }
 }
 
+export const getAUserAPI = async token => {
+    const user = await mainAPI.get('/users/find/user', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return user.data
+}
+
 // Manage APIs
 export const getAllUsers = async token => {
     const response = await mainAPI.get('/users', {

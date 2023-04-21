@@ -1,15 +1,37 @@
-import { Box, Card, CardHeader, Grid, Stack, ListItem, Checkbox, CardContent } from '@mui/material'
+import { Box, Card, CardHeader, Grid, Stack, ListItem, Checkbox, CardContent, Typography } from '@mui/material'
 import Image from 'mui-image'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import LinearIndeterminate from 'src/fallback/LinearProgress/LinearProgress'
+import { getAUserAPI } from '~/api/main'
+import images from '~/assets/imgs'
+import useStyles from '~/assets/styles/useStyles'
 
 const CartItems = () => {
+    const classes = useStyles()
+
     const [checked, setChecked] = useState([])
     const [products, setProducts] = useState([])
+    const [loading, setLoading] = useState(false)
+    const token = useSelector(state => state.auth.user.token)
 
     useEffect(() => {
-        const fetchCartOfUser = async () => {}
-    }, [])
+        const fetchCartOfUser = async () => {
+            setLoading(true)
+            try {
+                const user = await getAUserAPI(token)
+                console.log(user.products[0].productId)
+                setProducts(user.products)
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+                console.error(error)
+            }
+        }
+        fetchCartOfUser()
+    }, [token])
 
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value)
@@ -29,13 +51,42 @@ const CartItems = () => {
         setProducts(newProducts)
     }
 
+    // console.log(products)
     return (
         <Box>
             <Grid container className='row d-flex justify-content-center my-4'>
                 <Grid item className='col-md-8'>
                     <Card className='card mb-4'>
                         <CardHeader title='Giỏ hàng' className='card-header py-3' />
-                        <CardContent>{}</CardContent>
+                        <CardContent>
+                            {loading ? (
+                                <LinearIndeterminate />
+                            ) : products.length === 0 ? (
+                                <Box className={classes.flexBox} flexDirection='column'>
+                                    <Typography component='p' variant='h6'>
+                                        Giỏ hàng rỗng.{' '}
+                                        <Typography
+                                            component={Link}
+                                            className={classes.hoverItem}
+                                            color='primary'
+                                            to='/products'
+                                            variant='h6'
+                                        >
+                                            Mua hàng ngay!
+                                        </Typography>
+                                    </Typography>
+                                    <Image
+                                        duration={500}
+                                        shiftDuration={150}
+                                        className='w-25'
+                                        src={images.emptyFolder}
+                                        alt='Null'
+                                    />
+                                </Box>
+                            ) : (
+                                products?.map(product => <div>{product.name}</div>)
+                            )}
+                        </CardContent>
                     </Card>
                     <div className='card mb-4'>
                         <div className='card-body'>
