@@ -21,9 +21,8 @@ const ProductItem = new Schema(
             type: String,
             required: true
         },
-        totalPrice: {
-            type: Number,
-            required: true
+        sumPrice: {
+            type: Number
         }
     },
     { timestamps: true }

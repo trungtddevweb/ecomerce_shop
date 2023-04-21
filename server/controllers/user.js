@@ -63,13 +63,13 @@ export const addProductToUser = async (req, res) => {
             if (!product) {
                 return res.status(404).json({ message: 'Sản phẩm không tồn tại!' })
             }
-
-            user.products.push({ productId: product._id, quantity, size, color })
+            const sumPrice = quantity * product.price
+            user.products.push({ productId: product._id, quantity, size, color, sumPrice })
         } else {
             // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng lên 1
             user.products[productIndex].quantity += quantity
+            user.products[productIndex].sumPrice += quantity * user.products[productIndex].productId.price
         }
-
         // Cập nhật số lượng sản phẩm trong giỏ hàng và lưu vào cơ sở dữ liệu
         user.totalItems = user.products.reduce((acc, product) => acc + product.quantity, 0)
 
