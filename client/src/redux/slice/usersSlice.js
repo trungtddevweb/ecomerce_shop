@@ -4,8 +4,7 @@ const initialState = {
     isAuthenticated: false,
     error: false,
     user: null,
-    products: [],
-    totalItems: 0
+    products: []
 }
 
 export const userSlice = createSlice({
@@ -29,14 +28,11 @@ export const userSlice = createSlice({
             state.user = null
             state.error = null
             state.products = []
-            state.totalItems = 0
         },
         addProductToCart: (state, action) => {
-            state.totalItems = action.payload.totalItems
             state.products = action.payload.products
         },
         clearCart: state => {
-            state.totalItems = 0
             state.products = []
         }
     }

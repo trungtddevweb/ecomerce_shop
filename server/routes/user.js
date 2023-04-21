@@ -2,6 +2,7 @@ import express from 'express'
 import {
     addProductToUser,
     deleteUsers,
+    getAUser,
     getAllUsers,
     removeAllProducts,
     removeMutiplesProductId,
@@ -14,6 +15,9 @@ const router = express.Router()
 
 // Get All Users
 router.get('/', verifyAdmin, getAllUsers)
+
+// Get A User
+router.get('/find/user', verifyUser, getAUser)
 
 // Delete Many Users
 router.delete('/', verifyAdmin, deleteUsers)

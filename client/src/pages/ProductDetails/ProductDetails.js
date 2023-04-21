@@ -87,8 +87,7 @@ const ProductDetails = () => {
                 productId: product._id,
                 quantity: countQuantity,
                 size: selectedSize,
-                color: selectedColor,
-                totalPrice
+                color: selectedColor
             }
             const res = await addProductIdToCartAPI(token, data)
             if (res.status === 200) {

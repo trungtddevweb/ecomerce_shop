@@ -1,5 +1,5 @@
 import { Box, Grid, Stack, Typography } from '@mui/material'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, memo } from 'react'
 import CardProductItem from '~/components/CardProductItem'
 import { getProductByFieldAPI } from '~/api/main'
 import { optionsQueryAnotherProduct } from 'src/utils/const'
@@ -56,7 +56,7 @@ const AnotherProductByCategory = ({ title, fields, value, productId }) => {
                     )}
                 </Stack>
                 <Grid container minHeight={360} spacing={2}>
-                    {(isLoading ? Array.from(new Array(2)) : processedResult).map((list, index) => (
+                    {(isLoading ? Array.from(new Array(6)) : processedResult).map((list, index) => (
                         <Grid item key={list?._id || index} xs={2}>
                             {list ? (
                                 <CardProductItem data={list} />
@@ -77,4 +77,4 @@ const AnotherProductByCategory = ({ title, fields, value, productId }) => {
     )
 }
 
-export default AnotherProductByCategory
+export default memo(AnotherProductByCategory)

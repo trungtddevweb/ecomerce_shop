@@ -2,6 +2,16 @@ import User from '../models/User.js'
 import Product from '../models/Product.js'
 import responseHandler from '../handler/responseHandler.js'
 
+export const getAUser = async (req, res) => {
+    const { _id: userId } = req.user
+    try {
+        const user = await User.findById({ _id: userId })
+        responseHandler.success(res, user)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
 export const getAllUsers = async (req, res, next) => {
     const limit = parseInt(req.query.limit, 10) || 10
     const page = parseInt(req.query.page, 10) || 1
