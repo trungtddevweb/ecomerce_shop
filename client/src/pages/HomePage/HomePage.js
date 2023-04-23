@@ -7,6 +7,7 @@ const Sliders = lazy(() => import('~/components/Slider'))
 const NewLetters = lazy(() => import('~/components/NewLetters'))
 const Onboarding = lazy(() => import('./Onboading'))
 const ListProducts = lazy(() => import('~/components/ListProducts'))
+const CreateProducts = lazy(() => import('~/components/CreateProducts/Create-Product'))
 
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
@@ -31,6 +32,7 @@ const HomePage = () => {
                 <div>Other product</div>
                 <NewLetters />
                 <ListPostsBlog />
+                <CreateProducts />
             </Stack>
         </Box>
     )
