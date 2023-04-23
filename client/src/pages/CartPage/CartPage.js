@@ -1,87 +1,103 @@
-import { useState } from 'react'
-import { Box, Stepper, Typography, Step, StepLabel, Button, Paper, Stack } from '@mui/material'
-import useStyles from '~/assets/styles/useStyles'
+import { useState, useCallback } from 'react'
+import { Box, Stepper, Step, StepLabel, Paper } from '@mui/material'
 import { stepsCart } from 'src/utils/const'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import { Home } from '@mui/icons-material'
-import { Link } from 'react-router-dom'
-import { lazy } from 'react'
-// import CartItems from './CartItems'
-const CartItems = lazy(() => import('./CartItems'))
+import CartItems from './CartItems'
+import AddressForm from './AddressForm'
+import PaymentForm from './PaymentForm'
+import Review from './Review'
+import useStyles from '~/assets/styles/useStyles'
 
 const CartPage = () => {
     useDocumentTitle('Giỏ hàng')
     const classes = useStyles()
+    const [order, setOrder] = useState({
+        products: [],
+        address: {},
+        paymentMethod: {}
+    })
+    console.log(order)
     const [activeStep, setActiveStep] = useState(0)
 
-    const handleNext = () => {
-        setActiveStep(prevActiveStep => prevActiveStep + 1)
-    }
+    const handleNext = useCallback(() => {
+        setActiveStep(activeStep + 1)
+    }, [activeStep])
 
     const handleBack = () => {
-        setActiveStep(prevActiveStep => prevActiveStep - 1)
+        setActiveStep(activeStep - 1)
+    }
+
+    const handleProductSelect = useCallback(
+        selectedProducts => {
+            setOrder(prevOrder => ({
+                ...prevOrder,
+                products: selectedProducts
+            }))
+            handleNext()
+        },
+        [handleNext]
+    )
+
+    const handleAddressSelect = useCallback(
+        selectedAddress => {
+            setOrder(prevOrder => ({
+                ...prevOrder,
+                address: selectedAddress
+            }))
+            handleNext()
+        },
+        [handleNext]
+    )
+
+    const handlePaymentMethodSelect = useCallback(
+        selectedPaymentMethod => {
+            setOrder(prevOrder => ({
+                ...prevOrder,
+                paymentMethod: selectedPaymentMethod
+            }))
+            handleNext()
+        },
+        [handleNext]
+    )
+
+    const handleComfirm = order => {
+        try {
+        } catch (error) {}
+    }
+
+    function getStepContent(step) {
+        switch (step) {
+            case 0:
+                return <CartItems onNext={handleProductSelect} />
+            case 1:
+                return <AddressForm onNext={handleAddressSelect} onBack={handleBack} />
+            case 2:
+                return <PaymentForm onNext={handlePaymentMethodSelect} onBack={handleBack} />
+            case 3:
+                return <Review onConfirm={handleComfirm} onBack={handleBack} order={order} />
+            default:
+                throw new Error('Unknown step')
+        }
     }
 
     return (
-        <Box className='cart-page'>
-            <Box className='cart-wrapper'>
+        <Box className={classes.flexBox} bgcolor='lightGray' paddingY={6}>
+            <Box width={1400}>
                 <Paper
                     elevation={6}
                     sx={{
-                        padding: '12px',
-                        marginBottom: '20px'
+                        padding: '12px'
                     }}
                 >
                     <Stepper activeStep={activeStep}>
-                        {stepsCart.map((label, index) => {
-                            const stepProps = {}
-                            const labelProps = {}
-                            return (
-                                <Step key={index} {...stepProps}>
-                                    <StepLabel {...labelProps}>{label}</StepLabel>
-                                </Step>
-                            )
-                        })}
+                        {stepsCart.map(label => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
                     </Stepper>
                 </Paper>
-                {activeStep === stepsCart.length ? (
-                    <Box>
-                        <Typography sx={{ mt: 2, mb: 1 }}>
-                            Đặt hàng thành công! Chờ đợi chúng tôi liên lạc lại với bạn để xác nhận đơn hàng
-                        </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                            <Box sx={{ flex: '1 1 auto' }} />
-                            <Button variant='contained' component={Link} to='/' startIcon={<Home />}>
-                                Trang chủ
-                            </Button>
-                        </Box>
-                    </Box>
-                ) : (
-                    <Stack>
-                        {activeStep === 0 ? (
-                            <CartItems />
-                        ) : activeStep === 1 ? (
-                            <div>Component 2</div>
-                        ) : (
-                            <div>Component 3</div>
-                        )}
-                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                            <Button
-                                variant='contained'
-                                color='inherit'
-                                disabled={activeStep === 0}
-                                onClick={handleBack}
-                                sx={{ mr: 1 }}
-                            >
-                                Back
-                            </Button>
-                            <Box sx={{ flex: '1 1 auto' }} />
-                            <Button variant='contained' onClick={handleNext}>
-                                {activeStep === stepsCart.length - 1 ? 'Hoàn thành' : 'Bước tiếp theo'}
-                            </Button>
-                        </Box>
-                    </Stack>
-                )}
+                <Box className={classes.flexBox}>{getStepContent(activeStep)}</Box>
             </Box>
         </Box>
     )

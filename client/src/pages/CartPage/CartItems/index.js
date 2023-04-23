@@ -15,7 +15,8 @@ import {
     ListItemIcon,
     Divider,
     Tooltip,
-    CardContent
+    CardContent,
+    Button
 } from '@mui/material'
 import Image from 'mui-image'
 import { Fragment } from 'react'
@@ -29,8 +30,9 @@ import { removeProductFromCart } from 'src/redux/slice/usersSlice'
 import { getAUserAPI, removeProductIdFromCartAPI } from '~/api/main'
 import images from '~/assets/imgs'
 import useStyles from '~/assets/styles/useStyles'
+import paymentMethod from '~/assets/imgs/payment.png'
 
-const CartItems = () => {
+const CartItems = ({ onNext }) => {
     const classes = useStyles()
     const [checked, setChecked] = useState([])
     const [products, setProducts] = useState([])
@@ -61,6 +63,10 @@ const CartItems = () => {
         }
         fetchCartOfUser()
     }, [token])
+
+    const handleNextClick = () => {
+        onNext(checked)
+    }
 
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value)
@@ -109,7 +115,7 @@ const CartItems = () => {
     }
 
     return (
-        <Box>
+        <Box width={1400}>
             <Grid container className='row d-flex justify-content-center my-4'>
                 <Grid item className='col-md-8'>
                     <Card className='card mb-4'>
@@ -235,37 +241,12 @@ const CartItems = () => {
                             </List>
                         )}
                     </Card>
-                    {/* <div className='card mb-4 mb-lg-0'>
-                        <div className='card-body'>
-                            <p>
-                                <strong>We accept</strong>
-                            </p>
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg'
-                                alt='Visa'
-                            />
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg'
-                                alt='American Express'
-                            />
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg'
-                                alt='Mastercard'
-                            />
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.webp'
-                                alt='PayPal acceptance mark'
-                            />
-                        </div>
-                    </div> */}
+                    <Card className='card mb-4 mb-lg-0'>
+                        <CardContent className='card-body'>
+                            <Typography fontWeight={600}>Có thể thanh toán bằng ví điện tử</Typography>
+                            <Image duration={500} alt='Payment methods' width='250px' src={paymentMethod} />
+                        </CardContent>
+                    </Card>
                 </Grid>
                 <Grid item className='col-md-4'>
                     <Card position='sticky' className='card mb-4'>
@@ -304,6 +285,9 @@ const CartItems = () => {
                             </CardContent>
                         </Box>
                     </Card>
+                    <Button onClick={handleNextClick} disabled={checked.length === 0} variant='contained'>
+                        Đặt hàng ngay
+                    </Button>
                 </Grid>
             </Grid>
         </Box>
