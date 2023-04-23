@@ -24,7 +24,7 @@ const PaymentForm = ({ onNext, onBack }) => {
         setValue(newValue)
     }
     const handleNextClick = () => {
-        onNext()
+        onNext(choose)
     }
 
     return (
@@ -113,7 +113,7 @@ const PaymentForm = ({ onNext, onBack }) => {
                             <Button onClick={onBack} variant='text'>
                                 Trở lại
                             </Button>
-                            <Button variant='contained' type='submit'>
+                            <Button variant='contained' onClick={handleNextClick} type='submit'>
                                 Tiếp tục
                             </Button>
                         </Stack>

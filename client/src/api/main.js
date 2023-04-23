@@ -109,3 +109,12 @@ export const getProductByFieldAPI = async (fields, value, limit, page) => {
     const response = await mainAPI.get(`/products/fields/search/?${fields}=${value}&limit=${limit}&page=${page}`)
     return response.data
 }
+
+// Order
+export const orderProductAPI = async (token, orderDetails) => {
+    return await mainAPI.post('/order', orderDetails, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}

@@ -16,7 +16,6 @@ const CartPage = () => {
         address: {},
         paymentMethod: {}
     })
-    console.log(order)
     const [activeStep, setActiveStep] = useState(0)
 
     const handleNext = useCallback(() => {
@@ -60,11 +59,6 @@ const CartPage = () => {
         [handleNext]
     )
 
-    const handleComfirm = order => {
-        try {
-        } catch (error) {}
-    }
-
     function getStepContent(step) {
         switch (step) {
             case 0:
@@ -74,7 +68,7 @@ const CartPage = () => {
             case 2:
                 return <PaymentForm onNext={handlePaymentMethodSelect} onBack={handleBack} />
             case 3:
-                return <Review onConfirm={handleComfirm} onBack={handleBack} order={order} />
+                return <Review onBack={handleBack} order={order} />
             default:
                 throw new Error('Unknown step')
         }
