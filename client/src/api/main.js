@@ -24,7 +24,7 @@ export const logout = async token => {
         }
         return response
     } catch (error) {
-        console.error(error)
+        return console.error(error)
     }
 }
 
@@ -67,6 +67,19 @@ export const deleteItemByParams = async (params, token, selectedItem) => {
             selectedIds: selectedItem
         }
     })
+}
+
+export const removeProductIdFromCartAPI = async (productIds, token) => {
+    const res = await mainAPI.patch(
+        '/users/remove-mutiple',
+        { productIds },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+    return res.data
 }
 
 // PRODUCT APIs

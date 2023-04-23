@@ -32,6 +32,12 @@ export const userSlice = createSlice({
         addProductToCart: (state, action) => {
             state.products = action.payload.products
         },
+        removeProductFromCart: (state, action) => {
+            const { productIds } = action.payload
+            productIds.forEach(productId => {
+                state.products = state.products.filter(product => product.productId !== productId)
+            })
+        },
         clearCart: state => {
             state.products = []
         }

@@ -178,7 +178,7 @@ export const removeMutiplesProductId = async (req, res) => {
         }
 
         // Kiểm tra xem productIds có trong giỏ hàng không
-        const productIdsInCart = user.products.map(product => String(product.productId._id))
+        const productIdsInCart = user.products.map(product => String(product._id))
         const invalidProductIds = productIds.filter(productId => !productIdsInCart.includes(productId))
         if (invalidProductIds.length) {
             return res
@@ -187,7 +187,7 @@ export const removeMutiplesProductId = async (req, res) => {
         }
 
         // Xóa sản phẩm trong giỏ hàng
-        const updatedProducts = user.products.filter(product => !productIds.includes(String(product.productId._id)))
+        const updatedProducts = user.products.filter(product => !productIds.includes(String(product._id)))
 
         // Cập nhật tổng số sản phẩm trong giỏ hàng
         const updatedTotalItems = updatedProducts.reduce((total, product) => total + product.quantity, 0)
