@@ -14,10 +14,12 @@ import {
     ListItemButton,
     ListItemIcon,
     Divider,
-    Tooltip
+    Tooltip,
+    CardContent
 } from '@mui/material'
 import Image from 'mui-image'
 import { Fragment } from 'react'
+import { useMemo } from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -36,11 +38,14 @@ const CartItems = () => {
     const [loading, setLoading] = useState(false)
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
-    const currentDate = new Date()
-    const day = currentDate.getDate()
-    const month = currentDate.getMonth() + 1 // add 1 because getMonth() returns 0-11
-    const year = currentDate.getFullYear()
-    const formattedDate = `${day}-${month}-${year}`
+    const totalQuantity = useMemo(
+        () => checked.reduce((accumulator, currentValue) => accumulator + currentValue.quantity, 0),
+        [checked]
+    )
+    const totalPrice = useMemo(
+        () => checked.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
+        [checked]
+    )
 
     useEffect(() => {
         const fetchCartOfUser = async () => {
@@ -59,13 +64,20 @@ const CartItems = () => {
 
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value)
+        // console.log(checked)
         const newChecked = [...checked]
-
         if (currentIndex === -1) {
             newChecked.push(value)
         } else {
             newChecked.splice(currentIndex, 1)
         }
+
+        if (newChecked.length === products.length) {
+            setIsCheckedAll(true)
+        } else {
+            setIsCheckedAll(false)
+        }
+
         setChecked(newChecked)
     }
 
@@ -73,7 +85,7 @@ const CartItems = () => {
         if (isCheckedAll) {
             setChecked([])
         } else {
-            const newChecked = products.map(product => product._id)
+            const newChecked = products.map(product => product)
             setChecked(newChecked)
         }
         setIsCheckedAll(!isCheckedAll)
@@ -81,11 +93,12 @@ const CartItems = () => {
 
     const handleDelete = async value => {
         try {
-            const response = await removeProductIdFromCartAPI(checked, token)
+            const listCheckedId = checked?.map(product => product._id)
+            const response = await removeProductIdFromCartAPI(listCheckedId, token)
             if (response.status === 200) {
-                dispatch(removeProductFromCart({ productIds: checked }))
+                dispatch(removeProductFromCart({ productIds: listCheckedId }))
                 dispatch(showToast({ type: 'success', message: 'Xóa sản phẩm khỏi giỏ hàng thành công' }))
-                const newProducts = products.filter(product => !value.includes(product._id.toString()))
+                const newProducts = products.filter(product => !value.includes(product))
                 setProducts(newProducts)
                 setChecked([])
             }
@@ -133,19 +146,7 @@ const CartItems = () => {
                         {loading ? (
                             <LinearIndeterminate />
                         ) : products.length === 0 ? (
-                            <Box className={classes.flexBox} flexDirection='column'>
-                                <Stack direction='row' alignItems='center'>
-                                    <Typography>Giỏ hàng rỗng. </Typography>
-                                    <Typography
-                                        component={Link}
-                                        className={classes.hoverItem}
-                                        color='primary'
-                                        to='/products'
-                                        variant='h6'
-                                    >
-                                        Mua hàng ngay!
-                                    </Typography>
-                                </Stack>
+                            <Box className={classes.flexBox} padding={4} flexDirection='column'>
                                 <Image
                                     duration={500}
                                     shiftDuration={150}
@@ -153,24 +154,36 @@ const CartItems = () => {
                                     src={images.emptyFolder}
                                     alt='Null'
                                 />
+                                <Stack direction='row' alignItems='center'>
+                                    <Typography variant='body1'>
+                                        Giỏ hàng rỗng -{' '}
+                                        <Typography
+                                            component={Link}
+                                            color='primary'
+                                            to='/products'
+                                            className={classes.hoverItem}
+                                        >
+                                            Mua gì đó chứ ?
+                                        </Typography>
+                                    </Typography>
+                                </Stack>
                             </Box>
                         ) : (
-                            <List>
+                            <List
+                                sx={{
+                                    minHeight: '200px'
+                                }}
+                            >
                                 {products.map(product => {
                                     const labelId = `checkbox-list-label-${product._id}`
-
                                     return (
                                         <Fragment key={product._id}>
                                             <ListItem disablePadding>
-                                                <ListItemButton
-                                                    role={undefined}
-                                                    onClick={handleToggle(product._id)}
-                                                    dense
-                                                >
+                                                <ListItemButton role={undefined} onClick={handleToggle(product)} dense>
                                                     <ListItemIcon>
                                                         <Checkbox
                                                             edge='start'
-                                                            checked={checked.includes(product._id)}
+                                                            checked={checked.includes(product)}
                                                             tabIndex={-1}
                                                             disableRipple
                                                             inputProps={{ 'aria-labelledby': labelId }}
@@ -257,32 +270,39 @@ const CartItems = () => {
                 <Grid item className='col-md-4'>
                     <Card position='sticky' className='card mb-4'>
                         <CardHeader title='Tổng giá' className='card-header py-3' />
-                        <div className='card-body'>
-                            <ul className='list-group list-group-flush'>
-                                <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0'>
-                                    Products
-                                    <span>$53.98</span>
-                                </li>
-                                <li className='list-group-item d-flex justify-content-between align-items-center px-0'>
-                                    Shipping
-                                    <span>Gratis</span>
-                                </li>
-                                <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
-                                    <div>
-                                        <strong>Total amount</strong>
-                                        <strong>
-                                            <p className='mb-0'>(including VAT)</p>
-                                        </strong>
-                                    </div>
-                                    <span>
-                                        <strong>$53.98</strong>
-                                    </span>
-                                </li>
-                            </ul>
-                            <button type='button' className='btn btn-primary btn-lg btn-block'>
-                                Go to checkout
-                            </button>
-                        </div>
+                        <CardContent>
+                            <Box>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tổng số sản phẩm</Typography>
+                                    <Typography variant='h6' color='primary'>
+                                        {checked.length}
+                                    </Typography>
+                                </Stack>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tổng số lượng</Typography>
+                                    <Typography variant='h6' color='primary'>
+                                        {totalQuantity}
+                                    </Typography>
+                                </Stack>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tiền ship</Typography>
+                                    <Typography variant='h6' color='primary'>
+                                        Free ship
+                                    </Typography>
+                                </Stack>
+                            </Box>
+                        </CardContent>
+                        <Divider variant='fullWidth' component='div' />
+                        <Box>
+                            <CardContent>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tổng số tiền</Typography>
+                                    <Typography variant='h6' color='error'>
+                                        {totalPrice.toLocaleString('vi-VN')} VNĐ
+                                    </Typography>
+                                </Stack>
+                            </CardContent>
+                        </Box>
                     </Card>
                 </Grid>
             </Grid>
