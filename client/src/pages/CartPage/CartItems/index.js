@@ -14,8 +14,7 @@ import {
     ListItemButton,
     ListItemIcon,
     Divider,
-    Tooltip,
-    Button
+    Tooltip
 } from '@mui/material'
 import Image from 'mui-image'
 import { Fragment } from 'react'
@@ -37,6 +36,11 @@ const CartItems = () => {
     const [loading, setLoading] = useState(false)
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
+    const currentDate = new Date()
+    const day = currentDate.getDate()
+    const month = currentDate.getMonth() + 1 // add 1 because getMonth() returns 0-11
+    const year = currentDate.getFullYear()
+    const formattedDate = `${day}-${month}-${year}`
 
     useEffect(() => {
         const fetchCartOfUser = async () => {
@@ -112,7 +116,13 @@ const CartItems = () => {
                             {products.length !== 0 && (
                                 <ListItemButton role={undefined} dense>
                                     <ListItemIcon>
-                                        <Checkbox edge='start' tabIndex={-1} onClick={handleCheckAll} disableRipple />
+                                        <Checkbox
+                                            edge='start'
+                                            tabIndex={-1}
+                                            onClick={handleCheckAll}
+                                            checked={isCheckedAll}
+                                            disableRipple
+                                        />
                                     </ListItemIcon>
 
                                     <Typography variant='h6'>Chọn tất cả {`(${products.length})`}</Typography>
@@ -124,7 +134,7 @@ const CartItems = () => {
                             <LinearIndeterminate />
                         ) : products.length === 0 ? (
                             <Box className={classes.flexBox} flexDirection='column'>
-                                <Stack direction='row'>
+                                <Stack direction='row' alignItems='center'>
                                     <Typography>Giỏ hàng rỗng. </Typography>
                                     <Typography
                                         component={Link}
@@ -193,7 +203,10 @@ const CartItems = () => {
                                                                     Số lượng: {product.quantity}
                                                                 </Typography>
                                                                 {' | '}
-
+                                                                <Typography component='span' variant='body2'>
+                                                                    Màu sắc: {product.color}
+                                                                </Typography>
+                                                                {' | '}
                                                                 <Typography component='span' variant='body2'>
                                                                     Kích thước: {product.size}
                                                                 </Typography>
@@ -209,15 +222,7 @@ const CartItems = () => {
                             </List>
                         )}
                     </Card>
-                    <div className='card mb-4'>
-                        <div className='card-body'>
-                            <p>
-                                <strong>Expected shipping delivery</strong>
-                            </p>
-                            <p className='mb-0'>12.10.2020 - 14.10.2020</p>
-                        </div>
-                    </div>
-                    <div className='card mb-4 mb-lg-0'>
+                    {/* <div className='card mb-4 mb-lg-0'>
                         <div className='card-body'>
                             <p>
                                 <strong>We accept</strong>
@@ -247,10 +252,10 @@ const CartItems = () => {
                                 alt='PayPal acceptance mark'
                             />
                         </div>
-                    </div>
+                    </div> */}
                 </Grid>
                 <Grid item className='col-md-4'>
-                    <Card className='card mb-4'>
+                    <Card position='sticky' className='card mb-4'>
                         <CardHeader title='Tổng giá' className='card-header py-3' />
                         <div className='card-body'>
                             <ul className='list-group list-group-flush'>

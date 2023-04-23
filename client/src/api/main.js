@@ -79,7 +79,7 @@ export const removeProductIdFromCartAPI = async (productIds, token) => {
             }
         }
     )
-    return res.data
+    return res
 }
 
 // PRODUCT APIs
