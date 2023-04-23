@@ -17,4 +17,9 @@ export const optionsQueryAnotherProduct = {
     page: 1
 }
 
-export const stepsCart = ['Chọn sản phẩm', 'Chọn phương thức thanh toán', 'Xác thực']
+export const stepsCart = [
+    'Chọn sản phẩm',
+    'Nhập địa chỉ',
+    'Chọn phương thức thanh toán',
+    'Xem lại thông tin và xác nhận'
+]

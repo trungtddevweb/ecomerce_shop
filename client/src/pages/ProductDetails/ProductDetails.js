@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate, useNavigate } from 'react-router-dom'
 import {
     Box,
     Breadcrumbs,
@@ -32,6 +32,7 @@ const ProductDetails = () => {
     useDocumentTitle(product?.name)
     const totalPrice = Number(product.price * countQuantity)
     const valueOfField = product.category?.split(' ')[0]
+    const navigate = useNavigate()
 
     const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '')
     const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || '')
@@ -99,7 +100,23 @@ const ProductDetails = () => {
             dispatch(showToast({ type: 'error', message: 'Thêm vào giỏ hàng thát bại!' }))
         }
     }
-    const handleBuyNow = async () => {}
+    const handleBuyNow = async () => {
+        try {
+            const data = {
+                productId: product._id,
+                quantity: countQuantity,
+                size: selectedSize,
+                color: selectedColor
+            }
+            const res = await addProductIdToCartAPI(token, data)
+            if (res.status === 200) {
+                dispatch(addProductToCart(res.data))
+                navigate('/cart')
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
     return (
         <Box display='flex' justifyContent='center' marginY={4}>
             <Box width={1400}>
