@@ -27,7 +27,7 @@ const OrderSchema = new Schema(
             phone: { type: String, required: true }
         },
         status: { type: String, default: 'pending' },
-        idPaid: { type: Boolean, default: false }
+        isPaid: { type: Boolean, default: false }
     },
     {
         timestamps: true
