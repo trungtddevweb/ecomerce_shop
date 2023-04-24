@@ -1,25 +1,25 @@
 import responseHandler from '../handler/responseHandler.js'
 import Order from '../models/Order.js'
-import nanoId from 'nanoid'
+import { nanoid } from 'nanoid'
 
 export const createOrder = async (req, res) => {
     try {
         const { _id: userId } = req.user
-        let orderId = nanoId(10)
-        let existOrderId = await Order.findOne({ orderId })
+        let orderCode = nanoid(10)
+        let existOrderId = await Order.findOne({ orderCode })
 
         while (existOrderId) {
-            orderId = nanoId(10)
-            existOrderId = await Order.findOne({ orderId })
+            orderCode = nanoid(10)
+            existOrderId = await Order.findOne({ orderCode })
         }
         const newOrder = Order({
             ...req.body,
-            orderId,
+            orderCode,
             userId
         })
         await newOrder.save()
         responseHandler.success(res, newOrder)
     } catch (error) {
-        responseHandler.error(res, error)
+        res.status(500).json({ message: error })
     }
 }

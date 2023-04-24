@@ -112,7 +112,7 @@ export const getProductByFieldAPI = async (fields, value, limit, page) => {
 
 // Order
 export const orderProductAPI = async (token, orderDetails) => {
-    return await mainAPI.post('/order', orderDetails, {
+    return await mainAPI.post('/orders', orderDetails, {
         headers: {
             Authorization: `Bearer ${token}`
         }
