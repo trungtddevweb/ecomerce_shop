@@ -16,7 +16,6 @@ const CartPage = () => {
         address: {},
         paymentMethod: {}
     })
-    console.log(order)
     const [activeStep, setActiveStep] = useState(0)
 
     const handleNext = useCallback(() => {
