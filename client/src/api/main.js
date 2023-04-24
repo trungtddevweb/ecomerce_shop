@@ -126,6 +126,6 @@ export const gePublicKey = async () => {
 }
 
 export const getClientSecret = async products => {
-    const res = await mainAPI.get('/stripe/create-checkout-session', { products })
+    const res = await mainAPI.post('/stripe/create-checkout-session', { products })
     return res.data
 }
