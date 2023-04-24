@@ -118,3 +118,14 @@ export const orderProductAPI = async (token, orderDetails) => {
         }
     })
 }
+
+// Stripe
+export const gePublicKey = async () => {
+    const res = await mainAPI.get('/stripe/config')
+    return res.data
+}
+
+export const getClientSecret = async products => {
+    const res = await mainAPI.get('/stripe/create-checkout-session', { products })
+    return res.data
+}

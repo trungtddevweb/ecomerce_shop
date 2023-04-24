@@ -15,11 +15,11 @@ import { useState } from 'react'
 
 const AddressForm = ({ onNext, onBack }) => {
     const [info, setInfo] = useState({
-        firstName: '',
-        lastName: '',
+        fullName: '',
+        phoneNumber: '',
         address1: '',
         address2: '',
-        state: '',
+        email: '',
         city: '',
         zip: '',
         country: ''
@@ -30,7 +30,8 @@ const AddressForm = ({ onNext, onBack }) => {
         setInfo(prev => ({ ...prev, [name]: value }))
     }
 
-    const handleNextClick = () => {
+    const handleNextClick = e => {
+        e.preventDefault()
         onNext(info)
     }
 
@@ -49,9 +50,9 @@ const AddressForm = ({ onNext, onBack }) => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 required
-                                id='firstName'
-                                name='firstName'
-                                label='Họ'
+                                id='fullName'
+                                name='fullName'
+                                label='Họ và tên'
                                 fullWidth
                                 autoComplete='given-name'
                                 variant='standard'
@@ -61,12 +62,12 @@ const AddressForm = ({ onNext, onBack }) => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 required
-                                id='lastName'
-                                name='lastName'
-                                label='Tên'
+                                id='phoneNumber'
+                                name='phoneNumber'
+                                label='Số điện thoại'
                                 fullWidth
                                 onChange={handleChange}
-                                autoComplete='family-name'
+                                autoComplete='tel'
                                 variant='standard'
                             />
                         </Grid>
@@ -107,9 +108,10 @@ const AddressForm = ({ onNext, onBack }) => {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                id='state'
-                                name='state'
-                                label='Bang/Tỉnh/Khu vực'
+                                id='email'
+                                name='email'
+                                type='email'
+                                label='Địa chỉ email'
                                 onChange={handleChange}
                                 fullWidth
                                 variant='standard'

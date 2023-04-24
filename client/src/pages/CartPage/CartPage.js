@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react'
-import { Box, Stepper, Step, StepLabel, Paper } from '@mui/material'
+import { Box, Stepper, Step, StepLabel, Paper, Typography, Card, Button } from '@mui/material'
+import Image from 'mui-image'
 import { stepsCart } from 'src/utils/const'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import CartItems from './CartItems'
@@ -7,6 +8,9 @@ import AddressForm from './AddressForm'
 import PaymentForm from './PaymentForm'
 import Review from './Review'
 import useStyles from '~/assets/styles/useStyles'
+import shippingImage from '~/assets/imgs/shipping.jpg'
+import { KeyboardReturn } from '@mui/icons-material'
+import { Link } from 'react-router-dom'
 
 const CartPage = () => {
     useDocumentTitle('Giỏ hàng')
@@ -22,9 +26,9 @@ const CartPage = () => {
         setActiveStep(activeStep + 1)
     }, [activeStep])
 
-    const handleBack = () => {
+    const handleBack = useCallback(() => {
         setActiveStep(activeStep - 1)
-    }
+    }, [activeStep])
 
     const handleProductSelect = useCallback(
         selectedProducts => {
@@ -66,9 +70,9 @@ const CartPage = () => {
             case 1:
                 return <AddressForm onNext={handleAddressSelect} onBack={handleBack} />
             case 2:
-                return <PaymentForm onNext={handlePaymentMethodSelect} onBack={handleBack} />
+                return <PaymentForm onNext={handlePaymentMethodSelect} order={order} onBack={handleBack} />
             case 3:
-                return <Review onBack={handleBack} order={order} />
+                return <Review onBack={handleBack} onNext={handleNext} order={order} />
             default:
                 throw new Error('Unknown step')
         }
@@ -91,7 +95,35 @@ const CartPage = () => {
                         ))}
                     </Stepper>
                 </Paper>
-                <Box className={classes.flexBox}>{getStepContent(activeStep)}</Box>
+                {activeStep === stepsCart.length ? (
+                    <Box className={classes.flexBox}>
+                        <Card
+                            sx={{
+                                marginTop: '24px',
+                                width: '1000px',
+                                padding: '20px'
+                            }}
+                        >
+                            <Typography textAlign='center' color='primary' variant='h5' gutterBottom>
+                                Cảm ơn bạn đã mua hàng ở cửa hàng chúng tôi
+                            </Typography>
+                            <Typography textAlign='center' variant='subtitle1'>
+                                Mã đơn đặt hàng của bạn là #2001539. Chúng tôi đã gửi email xác nhận đơn đặt hàng của
+                                bạn và sẽ gửi bạn một bản cập nhật khi đơn đặt hàng của bạn đã được vận chuyển.Chúc bạn
+                                một ngày tốt lành và nhiều niềm vui!
+                            </Typography>
+                            <Box className={classes.flexBox} gap={4} flexDirection='column'>
+                                {' '}
+                                <Image src={shippingImage} duration={500} alt='Shiping' width={200} />
+                                <Button variant='contained' component={Link} to='/' startIcon={<KeyboardReturn />}>
+                                    Trang chủ
+                                </Button>
+                            </Box>
+                        </Card>
+                    </Box>
+                ) : (
+                    <Box className={classes.flexBox}>{getStepContent(activeStep)}</Box>
+                )}
             </Box>
         </Box>
     )

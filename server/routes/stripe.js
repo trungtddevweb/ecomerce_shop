@@ -1,8 +1,10 @@
 import express from 'express'
-import { checkoutSessionStripe } from '../controllers/stripe.js'
+import { checkoutSessionStripe, getKey } from '../controllers/stripe.js'
 
 const router = express.Router()
 
 router.post('/create-checkout-session', checkoutSessionStripe)
+
+router.get('/config', getKey)
 
 export default router
