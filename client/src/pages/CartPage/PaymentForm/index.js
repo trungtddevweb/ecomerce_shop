@@ -15,16 +15,45 @@ import {
     Typography
 } from '@mui/material'
 import { useState } from 'react'
+import { formatCVC, formatCreditCardNumber, formatExpirationDate } from 'src/utils/format'
 
 const PaymentForm = ({ onNext, onBack }) => {
-    const [value, setValue] = useState('1')
-    const [choose, setChoose] = useState('card')
+    const [value, setValue] = useState('credit')
+    const [form, setForm] = useState({
+        cardName: '',
+        cardNumber: '',
+        expDate: '',
+        cvv: '',
+        focused: ''
+    })
+
+    const handleInputFocus = ({ target }) => {
+        setForm(prev => ({ ...prev, focus: target.name }))
+    }
+
+    const handleChangeValues = ({ target }) => {
+        if (target.name === 'cardNumber') {
+            target.value = formatCreditCardNumber(target.value)
+        } else if (target.name === 'expDate') {
+            target.value = formatExpirationDate(target.value)
+        } else if (target.name === 'cvv') {
+            target.value = formatCVC(target.value)
+        }
+
+        setForm(prev => ({ ...prev, [target.name]: target.value }))
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue)
     }
-    const handleNextClick = () => {
-        onNext(choose)
+
+    const handleNextClick = e => {
+        e.preventDefault()
+        if (value === 'credit') {
+            onNext(form)
+        } else {
+            onNext('cash')
+        }
     }
 
     return (
@@ -41,27 +70,36 @@ const PaymentForm = ({ onNext, onBack }) => {
                     <TabContext value={value}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <TabList onChange={handleChange} aria-label='lab API tabs example'>
-                                <Tab label='Bằng thẻ tín dụng' value='1' />
-                                <Tab label='Tiền mặt' value='2' />
+                                <Tab label='Bằng thẻ tín dụng' value='credit' />
+                                <Tab label='Tiền mặt' value='cash' />
                             </TabList>
                         </Box>
-                        <TabPanel value='1'>
+                        <TabPanel value='credit'>
                             <Box component='form' onSubmit={handleNextClick}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} md={6}>
                                         <TextField
-                                            required
+                                            type='text'
                                             id='cardName'
+                                            name='cardName'
                                             label='Tên chủ tài khoản'
                                             fullWidth
+                                            onChange={handleChangeValues}
+                                            onFocus={handleInputFocus}
                                             autoComplete='cc-name'
                                             variant='standard'
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} md={6}>
                                         <TextField
                                             required
+                                            type='tel'
                                             id='cardNumber'
+                                            name='cardNumber'
+                                            pattern='[\d| ]{16,22}'
+                                            onChange={handleChangeValues}
+                                            onFocus={handleInputFocus}
                                             label='Số tài khoản'
                                             fullWidth
                                             autoComplete='cc-number'
@@ -72,6 +110,10 @@ const PaymentForm = ({ onNext, onBack }) => {
                                         <TextField
                                             required
                                             id='expDate'
+                                            name='expDate'
+                                            pattern='\d\d/\d\d'
+                                            onChange={handleChangeValues}
+                                            onFocus={handleInputFocus}
                                             label='Ngày hết hạn'
                                             fullWidth
                                             autoComplete='cc-exp'
@@ -82,9 +124,13 @@ const PaymentForm = ({ onNext, onBack }) => {
                                         <TextField
                                             required
                                             id='cvv'
+                                            name='cvv'
                                             label='Số CVV'
+                                            pattern='\d{3,4}'
                                             helperText='Last three digits on signature strip'
                                             fullWidth
+                                            onChange={handleChangeValues}
+                                            onFocus={handleInputFocus}
                                             autoComplete='cc-csc'
                                             variant='standard'
                                         />
@@ -98,7 +144,7 @@ const PaymentForm = ({ onNext, onBack }) => {
                                 </Grid>
                             </Box>
                         </TabPanel>
-                        <TabPanel value='2'>
+                        <TabPanel value='cash'>
                             <Typography
                                 sx={{
                                     minHeight: '220px'

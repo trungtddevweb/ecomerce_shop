@@ -1,16 +1,22 @@
-import { Box,Button,ListItemText, Grid,Typography,List, ListItem ,  Card, CardContent, CardHeader, Divider, Stack } from '@mui/material'
+import {
+    Box,
+    Button,
+    ListItemText,
+    Grid,
+    Typography,
+    List,
+    ListItem,
+    Card,
+    CardContent,
+    CardHeader,
+    Divider,
+    Stack
+} from '@mui/material'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { orderProductAPI } from '~/api/main'
-
-const addresses = ['1 MUI Drive', 'Reactville', 'Anytown', '99999', 'USA']
-const payments = [
-    { name: 'Card type', detail: 'Visa' },
-    { name: 'Card holder', detail: 'Mr John Smith' },
-    { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-    { name: 'Expiry date', detail: '04/2024' }
-]
+import Cards from 'react-credit-cards-2'
 
 export default function Review({ order, onBack }) {
     const { products, address, paymentMethod } = order
@@ -85,31 +91,51 @@ export default function Review({ order, onBack }) {
                 </List>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                        <Typography variant='h6' gutterBottom sx={{ mt: 2 }}>
+                        <Typography variant='h6' fontWeight={600} color='error' gutterBottom sx={{ mt: 2 }}>
                             Thông tin khách hàng
                         </Typography>
-                        <Typography gutterBottom>
-                            {address.firstName} {address.lastName}
-                        </Typography>
-                        <Typography gutterBottom>{addresses.join(', ')}</Typography>
+                        <Stack direction='row'>
+                            <Typography gutterBottom>Họ và tên:</Typography>
+                            <Typography color='primary' fontWeight={600} gutterBottom>
+                                {address.fullName}
+                            </Typography>
+                        </Stack>
+                        <Stack direction='row'>
+                            <Typography gutterBottom>Số điện thoại: </Typography>
+                            <Typography color='primary' fontWeight={600} gutterBottom>
+                                {address.phoneNumber}
+                            </Typography>
+                        </Stack>
+                        <Stack direction='row'>
+                            <Typography gutterBottom>Địa chỉ thường trú: </Typography>
+                            <Typography color='primary' fontWeight={600} gutterBottom>
+                                {address.address1}
+                            </Typography>
+                        </Stack>
+                        <Stack direction='row'>
+                            <Typography gutterBottom>Địa chỉ nhận hàng: </Typography>
+                            <Typography color='primary' fontWeight={600} gutterBottom>
+                                {address.address2}
+                            </Typography>
+                        </Stack>
                     </Grid>
-                    <Divider component='div' />
+
                     <Grid item container direction='column' xs={12} sm={6}>
-                        <Typography variant='h6' gutterBottom sx={{ mt: 2 }}>
+                        <Typography variant='h6' fontWeight={600} gutterBottom sx={{ mt: 2 }}>
                             Phương thức thanh toán
                         </Typography>
-                        <Grid container>
-                            {payments.map(payment => (
-                                <Box key={payment.name}>
-                                    <Grid item xs={6}>
-                                        <Typography gutterBottom>{payment.name}</Typography>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Typography gutterBottom>{payment.detail}</Typography>
-                                    </Grid>
-                                </Box>
-                            ))}
-                        </Grid>
+                        {paymentMethod === 'cash' ? (
+                            <Typography>Thanh toán bằng tiền mặt khi nhận hàng</Typography>
+                        ) : (
+                            <Grid xs={12} sm={6}>
+                                <Cards
+                                    number={paymentMethod?.cardNumber}
+                                    expiry={paymentMethod?.expDate}
+                                    cvc={paymentMethod?.cvv}
+                                    name={paymentMethod?.cardName}
+                                />
+                            </Grid>
+                        )}
                     </Grid>
                     <Grid item xs={12} display='flex' justifyContent='flex-end'>
                         <Stack direction='row'>
