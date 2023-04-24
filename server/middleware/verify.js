@@ -8,9 +8,9 @@ export const verifyAdmin = (req, res, next) => {
 
     if (token) {
         jwt.verify(token, process.env.JWT_KEY, (err, payload) => {
-            if (err) return responseHandler.tokenNotValid(res)
+            if (err) return res.status(400).json({ message: 'Token không hợp lệ!' })
             req.user = payload
-            if (!payload.isAdmin) return responseHandler.forbidden(res)
+            if (!payload.isAdmin) return res.status(403).json({ message: 'Bạn không có quyền làm điều này!' })
             next()
         })
     } else {
@@ -22,7 +22,7 @@ export const verifyUser = async (req, res, next) => {
     if (req.headers?.authorization) {
         const authHeaders = req.headers.authorization
         const token = authHeaders.split(' ')[1]
-        if (!token) return responseHandler.tokenNotValid(res)
+        if (!token) return res.status(400).json({ message: 'Token không hợp lệ!' })
         jwt.verify(token, process.env.JWT_KEY, async (err, payload) => {
             if (err) {
                 if (err.name === 'JsonWebTokenError')

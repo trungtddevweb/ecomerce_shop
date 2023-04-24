@@ -1,4 +1,3 @@
-import { faBookOpenReader } from '@fortawesome/free-solid-svg-icons'
 import {
     Box,
     Button,
@@ -13,7 +12,6 @@ import {
     Divider,
     Stack
 } from '@mui/material'
-import axios from 'axios'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
@@ -51,6 +49,7 @@ export default function Review({ order, onBack, onNext, setOrderCode }) {
         shippingAddress,
         isPaid
     }
+    console.log(payload)
     const handleOrder = async () => {
         try {
             const res = await orderProductAPI(token, payload)

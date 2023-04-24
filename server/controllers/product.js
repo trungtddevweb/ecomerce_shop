@@ -58,7 +58,7 @@ export const deletedProduct = async (req, res) => {
         }).exec()
         const existingIds = checkIds.map(id => id.id)
         const nonExistingIds = selectedIds.filter(id => !existingIds.includes(id))
-        if (nonExistingIds.length > 0) returnresponseHandler.notFound(res)
+        if (nonExistingIds.length > 0) return responseHandler.notFound(res)
 
         await Product.deleteMany({ _id: { $in: selectedIds } })
         res.status(200).json({ success: true, message: 'List products has been deleted!' })
