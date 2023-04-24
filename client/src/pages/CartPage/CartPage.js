@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom'
 const CartPage = () => {
     useDocumentTitle('Giỏ hàng')
     const classes = useStyles()
+    const [orderCode, setOrderCode] = useState('')
     const [order, setOrder] = useState({
         products: [],
         address: {},
@@ -72,7 +73,7 @@ const CartPage = () => {
             case 2:
                 return <PaymentForm onNext={handlePaymentMethodSelect} order={order} onBack={handleBack} />
             case 3:
-                return <Review onBack={handleBack} onNext={handleNext} order={order} />
+                return <Review onBack={handleBack} onNext={handleNext} order={order} setOrderCode={setOrderCode} />
             default:
                 throw new Error('Unknown step')
         }
@@ -107,10 +108,14 @@ const CartPage = () => {
                             <Typography textAlign='center' color='primary' variant='h5' gutterBottom>
                                 Cảm ơn bạn đã mua hàng ở cửa hàng chúng tôi
                             </Typography>
-                            <Typography textAlign='center' variant='subtitle1'>
-                                Mã đơn đặt hàng của bạn là #2001539. Chúng tôi đã gửi email xác nhận đơn đặt hàng của
-                                bạn và sẽ gửi bạn một bản cập nhật khi đơn đặt hàng của bạn đã được vận chuyển.Chúc bạn
-                                một ngày tốt lành và nhiều niềm vui!
+                            <Typography textAlign='center' component='div' variant='subtitle1'>
+                                Mã đơn đặt hàng của bạn là
+                                <Typography color='error' fontWeight={600}>
+                                    {orderCode}
+                                </Typography>{' '}
+                                . Chúng tôi đã gửi email xác nhận đơn đặt hàng của bạn và sẽ gửi bạn một bản cập nhật
+                                khi đơn đặt hàng của bạn đã được vận chuyển.Chúc bạn một ngày tốt lành và nhiều niềm
+                                vui!
                             </Typography>
                             <Box className={classes.flexBox} gap={4} flexDirection='column'>
                                 {' '}

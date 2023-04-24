@@ -1,3 +1,4 @@
+import { faBookOpenReader } from '@fortawesome/free-solid-svg-icons'
 import {
     Box,
     Button,
@@ -12,31 +13,55 @@ import {
     Divider,
     Stack
 } from '@mui/material'
+import axios from 'axios'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { orderProductAPI } from '~/api/main'
 
-export default function Review({ order, onBack, onNext }) {
+export default function Review({ order, onBack, onNext, setOrderCode }) {
     const { products, address, paymentMethod } = order
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
+    const isPaid = paymentMethod === 'credit'
 
     const totalPrice = useMemo(
         () => products.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
         [products]
     )
+    const newProducts = products.map(product => ({
+        productId: product.productId,
+        name: product.productId.name,
+        quantity: product.quantity,
+        price: product.productId.price,
+        color: product.color,
+        size: product.size,
+        sumPrice: product.sumPrice
+    }))
+    const shippingAddress = {
+        fullName: address.fullName,
+        address: address.address1,
+        phone: address.phoneNumber
+    }
 
+    const payload = {
+        totalPrice,
+        products: newProducts,
+        paymentMethod,
+        shippingAddress,
+        isPaid
+    }
     const handleOrder = async () => {
-        // try {
-        //     const res = await orderProductAPI(token, order)
-        //     if (res.statusCode === 200) {
-        //         dispatch(showToast({ type: 'success', message: 'Đặt hàng thành công!' }))
-        //     }
-        // } catch (error) {
-        //     dispatch(showToast({ type: 'error', message: 'Có lỗi xảy ra !' }))
-        //     console.error(error.message)
-        // }
+        try {
+            const res = await orderProductAPI(token, payload)
+            if (res.status === 200) {
+                dispatch(showToast({ type: 'success', message: 'Đặt hàng thành công!' }))
+                setOrderCode(res.data.orderCode)
+            }
+        } catch (error) {
+            dispatch(showToast({ type: 'error', message: 'Có lỗi xảy ra !' }))
+            console.error(error.message)
+        }
         onNext()
     }
 

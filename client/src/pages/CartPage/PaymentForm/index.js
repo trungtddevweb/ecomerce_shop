@@ -4,7 +4,6 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { useEffect, useState } from 'react'
 import CheckoutForm from '../CheckoutForm'
-import axios from 'axios'
 import { gePublicKey, getClientSecret } from '~/api/main'
 
 const PaymentForm = ({ onNext, onBack, order }) => {

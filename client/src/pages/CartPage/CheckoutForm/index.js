@@ -26,7 +26,7 @@ export default function CheckoutForm({ onNext }) {
                 redirect: 'if_required'
             })
             if (paymentIntent.status === 'succeeded') {
-                onNext('Credit')
+                onNext('credit')
             }
             setIsProcessing(false)
         } catch (error) {
