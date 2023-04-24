@@ -1,60 +1,41 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import {
-    Button,
-    Card,
-    Checkbox,
-    FormControlLabel,
-    TextField,
-    Grid,
-    Box,
-    CardHeader,
-    Divider,
-    CardContent,
-    Stack,
-    Tab,
-    Typography
-} from '@mui/material'
-import { useState } from 'react'
-import { formatCVC, formatCreditCardNumber, formatExpirationDate } from 'src/utils/format'
+import { Button, Card, Grid, Box, CardHeader, Divider, CardContent, Stack, Tab, Typography } from '@mui/material'
+import { Elements } from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
+import { useEffect, useState } from 'react'
+import CheckoutForm from '../CheckoutForm'
+import axios from 'axios'
+import { gePublicKey, getClientSecret } from '~/api/main'
 
-const PaymentForm = ({ onNext, onBack }) => {
+const PaymentForm = ({ onNext, onBack, order }) => {
     const [value, setValue] = useState('credit')
-    const [form, setForm] = useState({
-        cardName: '',
-        cardNumber: '',
-        expDate: '',
-        cvv: '',
-        focused: ''
-    })
-
-    const handleInputFocus = ({ target }) => {
-        setForm(prev => ({ ...prev, focus: target.name }))
-    }
-
-    const handleChangeValues = ({ target }) => {
-        if (target.name === 'cardNumber') {
-            target.value = formatCreditCardNumber(target.value)
-        } else if (target.name === 'expDate') {
-            target.value = formatExpirationDate(target.value)
-        } else if (target.name === 'cvv') {
-            target.value = formatCVC(target.value)
-        }
-
-        setForm(prev => ({ ...prev, [target.name]: target.value }))
-    }
+    const { products } = order
+    const [stripePromise, setStripePromise] = useState(null)
+    const [clientSecret, setClientSecret] = useState('')
 
     const handleChange = (event, newValue) => {
         setValue(newValue)
     }
 
-    const handleNextClick = e => {
-        e.preventDefault()
-        if (value === 'credit') {
-            onNext(form)
-        } else {
-            onNext('cash')
-        }
+    const handleNextStep = () => {
+        onNext('cash')
     }
+
+    useEffect(() => {
+        const fetchPublicKey = async () => {
+            const res = await gePublicKey()
+            setStripePromise(loadStripe(res.publishableKey))
+        }
+        fetchPublicKey()
+    }, [])
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const res = await getClientSecret(products)
+            setClientSecret(res.clientSecret)
+        }
+        fetchProduct()
+    }, [products])
 
     return (
         <Card
@@ -75,74 +56,11 @@ const PaymentForm = ({ onNext, onBack }) => {
                             </TabList>
                         </Box>
                         <TabPanel value='credit'>
-                            <Box component='form' onSubmit={handleNextClick}>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12} md={6}>
-                                        <TextField
-                                            type='text'
-                                            id='cardName'
-                                            name='cardName'
-                                            label='Tên chủ tài khoản'
-                                            fullWidth
-                                            onChange={handleChangeValues}
-                                            onFocus={handleInputFocus}
-                                            autoComplete='cc-name'
-                                            variant='standard'
-                                            required
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6}>
-                                        <TextField
-                                            required
-                                            type='tel'
-                                            id='cardNumber'
-                                            name='cardNumber'
-                                            pattern='[\d| ]{16,22}'
-                                            onChange={handleChangeValues}
-                                            onFocus={handleInputFocus}
-                                            label='Số tài khoản'
-                                            fullWidth
-                                            autoComplete='cc-number'
-                                            variant='standard'
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6}>
-                                        <TextField
-                                            required
-                                            id='expDate'
-                                            name='expDate'
-                                            pattern='\d\d/\d\d'
-                                            onChange={handleChangeValues}
-                                            onFocus={handleInputFocus}
-                                            label='Ngày hết hạn'
-                                            fullWidth
-                                            autoComplete='cc-exp'
-                                            variant='standard'
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} md={6}>
-                                        <TextField
-                                            required
-                                            id='cvv'
-                                            name='cvv'
-                                            label='Số CVV'
-                                            pattern='\d{3,4}'
-                                            helperText='Last three digits on signature strip'
-                                            fullWidth
-                                            onChange={handleChangeValues}
-                                            onFocus={handleInputFocus}
-                                            autoComplete='cc-csc'
-                                            variant='standard'
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <FormControlLabel
-                                            control={<Checkbox color='secondary' name='saveCard' value='yes' />}
-                                            label='Nhớ chi tiết thẻ tín dụng cho lần sau'
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Box>
+                            {clientSecret && stripePromise && (
+                                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                                    <CheckoutForm onNext={onNext} />
+                                </Elements>
+                            )}
                         </TabPanel>
                         <TabPanel value='cash'>
                             <Typography
@@ -156,10 +74,10 @@ const PaymentForm = ({ onNext, onBack }) => {
                     </TabContext>
                     <Grid item xs={12} display='flex' justifyContent='flex-end'>
                         <Stack direction='row'>
-                            <Button onClick={onBack} variant='text'>
+                            <Button onClick={onBack} variant={value === 'credit' ? 'contained' : 'text'}>
                                 Trở lại
                             </Button>
-                            <Button variant='contained' onClick={handleNextClick} type='submit'>
+                            <Button variant='contained' hidden={value === 'credit'} onClick={handleNextStep}>
                                 Tiếp tục
                             </Button>
                         </Stack>

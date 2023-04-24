@@ -16,9 +16,8 @@ import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { orderProductAPI } from '~/api/main'
-import Cards from 'react-credit-cards-2'
 
-export default function Review({ order, onBack }) {
+export default function Review({ order, onBack, onNext }) {
     const { products, address, paymentMethod } = order
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
@@ -29,15 +28,16 @@ export default function Review({ order, onBack }) {
     )
 
     const handleOrder = async () => {
-        try {
-            const res = await orderProductAPI(token, order)
-            if (res.statusCode === 200) {
-                dispatch(showToast({ type: 'success', message: 'Đặt hàng thành công!' }))
-            }
-        } catch (error) {
-            dispatch(showToast({ type: 'error', message: 'Có lỗi xảy ra !' }))
-            console.error(error.message)
-        }
+        // try {
+        //     const res = await orderProductAPI(token, order)
+        //     if (res.statusCode === 200) {
+        //         dispatch(showToast({ type: 'success', message: 'Đặt hàng thành công!' }))
+        //     }
+        // } catch (error) {
+        //     dispatch(showToast({ type: 'error', message: 'Có lỗi xảy ra !' }))
+        //     console.error(error.message)
+        // }
+        onNext()
     }
 
     return (
@@ -127,19 +127,26 @@ export default function Review({ order, onBack }) {
                         {paymentMethod === 'cash' ? (
                             <Typography>Thanh toán bằng tiền mặt khi nhận hàng</Typography>
                         ) : (
-                            <Grid xs={12} sm={6}>
-                                <Cards
-                                    number={paymentMethod?.cardNumber}
-                                    expiry={paymentMethod?.expDate}
-                                    cvc={paymentMethod?.cvv}
-                                    name={paymentMethod?.cardName}
-                                />
-                            </Grid>
+                            <Typography>Đã thanh toán thành công bằng thẻ tín dụng</Typography>
                         )}
                     </Grid>
                     <Grid item xs={12} display='flex' justifyContent='flex-end'>
+                        <Stack direction='row' spacing={2}>
+                            <Typography color='text.secondary'>Trạng thái đơn hàng</Typography>
+                            {order.paymentMethod === 'cash' ? (
+                                <Typography color='orange' fontWeight={600}>
+                                    Đang chờ thanh toán
+                                </Typography>
+                            ) : (
+                                <Typography color='green' fontWeight={600}>
+                                    Đã thanh toán
+                                </Typography>
+                            )}
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={12} display='flex' justifyContent='flex-end'>
                         <Stack direction='row'>
-                            <Button onClick={onBack} variant='text'>
+                            <Button onClick={onBack} hidden={order.paymentMethod !== 'cash'} variant='text'>
                                 Trở lại
                             </Button>
                             <Button variant='contained' onClick={handleOrder} type='submit'>
