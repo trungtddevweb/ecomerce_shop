@@ -41,14 +41,17 @@ export const getAllProduct = async (req, res) => {
 }
 
 export const getProductsByHot = async (req, res) => {
-    const { limit, page } = req.params
+    const { limit, page } = req.query
     const options = {
-        limit: parseInt(limit, 10) || 10,
-        page: parseInt(page, 10) || 1,
+        limit,
+        page,
+        // limit: parseInt(limit, 10) || 10,
+        // page: parseInt(page, 10) || 1,
         sort: { createdAt: 'desc' }
     }
     try {
         const products = await Product.paginate({ isHot: true }, options)
+        console.log(req.query)
         responseHandler.getData(res, products)
     } catch (error) {
         responseHandler.error(res, error)

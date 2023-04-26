@@ -16,6 +16,7 @@ const ListProducts = ({ title, ...props }) => {
             try {
                 setIsLoading(true)
                 const products = await getProductsByHot(optionsQuery.limit, optionsQuery.page)
+                console.log(products)
                 setIsLoading(false)
                 setLists(products.docs)
             } catch (error) {

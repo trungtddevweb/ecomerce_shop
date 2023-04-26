@@ -18,12 +18,11 @@ export const getAUser = async (req, res) => {
 }
 
 export const getAllUsers = async (req, res, next) => {
-    const limit = parseInt(req.query.limit, 10) || 10
-    const page = parseInt(req.query.page, 10) || 1
+    const { limit, page } = req.query
     const options = {
         select: 'name email createdAt',
-        limit,
-        page,
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
         sort: { createdAt: 'desc' }
     }
     try {
