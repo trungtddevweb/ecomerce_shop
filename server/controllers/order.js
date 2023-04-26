@@ -27,7 +27,7 @@ export const createOrder = async (req, res) => {
 
 export const getOrderByUserId = async (req, res) => {
     const { _id: userId } = req.user
-    const { limit, page } = req.params
+    const { limit, page } = req.query
     const options = {
         limit: parseInt(limit, 10) || 5,
         page: parseInt(page, 10) || 1,
@@ -100,7 +100,7 @@ export const deletedOrderById = async (req, res) => {
 }
 
 export const getAllOrderByAdmin = async (req, res) => {
-    const { limit, page } = req.params
+    const { limit, page } = req.query
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,

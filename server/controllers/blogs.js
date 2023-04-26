@@ -25,7 +25,7 @@ export const getAPost = async (req, res) => {
 }
 
 export const getAllPosts = async (req, res) => {
-    const { limit, page } = req.params
+    const { limit, page } = req.query
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
