@@ -47,8 +47,8 @@ export const getAllUsers = async token => {
     return response.data
 }
 
-export const getAllProducts = async () => {
-    const response = await mainAPI.get('/products')
+export const getAllProducts = async (limit, page) => {
+    const response = await mainAPI.get(`/products?limit=${limit}&page=${page}`)
     return response.data
 }
 

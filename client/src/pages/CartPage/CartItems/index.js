@@ -31,6 +31,7 @@ import { getAUserAPI, removeProductIdFromCartAPI } from '~/api/main'
 import images from '~/assets/imgs'
 import useStyles from '~/assets/styles/useStyles'
 import paymentMethod from '~/assets/imgs/payment.png'
+import { showDialog } from 'src/redux/slice/dialogSlice'
 
 const CartItems = ({ onNext }) => {
     const classes = useStyles()
@@ -70,7 +71,6 @@ const CartItems = ({ onNext }) => {
 
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value)
-        // console.log(checked)
         const newChecked = [...checked]
         if (currentIndex === -1) {
             newChecked.push(value)
@@ -114,6 +114,16 @@ const CartItems = ({ onNext }) => {
         }
     }
 
+    const handleClick = () => {
+        dispatch(
+            showDialog({
+                title: 'Xóa sản phẩm khỏi giỏ hàng',
+                message: `Bạn có chắc muốn xóa các mục này chứ này chứ`,
+                onConfirm: () => handleDelete(checked)
+            })
+        )
+    }
+
     return (
         <Box width={1400}>
             <Grid container className='row d-flex justify-content-center my-4'>
@@ -125,7 +135,7 @@ const CartItems = ({ onNext }) => {
                             secondaryAction={
                                 checked.length > 0 && (
                                     <Tooltip title='Xóa sản phẩm'>
-                                        <IconButton onClick={() => handleDelete(checked)} aria-label='delete'>
+                                        <IconButton onClick={handleClick} aria-label='delete'>
                                             <Delete />
                                         </IconButton>
                                     </Tooltip>

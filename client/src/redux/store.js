@@ -1,10 +1,11 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import usersReducer from './slice/usersSlice'
 import toastReducer from './slice/toastSlice'
+import dialogReducer from './slice/dialogSlice'
 import storage from 'redux-persist/lib/storage'
 import { persistStore, persistReducer, FLUSH, PAUSE, REHYDRATE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 
-const rootReducer = combineReducers({ auth: usersReducer, toast: toastReducer })
+const rootReducer = combineReducers({ auth: usersReducer, toast: toastReducer, dialog: dialogReducer })
 
 const persistConfig = {
     key: 'root',

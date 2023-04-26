@@ -23,7 +23,8 @@ export const getAllUsers = async (req, res, next) => {
     const options = {
         select: 'name email createdAt',
         limit,
-        page
+        page,
+        sort: { createdAt: 'desc' }
     }
     try {
         const users = await User.paginate({ isAdmin: false }, options)

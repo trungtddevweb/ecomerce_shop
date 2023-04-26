@@ -7,26 +7,31 @@ import { Add } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { deleteItemByParams } from '~/api/main'
-import { useState } from 'react'
-import CustomBackDrop from '../BackDrop/CustomBackDrop'
+import { showDialog } from 'src/redux/slice/dialogSlice'
 
 function EnhancedTableToolbar(props) {
-    const [isLoading, setIsLoading] = useState(false)
     const { managerId } = useParams()
-    const { numSelected, selectedItem } = props;
+    const { numSelected, selectedItem, setSelected, data, setData } = props
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
+
     const handleDelete = async () => {
         try {
-            setIsLoading(true)
             await deleteItemByParams(managerId, token, selectedItem)
-            setIsLoading(false)
             dispatch(showToast({ type: 'success', message: 'Xóa thành công!' }))
         } catch (error) {
             console.error(error)
-            setIsLoading(false)
-            dispatch(showToast({ type: "error", message: `${error.message}` }))
+            dispatch(showToast({ type: 'error', message: `${error.message}` }))
         }
+    }
+    const handleClick = () => {
+        dispatch(
+            showDialog({
+                title: 'Xóa các Items',
+                message: `Bạn có chắc muốn xóa các mục này chứ này chứ`,
+                onConfirm: handleDelete
+            })
+        )
     }
 
     return (
@@ -35,47 +40,35 @@ function EnhancedTableToolbar(props) {
                 pl: { sm: 2 },
                 pr: { xs: 1, sm: 1 },
                 ...(numSelected > 0 && {
-                    bgcolor: (theme) =>
-                        alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-                }),
+                    bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+                })
             }}
         >
             {numSelected > 0 ? (
-                <Typography
-                    sx={{ flex: '1 1 100%' }}
-                    color="inherit"
-                    variant="subtitle1"
-                    component="div"
-                >
+                <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
                     {numSelected} đã chọn
                 </Typography>
             ) : (
-                <Typography
-                    sx={{ flex: '1 1 100%' }}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    {managerId === "products" ? "Sản phẩm" : managerId === "users" ? "Người dùng" : "Bài viết"}
+                <Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
+                    {managerId === 'products' ? 'Sản phẩm' : managerId === 'users' ? 'Người dùng' : 'Bài viết'}
                 </Typography>
             )}
 
             {numSelected > 0 ? (
-                <Tooltip title="Xóa">
-                    <IconButton onClick={handleDelete}>
+                <Tooltip title='Xóa'>
+                    <IconButton onClick={handleClick}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
             ) : (
-                <Tooltip title="Tạo mới">
+                <Tooltip title='Tạo mới'>
                     <IconButton>
                         <Add />
                     </IconButton>
                 </Tooltip>
             )}
-            <CustomBackDrop open={isLoading} />
         </Toolbar>
-    );
+    )
 }
 
 // EnhancedTableToolbar.propTypes = {

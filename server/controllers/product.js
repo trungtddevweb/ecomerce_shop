@@ -26,10 +26,14 @@ export const getAProduct = async (req, res) => {
 }
 
 export const getAllProduct = async (req, res) => {
+    const { page, limit } = req.query
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
     try {
-        const limit = parseInt(req.query.limit, 10) || 10
-        const page = parseInt(req.query.page, 10) || 1
-        const products = await Product.paginate({}, { limit, page })
+        const products = await Product.paginate({}, options)
         responseHandler.getData(res, products)
     } catch (error) {
         responseHandler.error(res, error)
@@ -37,10 +41,14 @@ export const getAllProduct = async (req, res) => {
 }
 
 export const getProductsByHot = async (req, res) => {
+    const { limit, page } = req.params
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
     try {
-        const limit = parseInt(req.query.limit, 10) || 5
-        const page = parseInt(req.query.page, 10) || 1
-        const products = await Product.paginate({ isHot: true }, { limit, page })
+        const products = await Product.paginate({ isHot: true }, options)
         responseHandler.getData(res, products)
     } catch (error) {
         responseHandler.error(res, error)
@@ -87,7 +95,7 @@ export const searchByName = async (req, res) => {
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
-        sort: { createdAt: -1 }
+        sort: { createdAt: 'desc' }
     }
     try {
         const products = await Product.paginate(query, options)
@@ -104,7 +112,7 @@ export const searchByField = async (req, res) => {
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
-        sort: { createdAt: -1 }
+        sort: { createdAt: 'desc' }
     }
     try {
         const query = { [queryField]: { $regex: new RegExp(queryValue, 'i') } }

@@ -27,11 +27,14 @@ export const createOrder = async (req, res) => {
 
 export const getOrderByUserId = async (req, res) => {
     const { _id: userId } = req.user
-
+    const { limit, page } = req.params
+    const options = {
+        limit: parseInt(limit, 10) || 5,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
     try {
-        const limit = parseInt(req.query.limit, 10) || 4
-        const page = parseInt(req.query.page, 10) || 1
-        const orders = await Order.paginate({ userId }, { limit, page })
+        const orders = await Order.paginate({ userId }, options)
         if (!orders) res.status(200).json({ message: 'Chưa có đơn hàng nào được đặt' })
         responseHandler.success(res, orders)
     } catch (error) {
@@ -93,5 +96,20 @@ export const deletedOrderById = async (req, res) => {
         res.status(200).json({ success: true, message: 'Danh sách order được chọn đã bị xóa' })
     } catch (error) {
         responseHandler.error(res, error)
+    }
+}
+
+export const getAllOrderByAdmin = async (req, res) => {
+    const { limit, page } = req.params
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
+    try {
+        const orders = await Order.paginate({}, options)
+        res.status(200).json(orders)
+    } catch (error) {
+        res.status(500).json({ sucess: false, message: error })
     }
 }
