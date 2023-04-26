@@ -25,10 +25,14 @@ export const getAPost = async (req, res) => {
 }
 
 export const getAllPosts = async (req, res) => {
+    const { limit, page } = req.params
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
     try {
-        const limit = parseInt(req.query.limit, 10) || 4
-        const page = parseInt(req.query.page, 10) || 1
-        const posts = await Blog.paginate({}, { limit, page })
+        const posts = await Blog.paginate({}, options)
         responseHandler.getData(res, posts)
     } catch (error) {
         responseHandler.error(res, error)
@@ -78,7 +82,6 @@ export const searchByTitle = async (req, res) => {
     }
     try {
         const query = { title: { $regex: new RegExp(titleValues, 'i') } }
-        console.log(query)
         const collections = await Blog.paginate(query, options)
         responseHandler.success(res, collections)
     } catch (error) {

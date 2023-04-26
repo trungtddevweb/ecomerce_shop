@@ -62,18 +62,22 @@ export const login = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-    if (!req.headers?.authorization) {
-        return
-    }
-    const authHeaders = req.headers.authorization
-    const token = authHeaders.split(' ')[1]
-    if (!token) {
-        return res.status(401).json({ success: false, message: 'Token không hợp lệ!' })
-    }
+    try {
+        if (!req.headers?.authorization) {
+            return
+        }
+        const authHeaders = req.headers.authorization
+        const token = authHeaders.split(' ')[1]
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'Token không hợp lệ!' })
+        }
 
-    const tokens = req.user.tokens
-    const newTokens = tokens.filter(t => t.token !== token)
+        const tokens = req.user.tokens
+        const newTokens = tokens.filter(t => t.token !== token)
 
-    await User.findByIdAndUpdate(req.user._id, { tokens: newTokens })
-    res.status(200).json({ success: true, message: 'Đăng xuất thành công!' })
+        await User.findByIdAndUpdate(req.user._id, { tokens: newTokens })
+        res.status(200).json({ success: true, message: 'Đăng xuất thành công!' })
+    } catch (error) {
+        res.status(500).json({ sucess: false, message: error })
+    }
 }
