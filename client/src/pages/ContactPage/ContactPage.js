@@ -15,9 +15,11 @@ import ContactForm from './ContactForm/ContactForm'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import { Facebook, Instagram, LinkedIn, LocationOn, Mail, Phone, Telegram, Twitter } from '@mui/icons-material'
 import useStyles from '~/assets/styles/useStyles'
+import useScrollToTop from '~/hooks/useScrollToTop'
 
 const ContactPage = () => {
     useDocumentTitle('Liên hệ')
+    useScrollToTop()
     const classes = useStyles()
 
     return (
