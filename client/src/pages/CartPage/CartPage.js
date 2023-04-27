@@ -11,9 +11,12 @@ import useStyles from '~/assets/styles/useStyles'
 import shippingImage from '~/assets/imgs/shipping.jpg'
 import { KeyboardReturn } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
+import useScrollToTop from '~/hooks/useScrollToTop'
+import usePrevious from '~/hooks/usePrevious'
 
 const CartPage = () => {
     useDocumentTitle('Giỏ hàng')
+    useScrollToTop()
     const classes = useStyles()
     const [orderCode, setOrderCode] = useState('')
     const [order, setOrder] = useState({
@@ -23,13 +26,20 @@ const CartPage = () => {
     })
     const [activeStep, setActiveStep] = useState(0)
 
+    const previousAddress = usePrevious(order.address)
+    const previousPaymentMethod = usePrevious(order.paymentMethod)
     const handleNext = useCallback(() => {
         setActiveStep(activeStep + 1)
     }, [activeStep])
 
     const handleBack = useCallback(() => {
+        setOrder({
+            products: order.products,
+            address: previousAddress,
+            paymentMethod: previousPaymentMethod
+        })
         setActiveStep(activeStep - 1)
-    }, [activeStep])
+    }, [activeStep, order.products, previousAddress, previousPaymentMethod])
 
     const handleProductSelect = useCallback(
         selectedProducts => {

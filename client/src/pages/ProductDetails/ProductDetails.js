@@ -1,4 +1,4 @@
-import { useParams, Link, Navigate, useNavigate } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
     Box,
     Breadcrumbs,
@@ -19,6 +19,7 @@ import { AddShoppingCart, NavigateNext } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProductToCart } from 'src/redux/slice/usersSlice'
 import { showToast } from 'src/redux/slice/toastSlice'
+import useScrollToTop from '~/hooks/useScrollToTop'
 const AnotherProductByCategory = lazy(() => import('./AnotherProduct'))
 const SliderImagesProduct = lazy(() => import('./SlideImagesProduct'))
 
@@ -30,6 +31,7 @@ const ProductDetails = () => {
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
     useDocumentTitle(product?.name)
+    useScrollToTop()
     const totalPrice = Number(product.price * countQuantity)
     const valueOfField = product.category?.split(' ')[0]
     const navigate = useNavigate()

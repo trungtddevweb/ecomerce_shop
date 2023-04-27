@@ -10,27 +10,26 @@ import {
     ListItem,
     ListItemAvatar,
     Avatar,
-    Stack,
     Typography
 } from '@mui/material'
-import { useState, lazy } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import { getUser } from 'src/utils/const'
 import BlogsDashboard from './Blogs/BlogsDashboard'
 import ProductsDashboard from './Products/ProductsDashboard'
 import UsersDashBoard from './Users/UsersDashBoard'
+import useScrollToTop from '~/hooks/useScrollToTop'
 
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
+    useScrollToTop()
     const { managerId } = useParams()
     const navigate = useNavigate()
     const user = useSelector(state => state.auth?.user?.userInfo)
     const isAdmin = user?.isAdmin
 
-    // const [isLoading, setIsLoading] = useState(false)
     const [selectedParam, setSelectedParam] = useState(managerId)
 
     const handleListItemClick = (event, path) => {

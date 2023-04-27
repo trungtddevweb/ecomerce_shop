@@ -63,12 +63,10 @@ const Header = () => {
         setIsloading(true)
         handleClose()
         try {
-            const res = await logout(token)
-            if (res?.status === 200) {
-                dispatch(logoutSuccess())
-                setIsloading(false)
-                navigate('/login')
-            }
+            await logout(token)
+            dispatch(logoutSuccess())
+            setIsloading(false)
+            navigate('/login')
         } catch (error) {
             setIsloading(false)
             console.error('Error; ', error)

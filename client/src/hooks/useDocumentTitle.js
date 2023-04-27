@@ -7,6 +7,7 @@ function useDocumentTitle(title, description) {
             document.title = title
             return
         }
+        document.title = 'My store'
     }, [title])
 
     return (
