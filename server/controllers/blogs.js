@@ -1,5 +1,6 @@
 import Blog from '../models/Blog.js'
 import responseHandler from '../handler/responseHandler.js'
+import mongoose from 'mongoose'
 
 export const createAPost = async (req, res) => {
     const picture = req.file
@@ -16,11 +17,13 @@ export const createAPost = async (req, res) => {
 }
 
 export const getAPost = async (req, res) => {
+    const blogId = req.params.blogId
     try {
-        const post = await Blog.findById(req.params.id)
+        const post = await Blog.findById({ _id: blogId })
+        if (!post) return res.status(404).json({ message: 'Không tìm thấy bài viết' })
         res.status(200).json(post)
     } catch (error) {
-        responseHandler.error(res, error)
+        res.status(500).json({ message: error })
     }
 }
 

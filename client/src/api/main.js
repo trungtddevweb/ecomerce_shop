@@ -52,8 +52,14 @@ export const getAllProducts = async (limit, page) => {
     return response.data
 }
 
+// Blogs
 export const getAllBlogs = async () => {
     const response = await mainAPI.get('/blogs?limit=4&page=1', {})
+    return response.data
+}
+
+export const getABlogPostAPI = async blogId => {
+    const response = await mainAPI.get(`/blogs/find/${blogId}`)
     return response.data
 }
 
