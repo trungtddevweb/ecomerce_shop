@@ -1,8 +1,7 @@
 import { Box, Grid, Stack, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import CardProductItem from '../../../components/CardProductItem'
-import { getAllProducts, getProductsByHot } from '~/api/main'
-import { optionsQuery } from 'src/utils/const'
+import { getAllProducts } from '~/api/main'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 
