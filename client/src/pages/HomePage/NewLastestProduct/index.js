@@ -1,12 +1,11 @@
 import { Box, Grid, Stack, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import CardProductItem from '../CardProductItem'
-import { getProductsByHot } from '~/api/main'
-import { optionsQuery } from 'src/utils/const'
+import CardProductItem from '../../../components/CardProductItem'
+import { getAllProducts } from '~/api/main'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 
-const ListProducts = ({ title, ...props }) => {
+const NewLastestProduct = () => {
     // const classes = useStyles()
     const [lists, setLists] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -15,7 +14,7 @@ const ListProducts = ({ title, ...props }) => {
         const fetchProducts = async () => {
             try {
                 setIsLoading(true)
-                const products = await getProductsByHot(optionsQuery.limit, optionsQuery.page)
+                const products = await getAllProducts()
                 setIsLoading(false)
                 setLists(products.docs)
             } catch (error) {
@@ -25,20 +24,21 @@ const ListProducts = ({ title, ...props }) => {
         }
         fetchProducts()
     }, [])
+    const sortedData = [...lists].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
     return (
         <Box display='flex' marginY={6} alignItems='center' flexDirection='column'>
             <Box width={1400}>
                 <Stack direction='row' alignItems='center' justifyContent='space-between'>
                     <Typography variant='h6' color='primary.main'>
-                        {title}
+                        Những sản phẩm mới nhất
                     </Typography>
                     <Typography variant='subtitle2' component={Link} to='/' color='blue'>
                         Xem thêm {'>>'}
                     </Typography>
                 </Stack>
                 <Grid container spacing={2}>
-                    {(isLoading ? Array.from(new Array(5)) : lists).map((list, index) => (
+                    {(isLoading ? Array.from(new Array(5)) : sortedData).map((list, index) => (
                         <Grid item key={list?._id || index} xs={2.4}>
                             {list ? (
                                 <CardProductItem data={list} />
@@ -59,4 +59,4 @@ const ListProducts = ({ title, ...props }) => {
     )
 }
 
-export default ListProducts
+export default NewLastestProduct

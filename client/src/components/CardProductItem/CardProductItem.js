@@ -2,8 +2,6 @@ import { Card, CardActionArea, CardContent, CardMedia, Divider, Typography } fro
 import useStyles from '~/assets/styles/useStyles'
 import imageFallback from '~/assets/imgs/noImage.png'
 import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { addProductIdToCartAPI } from '~/api/main'
 
 const CardProductItem = ({ data }) => {
     const classes = useStyles()
@@ -32,7 +30,7 @@ const CardProductItem = ({ data }) => {
                             Thương hiệu: {data.brand}
                         </Typography>
                         <Typography variant='body2' color='text.secondary'>
-                            Giá: {data.price}
+                            Giá: {data.price.toLocaleString('vi-VN')} VNĐ
                         </Typography>
                     </CardContent>
                     <Divider color='gray' />

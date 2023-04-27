@@ -19,12 +19,11 @@ export const logout = async token => {
         const response = await mainAPI.post('/auth/logout', null, {
             headers: { Authorization: `Bearer ${token}` }
         })
-        if (response.data.success) {
+        if (response) {
             localStorage.removeItem('token')
         }
-        return response
     } catch (error) {
-        return console.error(error)
+        console.error(error)
     }
 }
 
@@ -47,13 +46,19 @@ export const getAllUsers = async token => {
     return response.data
 }
 
-export const getAllProducts = async () => {
-    const response = await mainAPI.get('/products')
+export const getAllProducts = async (limit, page) => {
+    const response = await mainAPI.get(`/products?limit=${limit}&page=${page}`)
     return response.data
 }
 
+// Blogs
 export const getAllBlogs = async () => {
     const response = await mainAPI.get('/blogs?limit=4&page=1', {})
+    return response.data
+}
+
+export const getABlogPostAPI = async blogId => {
+    const response = await mainAPI.get(`/blogs/find/${blogId}`)
     return response.data
 }
 
@@ -70,7 +75,7 @@ export const deleteItemByParams = async (params, token, selectedItem) => {
 }
 
 export const removeProductIdFromCartAPI = async (productIds, token) => {
-    const res = await mainAPI.patch(
+    return await mainAPI.patch(
         '/users/remove-mutiple',
         { productIds },
         {
@@ -79,7 +84,6 @@ export const removeProductIdFromCartAPI = async (productIds, token) => {
             }
         }
     )
-    return res.data
 }
 
 // PRODUCT APIs
@@ -116,4 +120,24 @@ export const getProductsByHot = async (limit, page) => {
 export const getProductByFieldAPI = async (fields, value, limit, page) => {
     const response = await mainAPI.get(`/products/fields/search/?${fields}=${value}&limit=${limit}&page=${page}`)
     return response.data
+}
+
+// Order
+export const orderProductAPI = async (token, orderDetails) => {
+    return await mainAPI.post('/orders', orderDetails, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+// Stripe
+export const gePublicKey = async () => {
+    const res = await mainAPI.get('/stripe/config')
+    return res.data
+}
+
+export const getClientSecret = async products => {
+    const res = await mainAPI.post('/stripe/create-checkout-session', { products })
+    return res.data
 }

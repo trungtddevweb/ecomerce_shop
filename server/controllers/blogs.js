@@ -1,5 +1,6 @@
 import Blog from '../models/Blog.js'
 import responseHandler from '../handler/responseHandler.js'
+import mongoose from 'mongoose'
 
 export const createAPost = async (req, res) => {
     const picture = req.file
@@ -16,19 +17,25 @@ export const createAPost = async (req, res) => {
 }
 
 export const getAPost = async (req, res) => {
+    const blogId = req.params.blogId
     try {
-        const post = await Blog.findById(req.params.id)
+        const post = await Blog.findById({ _id: blogId })
+        if (!post) return res.status(404).json({ message: 'Không tìm thấy bài viết' })
         res.status(200).json(post)
     } catch (error) {
-        responseHandler.error(res, error)
+        res.status(500).json({ message: error })
     }
 }
 
 export const getAllPosts = async (req, res) => {
+    const { limit, page } = req.query
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
     try {
-        const limit = parseInt(req.query.limit, 10) || 4
-        const page = parseInt(req.query.page, 10) || 1
-        const posts = await Blog.paginate({}, { limit, page })
+        const posts = await Blog.paginate({}, options)
         responseHandler.getData(res, posts)
     } catch (error) {
         responseHandler.error(res, error)
@@ -78,7 +85,6 @@ export const searchByTitle = async (req, res) => {
     }
     try {
         const query = { title: { $regex: new RegExp(titleValues, 'i') } }
-        console.log(query)
         const collections = await Blog.paginate(query, options)
         responseHandler.success(res, collections)
     } catch (error) {

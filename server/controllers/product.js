@@ -26,10 +26,14 @@ export const getAProduct = async (req, res) => {
 }
 
 export const getAllProduct = async (req, res) => {
+    const { page, limit } = req.query
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
     try {
-        const limit = parseInt(req.query.limit, 10) || 10
-        const page = parseInt(req.query.page, 10) || 1
-        const products = await Product.paginate({}, { limit, page })
+        const products = await Product.paginate({}, options)
         responseHandler.getData(res, products)
     } catch (error) {
         responseHandler.error(res, error)
@@ -37,10 +41,17 @@ export const getAllProduct = async (req, res) => {
 }
 
 export const getProductsByHot = async (req, res) => {
+    const { limit, page } = req.query
+    const options = {
+        limit,
+        page,
+        // limit: parseInt(limit, 10) || 10,
+        // page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
     try {
-        const limit = parseInt(req.query.limit, 10) || 5
-        const page = parseInt(req.query.page, 10) || 1
-        const products = await Product.paginate({ isHot: true }, { limit, page })
+        const products = await Product.paginate({ isHot: true }, options)
+        console.log(req.query)
         responseHandler.getData(res, products)
     } catch (error) {
         responseHandler.error(res, error)
@@ -58,7 +69,7 @@ export const deletedProduct = async (req, res) => {
         }).exec()
         const existingIds = checkIds.map(id => id.id)
         const nonExistingIds = selectedIds.filter(id => !existingIds.includes(id))
-        if (nonExistingIds.length > 0) returnresponseHandler.notFound(res)
+        if (nonExistingIds.length > 0) return responseHandler.notFound(res)
 
         await Product.deleteMany({ _id: { $in: selectedIds } })
         res.status(200).json({ success: true, message: 'List products has been deleted!' })
@@ -87,7 +98,7 @@ export const searchByName = async (req, res) => {
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
-        sort: { createdAt: -1 }
+        sort: { createdAt: 'desc' }
     }
     try {
         const products = await Product.paginate(query, options)
@@ -104,7 +115,7 @@ export const searchByField = async (req, res) => {
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
-        sort: { createdAt: -1 }
+        sort: { createdAt: 'desc' }
     }
     try {
         const query = { [queryField]: { $regex: new RegExp(queryValue, 'i') } }

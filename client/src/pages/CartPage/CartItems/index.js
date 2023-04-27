@@ -15,10 +15,12 @@ import {
     ListItemIcon,
     Divider,
     Tooltip,
+    CardContent,
     Button
 } from '@mui/material'
 import Image from 'mui-image'
 import { Fragment } from 'react'
+import { useMemo } from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -28,8 +30,10 @@ import { removeProductFromCart } from 'src/redux/slice/usersSlice'
 import { getAUserAPI, removeProductIdFromCartAPI } from '~/api/main'
 import images from '~/assets/imgs'
 import useStyles from '~/assets/styles/useStyles'
+import paymentMethod from '~/assets/imgs/payment.png'
+import { showDialog } from 'src/redux/slice/dialogSlice'
 
-const CartItems = () => {
+const CartItems = ({ onNext }) => {
     const classes = useStyles()
     const [checked, setChecked] = useState([])
     const [products, setProducts] = useState([])
@@ -37,6 +41,14 @@ const CartItems = () => {
     const [loading, setLoading] = useState(false)
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
+    const totalQuantity = useMemo(
+        () => checked.reduce((accumulator, currentValue) => accumulator + currentValue.quantity, 0),
+        [checked]
+    )
+    const totalPrice = useMemo(
+        () => checked.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
+        [checked]
+    )
 
     useEffect(() => {
         const fetchCartOfUser = async () => {
@@ -53,15 +65,25 @@ const CartItems = () => {
         fetchCartOfUser()
     }, [token])
 
+    const handleNextClick = () => {
+        onNext(checked)
+    }
+
     const handleToggle = value => () => {
         const currentIndex = checked.indexOf(value)
         const newChecked = [...checked]
-
         if (currentIndex === -1) {
             newChecked.push(value)
         } else {
             newChecked.splice(currentIndex, 1)
         }
+
+        if (newChecked.length === products.length) {
+            setIsCheckedAll(true)
+        } else {
+            setIsCheckedAll(false)
+        }
+
         setChecked(newChecked)
     }
 
@@ -69,7 +91,7 @@ const CartItems = () => {
         if (isCheckedAll) {
             setChecked([])
         } else {
-            const newChecked = products.map(product => product._id)
+            const newChecked = products.map(product => product)
             setChecked(newChecked)
         }
         setIsCheckedAll(!isCheckedAll)
@@ -77,11 +99,12 @@ const CartItems = () => {
 
     const handleDelete = async value => {
         try {
-            const response = await removeProductIdFromCartAPI(checked, token)
+            const listCheckedId = checked?.map(product => product._id)
+            const response = await removeProductIdFromCartAPI(listCheckedId, token)
             if (response.status === 200) {
-                dispatch(removeProductFromCart({ productIds: checked }))
+                dispatch(removeProductFromCart({ productIds: listCheckedId }))
                 dispatch(showToast({ type: 'success', message: 'Xóa sản phẩm khỏi giỏ hàng thành công' }))
-                const newProducts = products.filter(product => !value.includes(product._id.toString()))
+                const newProducts = products.filter(product => !value.includes(product))
                 setProducts(newProducts)
                 setChecked([])
             }
@@ -91,8 +114,18 @@ const CartItems = () => {
         }
     }
 
+    const handleClick = () => {
+        dispatch(
+            showDialog({
+                title: 'Xóa sản phẩm khỏi giỏ hàng',
+                message: `Bạn có chắc muốn xóa các mục này chứ này chứ`,
+                onConfirm: () => handleDelete(checked)
+            })
+        )
+    }
+
     return (
-        <Box>
+        <Box width={1400}>
             <Grid container className='row d-flex justify-content-center my-4'>
                 <Grid item className='col-md-8'>
                     <Card className='card mb-4'>
@@ -102,7 +135,7 @@ const CartItems = () => {
                             secondaryAction={
                                 checked.length > 0 && (
                                     <Tooltip title='Xóa sản phẩm'>
-                                        <IconButton onClick={() => handleDelete(checked)} aria-label='delete'>
+                                        <IconButton onClick={handleClick} aria-label='delete'>
                                             <Delete />
                                         </IconButton>
                                     </Tooltip>
@@ -112,7 +145,13 @@ const CartItems = () => {
                             {products.length !== 0 && (
                                 <ListItemButton role={undefined} dense>
                                     <ListItemIcon>
-                                        <Checkbox edge='start' tabIndex={-1} onClick={handleCheckAll} disableRipple />
+                                        <Checkbox
+                                            edge='start'
+                                            tabIndex={-1}
+                                            onClick={handleCheckAll}
+                                            checked={isCheckedAll}
+                                            disableRipple
+                                        />
                                     </ListItemIcon>
 
                                     <Typography variant='h6'>Chọn tất cả {`(${products.length})`}</Typography>
@@ -123,19 +162,7 @@ const CartItems = () => {
                         {loading ? (
                             <LinearIndeterminate />
                         ) : products.length === 0 ? (
-                            <Box className={classes.flexBox} flexDirection='column'>
-                                <Stack direction='row'>
-                                    <Typography>Giỏ hàng rỗng. </Typography>
-                                    <Typography
-                                        component={Link}
-                                        className={classes.hoverItem}
-                                        color='primary'
-                                        to='/products'
-                                        variant='h6'
-                                    >
-                                        Mua hàng ngay!
-                                    </Typography>
-                                </Stack>
+                            <Box className={classes.flexBox} padding={4} flexDirection='column'>
                                 <Image
                                     duration={500}
                                     shiftDuration={150}
@@ -143,24 +170,36 @@ const CartItems = () => {
                                     src={images.emptyFolder}
                                     alt='Null'
                                 />
+                                <Stack direction='row' alignItems='center'>
+                                    <Typography variant='body1'>
+                                        Giỏ hàng rỗng -{' '}
+                                        <Typography
+                                            component={Link}
+                                            color='primary'
+                                            to='/products'
+                                            className={classes.hoverItem}
+                                        >
+                                            Mua gì đó chứ ?
+                                        </Typography>
+                                    </Typography>
+                                </Stack>
                             </Box>
                         ) : (
-                            <List>
+                            <List
+                                sx={{
+                                    minHeight: '200px'
+                                }}
+                            >
                                 {products.map(product => {
                                     const labelId = `checkbox-list-label-${product._id}`
-
                                     return (
                                         <Fragment key={product._id}>
                                             <ListItem disablePadding>
-                                                <ListItemButton
-                                                    role={undefined}
-                                                    onClick={handleToggle(product._id)}
-                                                    dense
-                                                >
+                                                <ListItemButton role={undefined} onClick={handleToggle(product)} dense>
                                                     <ListItemIcon>
                                                         <Checkbox
                                                             edge='start'
-                                                            checked={checked.includes(product._id)}
+                                                            checked={checked.includes(product)}
                                                             tabIndex={-1}
                                                             disableRipple
                                                             inputProps={{ 'aria-labelledby': labelId }}
@@ -193,7 +232,10 @@ const CartItems = () => {
                                                                     Số lượng: {product.quantity}
                                                                 </Typography>
                                                                 {' | '}
-
+                                                                <Typography component='span' variant='body2'>
+                                                                    Màu sắc: {product.color}
+                                                                </Typography>
+                                                                {' | '}
                                                                 <Typography component='span' variant='body2'>
                                                                     Kích thước: {product.size}
                                                                 </Typography>
@@ -209,76 +251,53 @@ const CartItems = () => {
                             </List>
                         )}
                     </Card>
-                    <div className='card mb-4'>
-                        <div className='card-body'>
-                            <p>
-                                <strong>Expected shipping delivery</strong>
-                            </p>
-                            <p className='mb-0'>12.10.2020 - 14.10.2020</p>
-                        </div>
-                    </div>
-                    <div className='card mb-4 mb-lg-0'>
-                        <div className='card-body'>
-                            <p>
-                                <strong>We accept</strong>
-                            </p>
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg'
-                                alt='Visa'
-                            />
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg'
-                                alt='American Express'
-                            />
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg'
-                                alt='Mastercard'
-                            />
-                            <img
-                                className='me-2'
-                                width='45px'
-                                src='https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.webp'
-                                alt='PayPal acceptance mark'
-                            />
-                        </div>
-                    </div>
+                    <Card className='card mb-4 mb-lg-0'>
+                        <CardContent className='card-body'>
+                            <Typography fontWeight={600}>Có thể thanh toán bằng ví điện tử</Typography>
+                            <Image duration={500} alt='Payment methods' width='250px' src={paymentMethod} />
+                        </CardContent>
+                    </Card>
                 </Grid>
                 <Grid item className='col-md-4'>
-                    <Card className='card mb-4'>
+                    <Card position='sticky' className='card mb-4'>
                         <CardHeader title='Tổng giá' className='card-header py-3' />
-                        <div className='card-body'>
-                            <ul className='list-group list-group-flush'>
-                                <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0'>
-                                    Products
-                                    <span>$53.98</span>
-                                </li>
-                                <li className='list-group-item d-flex justify-content-between align-items-center px-0'>
-                                    Shipping
-                                    <span>Gratis</span>
-                                </li>
-                                <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
-                                    <div>
-                                        <strong>Total amount</strong>
-                                        <strong>
-                                            <p className='mb-0'>(including VAT)</p>
-                                        </strong>
-                                    </div>
-                                    <span>
-                                        <strong>$53.98</strong>
-                                    </span>
-                                </li>
-                            </ul>
-                            <button type='button' className='btn btn-primary btn-lg btn-block'>
-                                Go to checkout
-                            </button>
-                        </div>
+                        <CardContent>
+                            <Box>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tổng số sản phẩm</Typography>
+                                    <Typography variant='h6' color='primary'>
+                                        {checked.length}
+                                    </Typography>
+                                </Stack>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tổng số lượng</Typography>
+                                    <Typography variant='h6' color='primary'>
+                                        {totalQuantity}
+                                    </Typography>
+                                </Stack>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tiền ship</Typography>
+                                    <Typography variant='h6' color='primary'>
+                                        Free ship
+                                    </Typography>
+                                </Stack>
+                            </Box>
+                        </CardContent>
+                        <Divider variant='fullWidth' component='div' />
+                        <Box>
+                            <CardContent>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Tổng số tiền</Typography>
+                                    <Typography variant='h6' color='error'>
+                                        {totalPrice.toLocaleString('vi-VN')} VNĐ
+                                    </Typography>
+                                </Stack>
+                            </CardContent>
+                        </Box>
                     </Card>
+                    <Button onClick={handleNextClick} disabled={checked.length === 0} variant='contained'>
+                        Đặt hàng ngay
+                    </Button>
                 </Grid>
             </Grid>
         </Box>
