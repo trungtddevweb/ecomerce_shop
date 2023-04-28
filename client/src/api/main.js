@@ -57,6 +57,11 @@ export const getAllBlogs = async () => {
     return response.data
 }
 
+export const searchBlogsByQuery = async query => {
+    const response = await mainAPI.get(`/blogs/search?title=${query}`)
+    return response.data
+}
+
 export const getABlogPostAPI = async blogId => {
     const response = await mainAPI.get(`/blogs/find/${blogId}`)
     return response.data

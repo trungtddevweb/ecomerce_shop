@@ -101,7 +101,7 @@ const BlogDetailPage = () => {
                             <Typography variant='h6' marginBottom={2} fontWeight={600}>
                                 Những bài viết liên quan
                             </Typography>
-                            <RecentPosts />
+                            <RecentPosts blogId={blogId} />
                         </Grid>
                     </Grid>
                 </Box>

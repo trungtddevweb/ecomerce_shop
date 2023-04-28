@@ -30,7 +30,7 @@ const ErrorPage = () => {
                     </Typography>
                 </Typography>
                 <Button startIcon={<Home />} aria-label='go-home-button' component={Link} to='/' variant='contained'>
-                    Go Home
+                    Trang chủ
                 </Button>
             </Box>
         </Box>
