@@ -1,27 +1,26 @@
-import { useEffect, useState } from 'react'
 import { Box, Paper, Stack, Typography } from '@mui/material'
-import { getAllBlogs } from '~/api/main'
 import Image from 'mui-image'
 import { Link } from 'react-router-dom'
+import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
+import useFetchData from '~/hooks/useFetchData'
 
-const RecentPosts = () => {
-    const [posts, setPosts] = useState([])
+const RecentPosts = ({ blogId }) => {
+    const { data, isLoading } = useFetchData(`/blogs/`)
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const posts = await getAllBlogs()
-                setPosts(posts.docs)
-            } catch (error) {
-                console.error(error)
-            }
-        }
-        fetchPosts()
-    }, [])
+    if (isLoading)
+        return (
+            <Box width='60%'>
+                <SkeletonFallback height={100} />
+                <SkeletonFallback />
+                <SkeletonFallback width='80%' />
+            </Box>
+        )
+
+    const processedResult = data?.filter(item => !(item._id && item._id === blogId))
 
     return (
         <Box position='sticky' top={100} width='70%' display='flex' flexDirection='column' gap={2}>
-            {posts.map(post => (
+            {processedResult?.map(post => (
                 <Paper key={post._id} elevation={4}>
                     <Stack padding={2} spacing={2} direction='row'>
                         <Box>
