@@ -58,6 +58,8 @@ const ProductDetails = () => {
         fetchProduct(productId)
     }, [productId])
 
+    console.log(product)
+
     const increaseQuantity = () => {
         const newValue = parseInt(countQuantity) + 1
         setCountQuantity(newValue)

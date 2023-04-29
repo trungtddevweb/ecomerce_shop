@@ -39,7 +39,9 @@ const BlogPage = () => {
                         <Typography variant='h6' color='primary'>
                             Kết quả tìm kiếm cho:{' '}
                         </Typography>
-                        <Typography variant='h6'>"{query}"</Typography>
+                        <Typography variant='h6' color='secondary'>
+                            "{query}"
+                        </Typography>
                     </Stack>
                     {isLoading ? (
                         <Box className={classes.flexBox} height={500}>
@@ -47,6 +49,11 @@ const BlogPage = () => {
                         </Box>
                     ) : (
                         <ImageList variant='masonry' gap={8}>
+                            {data?.length === 0 && (
+                                <Typography>
+                                    Không có kết quả tìm kiếm phù hợp cho từ khóa bạn tìm kiếm. Vui lòng thử lại!
+                                </Typography>
+                            )}
                             {data?.map(blog => (
                                 <ImageListItem key={blog.picture}>
                                     <Link to={`/blogs/${blog._id}`}>

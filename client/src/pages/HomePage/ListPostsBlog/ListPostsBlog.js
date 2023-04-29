@@ -46,7 +46,7 @@ const ListPostsBlog = () => {
                 <Typography variant='h6' color='primary.main'>
                     Bài viết nổi bật
                 </Typography>
-                <Typography variant='subtitle2' component={Link} to='/' color='blue'>
+                <Typography variant='subtitle2' className={classes.hoverItem} component={Link} to='/blogs' color='blue'>
                     Xem thêm {'>>'}
                 </Typography>
             </Stack>
