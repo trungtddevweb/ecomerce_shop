@@ -1,32 +1,31 @@
 // import PropTypes from 'react'
-import TableSortLabel from '@mui/material/TableSortLabel';
-import { visuallyHidden } from '@mui/utils';
-import { Box, Checkbox, TableCell, TableHead, TableRow } from '@mui/material';
-
+import TableSortLabel from '@mui/material/TableSortLabel'
+import { visuallyHidden } from '@mui/utils'
+import { Box, Checkbox, TableCell, TableHead, TableRow } from '@mui/material'
 
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } =
-        props
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells, page } = props
 
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
+    const createSortHandler = property => event => {
+        onRequestSort(event, property)
+    }
 
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell padding='checkbox'>
                     <Checkbox
-                        color="primary"
+                        color='primary'
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
+                        hidden={page > 0}
                         inputProps={{
-                            'aria-label': 'select all desserts',
+                            'aria-label': 'select all desserts'
                         }}
                     />
                 </TableCell>
-                {headCells.map((headCell) => (
+                {headCells.map(headCell => (
                     <TableCell
                         key={headCell.id}
                         align={headCell.numeric ? 'right' : 'left'}
@@ -40,7 +39,7 @@ function EnhancedTableHead(props) {
                         >
                             {headCell.label}
                             {orderBy === headCell.id ? (
-                                <Box component="span" sx={visuallyHidden}>
+                                <Box component='span' sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </Box>
                             ) : null}
@@ -49,7 +48,7 @@ function EnhancedTableHead(props) {
                 ))}
             </TableRow>
         </TableHead>
-    );
+    )
 }
 
 // EnhancedTableHead.propTypes = {

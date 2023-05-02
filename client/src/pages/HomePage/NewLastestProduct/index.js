@@ -9,13 +9,12 @@ import useStyles from '~/assets/styles/useStyles'
 const NewLastestProduct = () => {
     // const classes = useStyles()
     const [lists, setLists] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const classes = useStyles()
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                setIsLoading(true)
                 const products = await getAllProducts()
                 setIsLoading(false)
                 setLists(products.docs)

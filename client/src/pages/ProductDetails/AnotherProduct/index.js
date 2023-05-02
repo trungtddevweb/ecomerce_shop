@@ -9,13 +9,12 @@ import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 
 const AnotherProductByCategory = ({ title, fields, value, productId }) => {
     const [lists, setLists] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const classes = useStyles()
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                setIsLoading(true)
                 const products = await getProductByFieldAPI(
                     fields,
                     value,
@@ -48,13 +47,18 @@ const AnotherProductByCategory = ({ title, fields, value, productId }) => {
                             className={classes.hoverItem}
                             variant='subtitle2'
                             component={Link}
-                            to='/'
+                            to='/blogs'
                             color='blue'
                         >
                             Xem thêm {'>>'}
                         </Typography>
                     )}
                 </Stack>
+                {processedResult.length === 0 && (
+                    <Typography variant='subtitle1' color='GrayText' padding={2}>
+                        Không có sản phẩm nào!
+                    </Typography>
+                )}
                 <Grid container minHeight={360} spacing={2}>
                     {(isLoading ? Array.from(new Array(6)) : processedResult).map((list, index) => (
                         <Grid item key={list?._id || index} xs={2}>

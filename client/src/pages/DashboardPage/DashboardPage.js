@@ -27,7 +27,7 @@ const DashboardPage = () => {
     useScrollToTop()
     const { managerId } = useParams()
     const navigate = useNavigate()
-    const user = useSelector(state => state.auth?.user?.userInfo)
+    const user = useSelector(state => state.auth?.user.userInfo)
     const isAdmin = user?.isAdmin
 
     const [selectedParam, setSelectedParam] = useState(managerId)
