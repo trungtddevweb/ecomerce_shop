@@ -65,6 +65,10 @@ export default createBrowserRouter([
             {
                 path: routes.personal.path,
                 element: routes.personal.element
+            },
+            {
+                path: routes.search.path,
+                element: routes.search.element
             }
         ]
     }

@@ -32,7 +32,6 @@ const Header = () => {
     const [isLoading, setIsloading] = useState(false)
     const token = localStorage.getItem('token')
     const classes = useStyles()
-    // const [value, setValue] = useState(false);
 
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth?.user?.userInfo)
@@ -165,12 +164,14 @@ const Header = () => {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                        <MenuItem component={Link} to='/settings' className={classes.hoverItem} onClick={handleClose}>
-                            <ListItemIcon>
-                                <Avatar fontSize='small' />
-                            </ListItemIcon>
-                            Thông tin
-                        </MenuItem>
+                        <Link onClick={handleClose} to={routes.personal.path} className={classes.hoverItem}>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <Avatar fontSize='small' />
+                                </ListItemIcon>
+                                Thông tin
+                            </MenuItem>
+                        </Link>
                         <MenuItem
                             className={classes.hoverItem}
                             component={Link}
