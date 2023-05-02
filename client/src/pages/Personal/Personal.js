@@ -1,14 +1,13 @@
 import { Box, Grid, Paper } from '@mui/material'
 import { useState } from 'react'
-import { lazy } from 'react'
 import useDocumentTitle from '~/hooks/useDocumentTitle'
 import useScrollToTop from '~/hooks/useScrollToTop'
 import Settings from './Fields/Settings'
 import Shipping from './Fields/Shipping'
 import Inbox from './Fields/Inbox'
-const TabsNavigation = lazy(() => import('./TabsNavigation'))
+import TabsNavigation from './TabsNavigation'
 
-const OrderPage = () => {
+const Personal = () => {
     const [selected, setSelected] = useState('settings')
     useScrollToTop()
     useDocumentTitle('Thông tin cá nhân')
@@ -28,19 +27,21 @@ const OrderPage = () => {
     }
 
     return (
-        <Box minHeight='71vh' display='flex' bgcolor='lightgray' justifyContent='center'>
-            <Grid width={1400} marginY={5} container spacing={2}>
-                <Grid item xs={4}>
-                    <Paper elevation={6}>
-                        <TabsNavigation selected={selected} setSelected={setSelected} />
-                    </Paper>
+        <Box minHeight='70vh' display='flex' bgcolor='lightgray' justifyContent='center'>
+            <Box width={1400} marginY={5}>
+                <Grid container spacing={2}>
+                    <Grid item xs={4}>
+                        <Paper elevation={6}>
+                            <TabsNavigation selected={selected} setSelected={setSelected} />
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <Paper elevation={6}>{getSelectedField(selected)}</Paper>
+                    </Grid>
                 </Grid>
-                <Grid item xs={8}>
-                    <Paper elevation={6}>{getSelectedField(selected)}</Paper>
-                </Grid>
-            </Grid>
+            </Box>
         </Box>
     )
 }
 
-export default OrderPage
+export default Personal

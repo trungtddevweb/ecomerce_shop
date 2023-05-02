@@ -11,6 +11,7 @@ import DashboardPage from '~/pages/DashboardPage'
 import BlogDetailPage from '~/pages/BlogDetailPage'
 import ProductDetails from '~/pages/ProductDetails'
 import Personal from '~/pages/Personal'
+import SearchPage from '~/pages/SearchPage'
 
 const routes = {
     home: {
@@ -60,6 +61,10 @@ const routes = {
     dashboard: {
         path: '/dashboard/:managerId',
         element: <DashboardPage />
+    },
+    search: {
+        path: '/search',
+        element: <SearchPage />
     },
     personal: {
         path: '/settings',
