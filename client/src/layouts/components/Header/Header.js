@@ -165,8 +165,11 @@ const Header = () => {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                        <MenuItem className={classes.hoverItem} onClick={handleClose}>
-                            <Avatar /> Thông tin
+                        <MenuItem component={Link} to='/settings' className={classes.hoverItem} onClick={handleClose}>
+                            <ListItemIcon>
+                                <Avatar fontSize='small' />
+                            </ListItemIcon>
+                            Thông tin
                         </MenuItem>
                         <MenuItem
                             className={classes.hoverItem}

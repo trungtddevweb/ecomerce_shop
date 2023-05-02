@@ -7,10 +7,10 @@ import LoginPage from '~/pages/LoginPage'
 import ProductPage from '~/pages/ProductPage'
 import RegisterPage from '~/pages/RegisterPage'
 import CartPage from '~/pages/CartPage'
-import CategoriesPage from '~/pages/CategoriesPage'
 import DashboardPage from '~/pages/DashboardPage'
 import BlogDetailPage from '~/pages/BlogDetailPage'
-import ProductDetails from '~/pages/ProductDetails/ProductDetails'
+import ProductDetails from '~/pages/ProductDetails'
+import Personal from '~/pages/Personal'
 
 const routes = {
     home: {
@@ -57,13 +57,13 @@ const routes = {
         path: '/cart',
         element: <CartPage />
     },
-    categories: {
-        path: '/categories',
-        element: <CategoriesPage />
-    },
     dashboard: {
         path: '/dashboard/:managerId',
         element: <DashboardPage />
+    },
+    personal: {
+        path: '/settings',
+        element: <Personal />
     }
 }
 

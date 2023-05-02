@@ -3,7 +3,7 @@ import mainAPI from '~/api/base'
 
 const useFetchData = url => {
     const [data, setData] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [errors, setErrors] = useState(null)
 
     useEffect(() => {

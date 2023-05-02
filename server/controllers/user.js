@@ -65,8 +65,6 @@ export const addProductToUser = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy người dùng' })
         }
 
-        if (!productId) return res.status(404).json({ message: 'productId chưa được nhập' })
-
         // Tìm kiếm sản phẩm trong giỏ hàng của người dùng
         const productIndex = user.products.findIndex(
             p => p.productId._id.toString() === productId.toString() && p.size === size && p.color === color
@@ -94,7 +92,7 @@ export const addProductToUser = async (req, res) => {
         responseHandler.success(res, user)
     } catch (error) {
         // Nếu có lỗi xảy ra, trả về thông báo lỗi và mã trạng thái 500
-        responseHandler.error(res, error)
+        res.status(500).json({ message: error })
     }
 }
 

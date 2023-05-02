@@ -23,7 +23,6 @@ const ForgotPassword = () => {
     })
     const forgotPass = data => {
         setLoading(true)
-        console.log(data)
         axios
             .post('https://ecomerce-shopping.onrender.com/api/auth/forgot', data)
             .then(() => {
@@ -37,7 +36,7 @@ const ForgotPassword = () => {
     }
     return (
         <div className='form-container d-flex justify-content-center align-items-center '>
-            <Box component="form" onSubmit={handleSubmit(forgotPass)} className='shadow rounded p-4 form-wrap '>
+            <Box component='form' onSubmit={handleSubmit(forgotPass)} className='shadow rounded p-4 form-wrap '>
                 <div className='img-wrap mb-3'>
                     <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                 </div>

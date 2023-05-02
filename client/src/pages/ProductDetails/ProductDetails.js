@@ -32,12 +32,12 @@ const ProductDetails = () => {
     const dispatch = useDispatch()
     useDocumentTitle(product?.name)
     useScrollToTop()
-    const totalPrice = Number(product.price * countQuantity)
+    const totalPrice = Number(product.price * countQuantity) || 0
     const valueOfField = product.category?.split(' ')[0]
     const navigate = useNavigate()
 
-    const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '')
-    const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || '')
+    const [selectedSize, setSelectedSize] = useState()
+    const [selectedColor, setSelectedColor] = useState()
 
     const handleChangeSize = (event, newAlignment) => {
         setSelectedSize(newAlignment)
@@ -58,7 +58,7 @@ const ProductDetails = () => {
         fetchProduct(productId)
     }, [productId])
 
-    console.log(product)
+    console.log(selectedSize)
 
     const increaseQuantity = () => {
         const newValue = parseInt(countQuantity) + 1

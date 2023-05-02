@@ -59,12 +59,12 @@ export default createBrowserRouter([
                 element: routes.cart.element
             },
             {
-                path: routes.categories.path,
-                element: routes.categories.element
-            },
-            {
                 path: routes.dashboard.path,
                 element: routes.dashboard.element
+            },
+            {
+                path: routes.personal.path,
+                element: routes.personal.element
             }
         ]
     }
