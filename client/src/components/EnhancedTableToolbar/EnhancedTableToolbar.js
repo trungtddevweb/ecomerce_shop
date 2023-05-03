@@ -60,16 +60,10 @@ function EnhancedTableToolbar(props) {
                 </Typography>
             )}
 
-            {numSelected > 0 ? (
+            {numSelected > 0 && (
                 <IconButton onClick={handleClick}>
                     <Tooltip title='Xóa'>
                         <DeleteIcon />
-                    </Tooltip>
-                </IconButton>
-            ) : (
-                <IconButton>
-                    <Tooltip title='Tạo mới'>
-                        <Add />
                     </Tooltip>
                 </IconButton>
             )}
