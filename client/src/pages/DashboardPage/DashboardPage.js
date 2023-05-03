@@ -15,11 +15,12 @@ import {
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { Create, HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
+import { Create, HistoryEduOutlined, Inventory, LocalShipping, ManageAccounts } from '@mui/icons-material'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import BlogsDashboard from './Blogs/BlogsDashboard'
 import ProductsDashboard from './Products/ProductsDashboard'
 import CreateFields from './CreateFields'
+import OrderManager from './OrderManager'
 import UsersDashBoard from './Users/UsersDashBoard'
 import useScrollToTop from '~/hooks/useScrollToTop'
 
@@ -48,6 +49,8 @@ const DashboardPage = () => {
                 return <BlogsDashboard />
             case 'create':
                 return <CreateFields />
+            case 'order-manager':
+                return <OrderManager />
             default:
                 return <ProductsDashboard />
         }
@@ -110,6 +113,15 @@ const DashboardPage = () => {
                                     <Create />
                                 </ListItemIcon>
                                 <ListItemText primary='Tạo mới' />
+                            </ListItemButton>
+                            <ListItemButton
+                                selected={selectedParam === 'order-manager'}
+                                onClick={event => handleListItemClick(event, 'order-manager')}
+                            >
+                                <ListItemIcon>
+                                    <LocalShipping />
+                                </ListItemIcon>
+                                <ListItemText primary='Đơn hàng' />
                             </ListItemButton>
                         </List>
                         <ListItem

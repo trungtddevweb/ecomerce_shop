@@ -23,6 +23,9 @@ router.get('/all-order', verifyAdmin, getAllOrderByAdmin)
 // Get orders by userId
 router.get('/', verifyUser, getOrderByUserId)
 
+// Get Order by fields
+router.get('/search', verifyAdmin, getOrderByFields)
+
 // Update order
 router.patch('/', verifyUser, updateOrder)
 

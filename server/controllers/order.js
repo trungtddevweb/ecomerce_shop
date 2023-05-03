@@ -113,3 +113,21 @@ export const getAllOrderByAdmin = async (req, res) => {
         res.status(500).json({ sucess: false, message: error })
     }
 }
+
+export const getOrderByFields = async (req, res) => {
+    const { page, limit } = req.query
+    const queryField = Object.keys(req.query)[0]
+    const queryValue = req.query[queryField]
+    const options = {
+        limit: parseInt(limit, 10) || 10,
+        page: parseInt(page, 10) || 1,
+        sort: { createdAt: 'desc' }
+    }
+    try {
+        const query = { [queryField]: { $regex: new RegExp(queryValue, 'i') } }
+        const collection = await Order.paginate(query, options)
+        responseHandler.success(res, collection)
+    } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
