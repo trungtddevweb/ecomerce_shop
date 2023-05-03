@@ -143,7 +143,7 @@ export const getClientSecret = async products => {
 export const getOrderByUserIdAPI = async (token, limit, pageSize) => {
     return await mainAPI.get(`/orders/?limit=${limit}&page=${pageSize}`, {
         headers: {
-            Authorization: `Beaser ${token}`
+            Authorization: `Bearer ${token}`
         }
     })
 }

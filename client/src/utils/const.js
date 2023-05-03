@@ -23,3 +23,18 @@ export const stepsCart = [
     'Chọn phương thức thanh toán',
     'Xem lại thông tin và xác nhận'
 ]
+
+export const filterLists = [
+    {
+        name: 'Loại',
+        options: ['Áo', 'Quần', 'Phụ kiện', 'Mũ', 'Đầm', 'Váy', 'Tất cả']
+    },
+    {
+        name: 'Thương hiệu',
+        options: ['Trung Quốc', 'Hàn Quốc', 'Thái Lan', 'Pháp', 'Việt Nam', 'Tất cả']
+    },
+    {
+        name: 'Màu sắc',
+        options: ['Trắng', 'Đen', 'Bạc', 'Ghi', 'Nâu', 'Tất cả']
+    }
+]
