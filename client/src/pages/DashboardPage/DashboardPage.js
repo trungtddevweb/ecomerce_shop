@@ -10,32 +10,47 @@ import {
     ListItem,
     ListItemAvatar,
     Avatar,
-    Stack,
     Typography
 } from '@mui/material'
-import { useState, lazy } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
+import { Create, HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import { getUser } from 'src/utils/const'
 import BlogsDashboard from './Blogs/BlogsDashboard'
 import ProductsDashboard from './Products/ProductsDashboard'
+import CreateFields from './CreateFields'
 import UsersDashBoard from './Users/UsersDashBoard'
+import useScrollToTop from '~/hooks/useScrollToTop'
 
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
+    useScrollToTop()
     const { managerId } = useParams()
     const navigate = useNavigate()
-    const user = useSelector(state => state.auth?.user?.userInfo)
+    const user = useSelector(state => state.auth?.user.userInfo)
     const isAdmin = user?.isAdmin
 
-    // const [isLoading, setIsLoading] = useState(false)
     const [selectedParam, setSelectedParam] = useState(managerId)
 
     const handleListItemClick = (event, path) => {
         setSelectedParam(path)
         navigate(`/dashboard/${path}`)
+    }
+
+    function getFields(params) {
+        switch (params) {
+            case 'users':
+                return <UsersDashBoard />
+            case 'products':
+                return <ProductsDashboard />
+            case 'blogs':
+                return <BlogsDashboard />
+            case 'create':
+                return <CreateFields />
+            default:
+                return <ProductsDashboard />
+        }
     }
 
     // Effects
@@ -57,7 +72,8 @@ const DashboardPage = () => {
                                 </ListSubheader>
                             }
                         >
-                            <Divider />
+                            <Divider variant='fullWidth' component='div' />
+
                             <ListItemButton
                                 selected={selectedParam === 'blogs'}
                                 onClick={event => handleListItemClick(event, 'blogs')}
@@ -85,7 +101,16 @@ const DashboardPage = () => {
                                 </ListItemIcon>
                                 <ListItemText primary='Thông tin người dùng' />
                             </ListItemButton>
-                            <Divider />
+                            {/* <Divider variant='fullWidth' component='div' /> */}
+                            <ListItemButton
+                                selected={selectedParam === 'create'}
+                                onClick={event => handleListItemClick(event, 'create')}
+                            >
+                                <ListItemIcon>
+                                    <Create />
+                                </ListItemIcon>
+                                <ListItemText primary='Tạo mới' />
+                            </ListItemButton>
                         </List>
                         <ListItem
                             sx={{
@@ -107,15 +132,7 @@ const DashboardPage = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={8}>
-                    <Paper elevation={6}>
-                        {managerId === 'blogs' ? (
-                            <BlogsDashboard />
-                        ) : managerId === 'products' ? (
-                            <ProductsDashboard />
-                        ) : (
-                            <UsersDashBoard />
-                        )}
-                    </Paper>
+                    <Paper elevation={6}>{getFields(selectedParam)}</Paper>
                 </Grid>
             </Grid>
         </Grid>

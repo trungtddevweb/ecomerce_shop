@@ -4,16 +4,17 @@ import CardProductItem from '../../../components/CardProductItem'
 import { getAllProducts } from '~/api/main'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
+import useStyles from '~/assets/styles/useStyles'
 
 const NewLastestProduct = () => {
     // const classes = useStyles()
     const [lists, setLists] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const classes = useStyles()
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                setIsLoading(true)
                 const products = await getAllProducts()
                 setIsLoading(false)
                 setLists(products.docs)
@@ -33,7 +34,13 @@ const NewLastestProduct = () => {
                     <Typography variant='h6' color='primary.main'>
                         Những sản phẩm mới nhất
                     </Typography>
-                    <Typography variant='subtitle2' component={Link} to='/' color='blue'>
+                    <Typography
+                        variant='subtitle2'
+                        className={classes.hoverItem}
+                        component={Link}
+                        to='/products'
+                        color='blue'
+                    >
                         Xem thêm {'>>'}
                     </Typography>
                 </Stack>

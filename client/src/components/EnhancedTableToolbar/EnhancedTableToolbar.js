@@ -11,15 +11,21 @@ import { showDialog } from 'src/redux/slice/dialogSlice'
 
 function EnhancedTableToolbar(props) {
     const { managerId } = useParams()
-    const { numSelected, selectedItem, setSelected, data, setData } = props
+    const { numSelected, selectedItem, setSelected, setDeleting } = props
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
 
     const handleDelete = async () => {
         try {
-            await deleteItemByParams(managerId, token, selectedItem)
-            dispatch(showToast({ type: 'success', message: 'Xóa thành công!' }))
+            setDeleting(true)
+            const res = await deleteItemByParams(managerId, token, selectedItem)
+            if (res.status === 200) {
+                setSelected([])
+                dispatch(showToast({ type: 'success', message: 'Xóa thành công!' }))
+                setDeleting(false)
+            }
         } catch (error) {
+            setDeleting(false)
             console.error(error)
             dispatch(showToast({ type: 'error', message: `${error.message}` }))
         }
@@ -54,18 +60,12 @@ function EnhancedTableToolbar(props) {
                 </Typography>
             )}
 
-            {numSelected > 0 ? (
-                <Tooltip title='Xóa'>
-                    <IconButton onClick={handleClick}>
+            {numSelected > 0 && (
+                <IconButton onClick={handleClick}>
+                    <Tooltip title='Xóa'>
                         <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <Tooltip title='Tạo mới'>
-                    <IconButton>
-                        <Add />
-                    </IconButton>
-                </Tooltip>
+                    </Tooltip>
+                </IconButton>
             )}
         </Toolbar>
     )

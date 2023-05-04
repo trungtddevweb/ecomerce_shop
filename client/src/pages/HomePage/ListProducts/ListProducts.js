@@ -5,11 +5,13 @@ import { getProductsByHot } from '~/api/main'
 import { optionsQuery } from 'src/utils/const'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
+import useStyles from '~/assets/styles/useStyles'
 
 const ListProducts = ({ title, ...props }) => {
     // const classes = useStyles()
     const [lists, setLists] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const classes = useStyles()
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -33,7 +35,13 @@ const ListProducts = ({ title, ...props }) => {
                     <Typography variant='h6' color='primary.main'>
                         {title}
                     </Typography>
-                    <Typography variant='subtitle2' component={Link} to='/' color='blue'>
+                    <Typography
+                        variant='subtitle2'
+                        className={classes.hoverItem}
+                        component={Link}
+                        to='/products'
+                        color='blue'
+                    >
                         Xem thêm {'>>'}
                     </Typography>
                 </Stack>

@@ -52,8 +52,13 @@ export const getAllProducts = async (limit, page) => {
 }
 
 // Blogs
-export const getAllBlogs = async () => {
-    const response = await mainAPI.get('/blogs?limit=4&page=1', {})
+export const getAllBlogs = async (limit, pageSize) => {
+    const response = await mainAPI.get(`/blogs?limit=${limit}&page=${pageSize}`, {})
+    return response.data
+}
+
+export const searchBlogsByQuery = async query => {
+    const response = await mainAPI.get(`/blogs/search?title=${query}`)
     return response.data
 }
 
@@ -140,4 +145,13 @@ export const gePublicKey = async () => {
 export const getClientSecret = async products => {
     const res = await mainAPI.post('/stripe/create-checkout-session', { products })
     return res.data
+}
+
+// Orders
+export const getOrderByUserIdAPI = async (token, limit, pageSize) => {
+    return await mainAPI.get(`/orders/?limit=${limit}&page=${pageSize}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }

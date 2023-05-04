@@ -6,12 +6,12 @@ import HomePage from '~/pages/HomePage'
 import LoginPage from '~/pages/LoginPage'
 import ProductPage from '~/pages/ProductPage'
 import RegisterPage from '~/pages/RegisterPage'
-import SearchPage from '~/pages/SearchPage'
 import CartPage from '~/pages/CartPage'
-import CategoriesPage from '~/pages/CategoriesPage'
 import DashboardPage from '~/pages/DashboardPage'
 import BlogDetailPage from '~/pages/BlogDetailPage'
-import ProductDetails from '~/pages/ProductDetails/ProductDetails'
+import ProductDetails from '~/pages/ProductDetails'
+import Personal from '~/pages/Personal'
+import SearchPage from '~/pages/SearchPage'
 
 const routes = {
     home: {
@@ -50,10 +50,6 @@ const routes = {
         path: '/contact',
         element: <ContactPage />
     },
-    search: {
-        path: '/search',
-        element: <SearchPage />
-    },
     about: {
         path: '/about',
         element: <AboutPage />
@@ -62,13 +58,17 @@ const routes = {
         path: '/cart',
         element: <CartPage />
     },
-    categories: {
-        path: '/categories',
-        element: <CategoriesPage />
-    },
     dashboard: {
         path: '/dashboard/:managerId',
         element: <DashboardPage />
+    },
+    search: {
+        path: '/search',
+        element: <SearchPage />
+    },
+    personal: {
+        path: '/settings',
+        element: <Personal />
     }
 }
 

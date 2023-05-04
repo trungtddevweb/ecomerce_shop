@@ -1,9 +1,11 @@
 import { IconButton, TextField, Box } from '@mui/material'
 import { Search as SearchIcon } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 const Search = () => {
-    const search = () => {
-        console.log('helle')
+    const navigate = useNavigate()
+    const handleSearch = () => {
+        navigate('/search')
     }
     return (
         <Box component='form' noValidate autoComplete='off'>
@@ -14,11 +16,7 @@ const Search = () => {
                 size='small'
                 fullWidth
                 InputProps={{
-                    endAdornment: (
-                        <IconButton aria-label='search' onClick={search}>
-                            <SearchIcon />
-                        </IconButton>
-                    )
+                    endAdornment: <SearchIcon cursor='pointer' onClick={handleSearch} />
                 }}
             />
         </Box>

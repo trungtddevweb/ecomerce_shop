@@ -13,7 +13,6 @@ import {
 } from '@mui/material'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 import { getAllBlogs } from '~/api/main'
@@ -21,14 +20,12 @@ import useStyles from '~/assets/styles/useStyles'
 
 const ListPostsBlog = () => {
     const [listBlogs, setListBlogs] = useState([])
-    const dispatch = useDispatch()
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const classes = useStyles()
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                setIsLoading(true)
                 const response = await getAllBlogs()
                 setIsLoading(false)
                 setListBlogs(response.docs)
@@ -38,7 +35,7 @@ const ListPostsBlog = () => {
             }
         }
         fetchPosts()
-    }, [dispatch])
+    }, [])
 
     return (
         <Stack width={1400} margin='auto'>
@@ -46,7 +43,7 @@ const ListPostsBlog = () => {
                 <Typography variant='h6' color='primary.main'>
                     Bài viết nổi bật
                 </Typography>
-                <Typography variant='subtitle2' component={Link} to='/' color='blue'>
+                <Typography variant='subtitle2' className={classes.hoverItem} component={Link} to='/blogs' color='blue'>
                     Xem thêm {'>>'}
                 </Typography>
             </Stack>
@@ -62,7 +59,7 @@ const ListPostsBlog = () => {
                                 )}
                                 <CardContent>
                                     {item ? (
-                                        <>
+                                        <Link className={classes.hoverItem} to={`/blogs/${item._id}`}>
                                             <Typography gutterBottom variant='h6' minHeight={64} component='p'>
                                                 {item?.title}
                                             </Typography>
@@ -87,7 +84,7 @@ const ListPostsBlog = () => {
                                                     {item?.createdAt.split('T')[0]}
                                                 </Typography>
                                             </Typography>
-                                        </>
+                                        </Link>
                                     ) : (
                                         <Box>
                                             <SkeletonFallback />
@@ -97,12 +94,6 @@ const ListPostsBlog = () => {
                                     )}
                                 </CardContent>
                             </CardActionArea>
-                            <Divider />
-                            <CardActions>
-                                <Button component={Link} to={`/blogs/${item?._id}`} size='small' color='primary'>
-                                    Đọc
-                                </Button>
-                            </CardActions>
                         </Card>
                     </Grid>
                 ))}

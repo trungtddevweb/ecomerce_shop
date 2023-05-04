@@ -10,6 +10,7 @@ import {
     removeQuantityProductIdFromCart
 } from '../controllers/user.js'
 import { verifyAdmin, verifyUser } from '../middleware/verify.js'
+import { validateAddProduct } from '../middleware/joiMiddleWare.js'
 
 const router = express.Router()
 
@@ -23,7 +24,7 @@ router.get('/find/user', verifyUser, getAUser)
 router.delete('/', verifyAdmin, deleteUsers)
 
 // Add productId to products field
-router.post('/add', verifyUser, addProductToUser)
+router.post('/add', verifyUser, validateAddProduct, addProductToUser)
 
 // Remove quantity of productId to products field
 router.delete('/remove-quantity', verifyUser, removeQuantityProductIdFromCart)

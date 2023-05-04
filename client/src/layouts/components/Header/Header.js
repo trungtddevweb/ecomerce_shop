@@ -32,7 +32,6 @@ const Header = () => {
     const [isLoading, setIsloading] = useState(false)
     const token = localStorage.getItem('token')
     const classes = useStyles()
-    // const [value, setValue] = useState(false);
 
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth?.user?.userInfo)
@@ -63,12 +62,10 @@ const Header = () => {
         setIsloading(true)
         handleClose()
         try {
-            const res = await logout(token)
-            if (res?.status === 200) {
-                dispatch(logoutSuccess())
-                setIsloading(false)
-                navigate('/login')
-            }
+            await logout(token)
+            dispatch(logoutSuccess())
+            setIsloading(false)
+            navigate('/login')
         } catch (error) {
             setIsloading(false)
             console.error('Error; ', error)
@@ -167,9 +164,14 @@ const Header = () => {
                         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                        <MenuItem className={classes.hoverItem} onClick={handleClose}>
-                            <Avatar /> Thông tin
-                        </MenuItem>
+                        <Link onClick={handleClose} to={routes.personal.path} className={classes.hoverItem}>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <Avatar fontSize='small' />
+                                </ListItemIcon>
+                                Thông tin
+                            </MenuItem>
+                        </Link>
                         <MenuItem
                             className={classes.hoverItem}
                             component={Link}

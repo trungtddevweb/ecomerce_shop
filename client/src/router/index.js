@@ -55,20 +55,20 @@ export default createBrowserRouter([
                 element: routes.contact.element
             },
             {
-                path: routes.search.path,
-                element: routes.search.element
-            },
-            {
                 path: routes.cart.path,
                 element: routes.cart.element
             },
             {
-                path: routes.categories.path,
-                element: routes.categories.element
-            },
-            {
                 path: routes.dashboard.path,
                 element: routes.dashboard.element
+            },
+            {
+                path: routes.personal.path,
+                element: routes.personal.element
+            },
+            {
+                path: routes.search.path,
+                element: routes.search.element
             }
         ]
     }

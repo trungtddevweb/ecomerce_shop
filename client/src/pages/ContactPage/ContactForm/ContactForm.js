@@ -1,19 +1,28 @@
 import emailjs from '@emailjs/browser'
-import { Box, Button, CardContent, Grid, TextField, Typography } from '@mui/material'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+import { LoadingButton } from '@mui/lab'
+import { Box, CardContent, Grid, TextField, Typography } from '@mui/material'
 import { toast } from 'react-toastify'
 
 const ContactForm = () => {
+    const [isLoading, setIsLoading] = useState(false)
     const form = useRef()
 
     const sendEmail = e => {
         e.preventDefault()
-        toast.promise(emailjs.sendForm('service_v4tix23', 'template_nlr2obv', form.current, 'd1CBIhunT7-fyL3nu'), {
-            pending: 'Đang gửi thư',
-            success: 'Gửi thành công!!!',
-            error: 'Gửi thất bại, hãy thử lại'
-        })
-        e.target.reset()
+        toast
+            .promise(emailjs.sendForm('service_v4tix23', 'template_nlr2obv', form.current, 'd1CBIhunT7-fyL3nu'), {
+                pending: 'Đang gửi thư',
+                success: 'Gửi thành công!!!',
+                error: 'Gửi thất bại, hãy thử lại'
+            })
+            .then(() => {
+                setIsLoading(false)
+                e.target.reset()
+            })
+            .catch(() => {
+                setIsLoading(false)
+            })
     }
 
     return (
@@ -32,6 +41,7 @@ const ContactForm = () => {
                                         label='Họ'
                                         variant='outlined'
                                         name='user_fname'
+                                        autoComplete='family-name'
                                         fullWidth
                                         required
                                     />
@@ -42,6 +52,7 @@ const ContactForm = () => {
                                         label='Tên '
                                         variant='outlined'
                                         name='user_lname'
+                                        autoCapitalize='given-name'
                                         fullWidth
                                         required
                                     />
@@ -54,6 +65,7 @@ const ContactForm = () => {
                                         name='user_email'
                                         label='Email'
                                         variant='outlined'
+                                        autoComplete='email'
                                         required
                                         fullWidth
                                     />
@@ -65,6 +77,7 @@ const ContactForm = () => {
                                         name='user_number'
                                         label='Số điện thoại'
                                         variant='outlined'
+                                        autoComplete='tel'
                                         fullWidth
                                         required
                                     />
@@ -82,17 +95,18 @@ const ContactForm = () => {
                                     />
                                 </Grid>
                                 <Grid item xs={12} marginTop={2}>
-                                    <Button type='submit' variant='contained' color='primary' fullWidth>
+                                    <LoadingButton
+                                        loading={isLoading}
+                                        type='submit'
+                                        variant='contained'
+                                        color='primary'
+                                        fullWidth
+                                    >
                                         Gửi
-                                    </Button>
+                                    </LoadingButton>
                                 </Grid>
                             </Grid>
                         </Box>
-                        {/* <Button sx={{
-                            marginTop: 2,
-                            textDecoration: "underline",
-                        }}
-                            component={Link} startIcon={<KeyboardReturnIcon />} to="/"> Trở về trang chủ</Button> */}
                     </CardContent>
                 </Box>
             </Grid>

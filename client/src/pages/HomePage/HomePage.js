@@ -6,6 +6,7 @@ import Image from 'mui-image'
 import bannerShipping from '~/assets/imgs/banner-shopping.jpg'
 import CreateProducts from '~/components/CreateAProduct/CreateAProduct'
 // import CreateAProducts from '~/components/CreateProducts/CreateAProductsts'
+import useScrollToTop from '~/hooks/useScrollToTop'
 
 const ListPostsBlog = lazy(() => import('~/pages/HomePage/ListPostsBlog'))
 const Sliders = lazy(() => import('~/components/Slider'))
@@ -15,6 +16,7 @@ const ListProducts = lazy(() => import('~/pages/HomePage/ListProducts'))
 
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
+    useScrollToTop()
 
     return (
         <Box>

@@ -18,23 +18,25 @@ import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
 
 const UsersDashBoard = () => {
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [isDeleting, setIsDeleting] = useState(true)
     const [order, setOrder] = useState('asc')
     const [orderBy, setOrderBy] = useState('calories')
     const [selected, setSelected] = useState([])
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [data, setData] = useState([])
+    const [data, setData] = useState(null)
+    const [users, setUsers] = useState([])
 
     const token = useSelector(state => state.auth.user.token)
 
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true)
             try {
-                const response = await getAllUsers(token)
-                setData(response.docs)
+                const response = await getAllUsers(token, rowsPerPage, page + 1)
+                setData(response)
+                setUsers(response.docs)
                 setIsLoading(false)
             } catch (error) {
                 setIsLoading(false)
@@ -42,7 +44,8 @@ const UsersDashBoard = () => {
             }
         }
         fetchData()
-    }, [token])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rowsPerPage, page, isDeleting])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -107,7 +110,7 @@ const UsersDashBoard = () => {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelected = data?.map(n => n._id)
+            const newSelected = users?.map(n => n._id)
             setSelected(newSelected)
             return
         }
@@ -132,6 +135,7 @@ const UsersDashBoard = () => {
     }
 
     const handleChangePage = (event, newPage) => {
+        setIsLoading(true)
         setPage(newPage)
     }
 
@@ -145,19 +149,18 @@ const UsersDashBoard = () => {
     // };
 
     const isSelected = id => selected.includes(id)
-
+    const count = data?.totalDocs
     // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - count) : 0
 
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 <EnhancedTableToolbar
                     setSelected={setSelected}
-                    setData={setData}
-                    data={data}
                     numSelected={selected.length}
                     selectedItem={selected}
+                    setDeleting={setIsDeleting}
                 />
                 {isLoading ? (
                     <LinearIndeterminate />
@@ -171,44 +174,42 @@ const UsersDashBoard = () => {
                                 orderBy={orderBy}
                                 onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
-                                rowCount={data?.length}
+                                rowCount={count}
                             />
                             <TableBody>
-                                {stableSort(data, getComparator(order, orderBy))
-                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row, index) => {
-                                        const isItemSelected = isSelected(row._id)
-                                        const labelId = `enhanced-table-checkbox-${index}`
+                                {stableSort(users, getComparator(order, orderBy)).map((row, index) => {
+                                    const isItemSelected = isSelected(row._id)
+                                    const labelId = `enhanced-table-checkbox-${index}`
 
-                                        return (
-                                            <TableRow
-                                                hover
-                                                onClick={event => handleClick(event, row._id)}
-                                                role='checkbox'
-                                                aria-checked={isItemSelected}
-                                                tabIndex={-1}
-                                                key={row._id}
-                                                selected={isItemSelected}
-                                                sx={{ cursor: 'pointer' }}
-                                            >
-                                                <TableCell padding='checkbox'>
-                                                    <Checkbox
-                                                        color='primary'
-                                                        checked={isItemSelected}
-                                                        inputProps={{
-                                                            'aria-labelledby': labelId
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell component='th' id={labelId} scope='row' padding='none'>
-                                                    {row._id}
-                                                </TableCell>
-                                                <TableCell align='right'>{row.name}</TableCell>
-                                                <TableCell align='right'>{row.email}</TableCell>
-                                                <TableCell align='right'>{row.createdAt?.split('T')[0]}</TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={event => handleClick(event, row._id)}
+                                            role='checkbox'
+                                            aria-checked={isItemSelected}
+                                            tabIndex={-1}
+                                            key={row._id}
+                                            selected={isItemSelected}
+                                            sx={{ cursor: 'pointer' }}
+                                        >
+                                            <TableCell padding='checkbox'>
+                                                <Checkbox
+                                                    color='primary'
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby': labelId
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell component='th' id={labelId} scope='row' padding='none'>
+                                                {row._id}
+                                            </TableCell>
+                                            <TableCell align='right'>{row.name}</TableCell>
+                                            <TableCell align='right'>{row.email}</TableCell>
+                                            <TableCell align='right'>{row.createdAt?.split('T')[0]}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
                                 {emptyRows > 0 && (
                                     <TableRow
                                         style={{
@@ -220,7 +221,7 @@ const UsersDashBoard = () => {
                                 )}
                             </TableBody>
                         </Table>
-                        {data.length === 0 && (
+                        {users.length === 0 && (
                             <Box
                                 margin='auto'
                                 display='flex'
@@ -238,7 +239,7 @@ const UsersDashBoard = () => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component='div'
-                    count={data?.length}
+                    count={count}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

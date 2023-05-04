@@ -1,4 +1,4 @@
-import { useParams, Link, Navigate, useNavigate } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
     Box,
     Breadcrumbs,
@@ -19,23 +19,25 @@ import { AddShoppingCart, NavigateNext } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProductToCart } from 'src/redux/slice/usersSlice'
 import { showToast } from 'src/redux/slice/toastSlice'
+import useScrollToTop from '~/hooks/useScrollToTop'
 const AnotherProductByCategory = lazy(() => import('./AnotherProduct'))
 const SliderImagesProduct = lazy(() => import('./SlideImagesProduct'))
 
 const ProductDetails = () => {
+    const [product, setProduct] = useState({})
+    useDocumentTitle(product?.name)
+    useScrollToTop()
     const { productId } = useParams()
     const classes = useStyles()
-    const [product, setProduct] = useState({})
     const [countQuantity, setCountQuantity] = useState(1)
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
-    useDocumentTitle(product?.name)
-    const totalPrice = Number(product.price * countQuantity)
-    const valueOfField = product.category?.split(' ')[0]
     const navigate = useNavigate()
+    const totalPrice = Number(product.price * countQuantity) || 0
+    const valueOfField = product.category?.split(' ')[0]
 
-    const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '')
-    const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || '')
+    const [selectedSize, setSelectedSize] = useState()
+    const [selectedColor, setSelectedColor] = useState()
 
     const handleChangeSize = (event, newAlignment) => {
         setSelectedSize(newAlignment)
@@ -55,6 +57,13 @@ const ProductDetails = () => {
         }
         fetchProduct(productId)
     }, [productId])
+
+    useEffect(() => {
+        if (product && !selectedSize && !selectedColor) {
+            setSelectedSize(product.sizes?.[0])
+            setSelectedColor(product.colors?.[0])
+        }
+    }, [product, selectedSize, selectedColor])
 
     const increaseQuantity = () => {
         const newValue = parseInt(countQuantity) + 1
@@ -95,9 +104,8 @@ const ProductDetails = () => {
                 dispatch(addProductToCart(res.data))
                 dispatch(showToast({ type: 'success', message: 'Thêm vào giỏ hàng thành công!' }))
             }
-        } catch (error) {
-            console.error(error)
-            dispatch(showToast({ type: 'error', message: 'Thêm vào giỏ hàng thát bại!' }))
+        } catch (err) {
+            dispatch(showToast({ type: 'error', message: err.response.data.error || 'Thêm thất bại!' }))
         }
     }
     const handleBuyNow = async () => {
