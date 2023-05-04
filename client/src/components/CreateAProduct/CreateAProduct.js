@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -6,37 +6,46 @@ import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
+import OutlinedInput from '@mui/material/OutlinedInput'
 import { useForm } from 'react-hook-form'
 import { createProductAPI } from '~/api/main'
 import { useSelector } from 'react-redux'
 
 const CreateProducts = () => {
     const token = useSelector(state => state.auth.user.token)
-    const [color, setColor] = useState()
-    const [size, setSize] = useState('l')
-    const [hot, setHot] = useState('true')
-    const [category, setCategory] = useState('all')
 
-    const handleChange = event => {
-        setColor(event.target.value)
-    }
-    const sizeChange = e => {
-        setSize(e.target.value)
-    }
-    const hotChange = e => {
-        setHot(e.target.value)
-    }
-    const categoryChange = e => {
-        setCategory(e.target.value)
-    }
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm()
+
     const onSubmit = async data => {
+        const formData = new FormData()
+        const colorsChange = data.colors.split(',')
+        colorsChange.forEach(colors => {
+            formData.append('colors', colors)
+        })
+        const sizesChange = data.sizes
+        sizesChange.forEach(sizes => {
+            formData.append('sizes', sizes)
+        })
+        const imgs = Object.entries(data.productImages)
+        imgs.forEach(img => {
+            formData.append('productImages', img)
+        })
+        formData.append('name', data.name)
+        formData.append('desc', data.desc)
+        formData.append('brand', data.brand)
+        formData.append('quantity', data.quantity)
+        formData.append('price', data.price)
+        formData.append('category', data.category)
+        formData.append('isHot', data.isHot)
+        // formData.append('productImages', data.productImages[0])
+        console.log(data)
+
         try {
-            await createProductAPI(data, token)
+            await createProductAPI(formData, token)
             console.log(data)
         } catch (err) {
             console.log(err)
@@ -90,8 +99,17 @@ const CreateProducts = () => {
                             fullWidth
                             required
                             defaultValue={1}
-                            {...register('quantity')}
+                            {...register('quantity', {
+                                validate: {
+                                    positive: value => {
+                                        return value >= 1 || 'Số lượng phải là số lớn hoặc bằng 1'
+                                    }
+                                }
+                            })}
                         />
+                        {errors.quantity && errors.quantity.type === 'positive' && (
+                            <p className='text-danger'>{errors.quantity.message}</p>
+                        )}
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
@@ -102,24 +120,31 @@ const CreateProducts = () => {
                             fullWidth
                             required
                             defaultValue={0}
-                            {...register('price', { required: true })}
+                            {...register('price', {
+                                validate: {
+                                    lessThanZero: value => {
+                                        return value >= 0 || 'Giá phải là 1 giá trị lớn hơn hoặc bằng 0'
+                                    }
+                                }
+                            })}
                         />
-                        {errors.price && <p>ko dc de trong</p>}
+                        {errors.price && errors.price.type === 'lessThanZero' && (
+                            <p className='text-danger'>{errors.price.message}</p>
+                        )}
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel>Màu sắc</InputLabel>
-                            <Select label='Màu sắc' onChange={handleChange} value={color} {...register('colors')}>
-                                <MenuItem value={'red'}>do</MenuItem>
-                                <MenuItem value='blue'>xanh</MenuItem>
-                                <MenuItem value='green'>luc</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <TextField
+                            placeholder='Màu sắc'
+                            label='Màu sắc'
+                            variant='outlined'
+                            fullWidth
+                            {...register('colors')}
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl fullWidth>
                             <InputLabel>Kích cỡ</InputLabel>
-                            <Select label='Kích cỡ' onChange={sizeChange} value={size} {...register('sizes')}>
+                            <Select label='Kích cỡ' defaultValue={['l']} multiple {...register('sizes')}>
                                 <MenuItem value='s'>s</MenuItem>
                                 <MenuItem value='m'>m</MenuItem>
                                 <MenuItem value='l'>l</MenuItem>
@@ -130,41 +155,35 @@ const CreateProducts = () => {
                             </Select>
                         </FormControl>
                     </Grid>
+
                     <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel>Phân loại</InputLabel>
-                            <Select
-                                label='Phân loại'
-                                onChange={categoryChange}
-                                value={category}
-                                {...register('category')}
-                            >
-                                <MenuItem value='all'>tat ca</MenuItem>
-                                <MenuItem value='vay'>vay</MenuItem>
-                                <MenuItem value='ao'>ao</MenuItem>
-                                <MenuItem value='quan'>quan</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <TextField
+                            placeholder='Phân loại'
+                            label='Phân loại'
+                            variant='outlined'
+                            fullWidth
+                            {...register('category')}
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl fullWidth>
                             <InputLabel>Hot</InputLabel>
-                            <Select label='Màu sắc' onChange={hotChange} value={hot} {...register('isHot')}>
+                            <Select label='Màu sắc' {...register('isHot')} defaultValue={'true'}>
                                 <MenuItem value='true'>dung</MenuItem>
                                 <MenuItem value='false'>sai</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
                     <Grid xs={12} item>
-                        <TextField
-                            placeholder='Hình ảnh'
-                            label='Hình ảnh'
-                            variant='outlined'
+                        <OutlinedInput
+                            type='file'
+                            inputProps={{ multiple: true }}
                             fullWidth
                             {...register('productImages')}
                             defaultValue=''
                         />
                     </Grid>
+
                     <Grid item xs={12}>
                         <Button type='submit' variant='contained' color='primary' fullWidth>
                             Submit
