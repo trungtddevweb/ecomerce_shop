@@ -113,6 +113,14 @@ export const addProductIdToCartAPI = async (token, data) => {
     })
 }
 
+// Creata a Product
+export const createProductAPI = async (data, token) => {
+    return await mainAPI.post('/products', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
 // Get products by hot
 export const getProductsByHot = async (limit, page) => {
     const response = await mainAPI.get(`/products/search/hots?limit=${limit}&page=${page}`)
