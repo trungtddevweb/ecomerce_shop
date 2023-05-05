@@ -1,104 +1,150 @@
-import React from 'react'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import Select from '@mui/material/Select'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createProductAPI } from '~/api/main'
-import { useSelector } from 'react-redux'
-import axios from 'axios'
-
+import { useDispatch, useSelector } from 'react-redux'
+import ErrorMessages from '~/components/ErrorMessages'
+import {
+    Typography,
+    FormControl,
+    MenuItem,
+    InputLabel,
+    Select,
+    Grid,
+    TextField,
+    Box,
+    InputAdornment
+} from '@mui/material'
+import { LoadingButton } from '@mui/lab'
+import { showToast } from 'src/redux/slice/toastSlice'
+import { optionValueSizes } from 'src/utils/const'
 const ProductComponent = () => {
+    const [files, setFiles] = useState([])
     const token = useSelector(state => state.auth.user.token)
+    const [isLoading, setIsLoading] = useState(false)
+    const dispatch = useDispatch()
 
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors, dirtyFields }
     } = useForm()
 
-    const onSubmit = async data => {
+    const handleFileUpload = event => {
+        const fileList = event.target.files
+        const fileArray = Array.from(fileList)
+        setFiles(fileArray)
+    }
+
+    const createFormData = (data, files) => {
         const formData = new FormData()
+        formData.set('name', data.name)
+        formData.set('desc', data.desc)
+        formData.set('brand', data.brand)
+        formData.set('quantity', data.quantity)
+        formData.set('price', data.price)
+        formData.set('category', data.category)
+        formData.set('isHot', data.isHot)
+
+        // Handlers
         const colorsChange = data.colors.split(',')
         colorsChange.forEach(colors => {
             formData.append('colors', colors)
         })
+
         const sizesChange = data.sizes
         sizesChange.forEach(size => {
             formData.append('sizes', size)
         })
 
-        formData.append('picture', data.picture)
-        formData.append('name', data.name)
-        formData.append('desc', data.desc)
-        formData.append('brand', data.brand)
-        formData.append('quantity', data.quantity)
-        formData.append('price', data.price)
-        formData.append('category', data.category)
-        formData.append('isHot', data.isHot)
-        // formData.append('picture', data.picture[0])
-        console.log(data.picture)
+        for (let i = 0; i < files.length && i < 5; i++) {
+            formData.append('picture', files[i])
+        }
 
+        return formData
+    }
+
+    const onSubmit = async data => {
+        const formData = createFormData(data, files)
+        setIsLoading(true)
         try {
-            await axios.post('http://localhost:5000/api/products', formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            // await createProductAPI(formData, token)
-
-            console.log(data)
+            const res = await createProductAPI(formData, token)
+            if (res.status === 201) {
+                setIsLoading(false)
+                dispatch(showToast({ type: 'success', message: 'Tạo mới sản phẩm thành công!' }))
+            }
         } catch (err) {
-            console.log(err)
+            console.error(err)
+            setIsLoading(false)
+            dispatch(showToast({ type: 'error', message: 'Tạo mới sản phẩm thất bại!' }))
         }
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container spacing={1}>
+        <Box>
+            <Box component='form' onSubmit={handleSubmit(onSubmit)}>
+                <Grid container spacing={2}>
                     <Grid xs={12} item>
                         <TextField
-                            placeholder='Tên sản phẩm'
                             label='Tên sản phẩm'
                             variant='outlined'
                             fullWidth
-                            required
                             {...register('name', { required: true })}
                         />
-                        {errors.name && <p>ko dc de trong</p>}
+                        <ErrorMessages errors={errors} fieldName='name' />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
                             label='Chi tiết sản phẩm'
                             multiline
                             rows={4}
-                            placeholder='Chi tiết sản phẩm'
                             variant='outlined'
                             fullWidth
-                            required
-                            {...register('desc')}
+                            {...register('desc', { required: true })}
                         />
+                        <ErrorMessages errors={errors} fieldName='desc' />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
                             type='text'
-                            placeholder='Thương hiệu'
                             label='Thương hiệu'
                             variant='outlined'
                             fullWidth
-                            required
-                            {...register('brand')}
+                            {...register('brand', { required: true })}
                         />
+                        <ErrorMessages errors={errors} fieldName='brand' />
+                    </Grid>
+
+                    <Grid container item xs={12} spacing={1}>
+                        <Grid item xs={6}>
+                            <TextField
+                                type='number'
+                                fullWidth
+                                label='Giá'
+                                variant='outlined'
+                                InputProps={{
+                                    endAdornment: <InputAdornment position='end'>VNĐ</InputAdornment>
+                                }}
+                                required
+                                defaultValue={1}
+                                {...register('price', {
+                                    validate: {
+                                        lessThanZero: value => {
+                                            return value >= 0 || 'Giá phải là 1 giá trị lớn hơn hoặc bằng 0'
+                                        }
+                                    }
+                                })}
+                            />
+                            {errors.price && errors.price.type === 'lessThanZero' && (
+                                <Typography className='text-danger'>{errors.price.message}</Typography>
+                            )}
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField fullWidth label='Màu sắc' variant='outlined' {...register('colors')} />
+                        </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
                             type='number'
-                            placeholder='Số lượng'
                             label='Số lượng'
                             variant='outlined'
                             fullWidth
@@ -113,90 +159,65 @@ const ProductComponent = () => {
                             })}
                         />
                         {errors.quantity && errors.quantity.type === 'positive' && (
-                            <p className='text-danger'>{errors.quantity.message}</p>
+                            <Typography className='text-danger'>{errors.quantity.message}</Typography>
                         )}
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            type='number'
-                            placeholder='Giá'
-                            label='Giá'
-                            variant='outlined'
-                            fullWidth
-                            required
-                            defaultValue={0}
-                            {...register('price', {
-                                validate: {
-                                    lessThanZero: value => {
-                                        return value >= 0 || 'Giá phải là 1 giá trị lớn hơn hoặc bằng 0'
-                                    }
-                                }
+
+                    <Grid item container spacing={1}>
+                        <Grid item xs={4}>
+                            <FormControl fullWidth>
+                                <InputLabel>Kích cỡ</InputLabel>
+                                <Select label='Kích cỡ' defaultValue={['l']} multiple {...register('sizes')}>
+                                    {optionValueSizes.map(size => (
+                                        <MenuItem value={size.value} key={size.value}>
+                                            {size.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <TextField
+                                label='Phân loại'
+                                variant='outlined'
+                                fullWidth
+                                {...register('category', { required: true })}
+                            />
+                            <ErrorMessages errors={errors} fieldName='category' />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FormControl fullWidth>
+                                <InputLabel>Hot</InputLabel>
+                                <Select label='Hot' {...register('isHot')} defaultValue={'true'}>
+                                    <MenuItem value='true'>True</MenuItem>
+                                    <MenuItem value='false'>False</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+
+                    <Grid xs={12} item>
+                        <Typography
+                            component='input'
+                            type='file'
+                            multiple
+                            accept='image/png, image/jpeg'
+                            {...register('picture', {
+                                required: true,
+                                onChange: e => handleFileUpload(e)
                             })}
                         />
-                        {errors.price && errors.price.type === 'lessThanZero' && (
-                            <p className='text-danger'>{errors.price.message}</p>
-                        )}
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            placeholder='Màu sắc'
-                            label='Màu sắc'
-                            variant='outlined'
-                            fullWidth
-                            {...register('colors')}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel>Kích cỡ</InputLabel>
-                            <Select label='Kích cỡ' defaultValue={['l']} multiple {...register('sizes')}>
-                                <MenuItem value='s'>s</MenuItem>
-                                <MenuItem value='m'>m</MenuItem>
-                                <MenuItem value='l'>l</MenuItem>
-                                <MenuItem value='xl'>xl</MenuItem>
-                                <MenuItem value='xxl'>xxl</MenuItem>
-                                <MenuItem value='3xl'>3xl</MenuItem>
-                                <MenuItem value='4xl'>4xl</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <ErrorMessages errors={errors} fieldName='picture' />
                     </Grid>
 
                     <Grid item xs={12}>
-                        <TextField
-                            placeholder='Phân loại'
-                            label='Phân loại'
-                            variant='outlined'
-                            fullWidth
-                            {...register('category')}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <InputLabel>Hot</InputLabel>
-                            <Select label='Màu sắc' {...register('isHot')} defaultValue={'true'}>
-                                <MenuItem value='true'>dung</MenuItem>
-                                <MenuItem value='false'>sai</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid xs={12} item>
-                        <OutlinedInput
-                            type='file'
-                            inputProps={{ multiple: true }}
-                            fullWidth
-                            {...register('picture')}
-                            defaultValue=''
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Button type='submit' variant='contained' color='primary' fullWidth>
-                            Submit
-                        </Button>
+                        <LoadingButton loading={isLoading} type='submit' variant='contained' color='primary' fullWidth>
+                            Tạo mới
+                        </LoadingButton>
                     </Grid>
                 </Grid>
-            </form>
-        </div>
+            </Box>
+        </Box>
     )
 }
 
