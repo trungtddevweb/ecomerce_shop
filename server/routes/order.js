@@ -3,6 +3,7 @@ import {
     createOrder,
     deletedOrderById,
     getAllOrderByAdmin,
+    getOrderByFields,
     getOrderByOrderCode,
     getOrderByUserId,
     updateOrder
