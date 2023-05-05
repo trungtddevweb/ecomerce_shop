@@ -4,8 +4,7 @@ import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import NewLastestProduct from './NewLastestProduct'
 import Image from 'mui-image'
 import bannerShipping from '~/assets/imgs/banner-shopping.jpg'
-import CreateProducts from '~/components/CreateAProduct/CreateAProduct'
-// import CreateAProducts from '~/components/CreateProducts/CreateAProductsts'
+
 import useScrollToTop from '~/hooks/useScrollToTop'
 
 const ListPostsBlog = lazy(() => import('~/pages/HomePage/ListPostsBlog'))
@@ -28,7 +27,6 @@ const HomePage = () => {
                 <Image width='100%' src={bannerShipping} alt='Shipping' />
                 <NewLetters />
                 <ListPostsBlog />
-                <CreateProducts />
             </Stack>
         </Box>
     )

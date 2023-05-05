@@ -8,7 +8,8 @@ export const createAProduct = async (req, res) => {
             ...req.body,
             productImages: filepaths
         })
-        await newProduct.save()
+        console.log('req.files', req.files)
+        // await newProduct.save()
         responseHandler.created(res, newProduct)
     } catch (error) {
         responseHandler.error(res, error)
