@@ -38,3 +38,12 @@ export const filterLists = [
         options: ['Trắng', 'Đen', 'Bạc', 'Ghi', 'Nâu', 'Tất cả']
     }
 ]
+
+export const optionValueSizes = [
+    { value: 's', label: 's' },
+    { value: 'm', label: 'm' },
+    { value: 'l', label: 'l' },
+    { value: 'xxl', label: 'xxl' },
+    { value: '3xl', label: '3xl' },
+    { value: '4xl', label: '4xl' }
+]
