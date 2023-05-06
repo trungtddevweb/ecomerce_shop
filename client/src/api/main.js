@@ -67,6 +67,13 @@ export const getABlogPostAPI = async blogId => {
     return response.data
 }
 
+export const createBlogAPI = async (data, token) => {
+    return await mainAPI.post('/blogs', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
 // Deleted array of products
 export const deleteItemByParams = async (params, token, selectedItem) => {
     return await mainAPI.delete(`/${params}`, {
