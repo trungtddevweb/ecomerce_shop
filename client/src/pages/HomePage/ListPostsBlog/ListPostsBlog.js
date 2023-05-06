@@ -15,6 +15,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
+import { optionsQuery } from 'src/utils/const'
 import { getAllBlogs } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
@@ -26,7 +27,7 @@ const ListPostsBlog = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await getAllBlogs()
+                const response = await getAllBlogs(optionsQuery.limit, optionsQuery.page)
                 setIsLoading(false)
                 setListBlogs(response.docs)
             } catch (error) {

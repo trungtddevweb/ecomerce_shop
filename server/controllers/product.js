@@ -27,16 +27,20 @@ export const getAProduct = async (req, res) => {
 
 export const getAllProduct = async (req, res) => {
     const { page, limit } = req.query
+    const fields = req.query.fields
+    const selectedFields = fields ? fields.split(' ') : null
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
-        sort: { createdAt: 'desc' }
+        sort: { createdAt: 'desc' },
+        select: selectedFields
     }
     try {
         const products = await Product.paginate({}, options)
+        console.log('Select', fields)
         responseHandler.getData(res, products)
     } catch (error) {
-        responseHandler.error(res, error)
+        res.status(500).json({ message: error })
     }
 }
 
@@ -51,7 +55,6 @@ export const getProductsByHot = async (req, res) => {
     }
     try {
         const products = await Product.paginate({ isHot: true }, options)
-        console.log(req.query)
         responseHandler.getData(res, products)
     } catch (error) {
         responseHandler.error(res, error)
