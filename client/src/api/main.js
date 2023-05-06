@@ -66,10 +66,11 @@ export const getABlogPostAPI = async blogId => {
     const response = await mainAPI.get(`/blogs/find/${blogId}`)
     return response.data
 }
-export const createBlog = async (data, token) => {
+
+export const createBlogAPI = async (data, token) => {
     return await mainAPI.post('/blogs', data, {
         headers: {
-            Authorization: `Bearer${token}`
+            Authorization: `Bearer ${token}`
         }
     })
 }
