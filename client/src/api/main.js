@@ -57,6 +57,10 @@ export const getAllProductByQueryAPI = async (limit, url) => {
     return res.data
 }
 
+export const getRandomProductsAPI = async () => {
+    return await mainAPI.get('/products/random')
+}
+
 // Blogs
 export const getAllBlogs = async (limit, pageSize) => {
     const response = await mainAPI.get(`/blogs?limit=${limit}&page=${pageSize}`, {})
