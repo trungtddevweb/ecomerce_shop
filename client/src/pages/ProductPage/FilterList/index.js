@@ -55,7 +55,7 @@ const FilterList = ({ setUrl }) => {
             }
         })
 
-        const url = new URL('http://localhost:3000')
+        const url = new URL('http://localhost:3000' || process.env.REACT_APP_DOMAIN_URL)
         url.pathname = '/products'
         url.search = params.toString()
 
