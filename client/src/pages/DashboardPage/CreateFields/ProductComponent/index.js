@@ -211,7 +211,7 @@ const ProductComponent = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <LoadingButton loading={isLoading} type='submit' variant='contained' color='primary' fullWidth>
+                        <LoadingButton loading={isLoading} type='submit' variant='contained' color='primary'>
                             Tạo mới
                         </LoadingButton>
                     </Grid>

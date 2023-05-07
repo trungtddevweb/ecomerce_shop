@@ -190,7 +190,7 @@ const CartItems = ({ onNext }) => {
                                     minHeight: '200px'
                                 }}
                             >
-                                {products.map(product => {
+                                {products?.map(product => {
                                     const labelId = `checkbox-list-label-${product._id}`
                                     return (
                                         <Fragment key={product._id}>

@@ -144,7 +144,7 @@ export default function CustomPaginationActionsTable() {
     ]
 
     // Avoid a layout jump when reaching the last page with empty rows.
-    const count = data?.totalDocs
+    const count = data?.totalDocs || 0
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - count) : 0
 
     const handleChangePage = (event, newPage) => {

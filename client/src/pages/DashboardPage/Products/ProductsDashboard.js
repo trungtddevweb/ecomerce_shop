@@ -175,7 +175,7 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
     // };
 
     const isSelected = name => selected.includes(name)
-    const count = data?.totalDocs
+    const count = data?.totalDocs || 0
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - count) : 0
 
@@ -268,8 +268,8 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
                                                 align='right'
                                             >
                                                 <Tooltip title='Sửa'>
-                                                    <IconButton>
-                                                        <Edit onClick={() => handleModalOpen(row)} />
+                                                    <IconButton onClick={() => handleModalOpen(row)}>
+                                                        <Edit />
                                                     </IconButton>
                                                 </Tooltip>
                                             </TableCell>
