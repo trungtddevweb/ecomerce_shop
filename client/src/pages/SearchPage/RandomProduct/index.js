@@ -1,9 +1,9 @@
-import { Box, List, ListItemButton, Paper, Skeleton, Stack, Typography } from '@mui/material'
-import axios from 'axios'
+import { Box, List, ListItemButton, Paper, Stack, Typography } from '@mui/material'
 import Image from 'mui-image'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
+import SkeletonFallback from 'src/fallback/Skeleton'
+import { getRandomProductsAPI } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
 const RandomProduct = ({ nameValue }) => {
@@ -14,7 +14,7 @@ const RandomProduct = ({ nameValue }) => {
         const fetch = async () => {
             try {
                 setIsFetching(true)
-                const res = await axios.get('http://localhost:5000/api/products/random')
+                const res = await getRandomProductsAPI()
                 setData(res.data)
                 setIsFetching(false)
             } catch (error) {
