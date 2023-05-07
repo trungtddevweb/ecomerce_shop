@@ -209,8 +209,8 @@ const CartItems = ({ onNext }) => {
                                                         duration={500}
                                                         width={120}
                                                         height={120}
-                                                        src={product.productId.productImages?.[0]}
-                                                        alt={product.productId.name}
+                                                        src={product.productId?.productImages?.[0] || ''}
+                                                        alt={product.productId?.name}
                                                     />
                                                     <ListItemText
                                                         sx={{
@@ -219,7 +219,7 @@ const CartItems = ({ onNext }) => {
                                                         id={labelId}
                                                         primary={
                                                             <Typography color='primary' variant='h6'>
-                                                                {product.productId.name}
+                                                                {product.productId?.name}
                                                             </Typography>
                                                         }
                                                         secondary={

@@ -7,7 +7,8 @@ import {
     updatedProduct,
     searchByName,
     searchByField,
-    getProductsByHot
+    getProductsByHot,
+    getRandomProducts
 } from '../controllers/product.js'
 import { verifyAdmin } from '../middleware/verify.js'
 import uploadCloud from '../middleware/cloudinary.js'
@@ -22,6 +23,9 @@ router.get('/', getAllProduct)
 
 // GET A PRODUCT
 router.get('/find/:productId', getAProduct)
+
+// GET RANDOM PRODUCT
+router.get('/random', getRandomProducts)
 
 // DELETED MANY PRODUCTS
 router.delete('/', verifyAdmin, deletedProduct)
