@@ -1,8 +1,9 @@
-import { Box, Grid, TextField, Button } from '@mui/material'
+import { Box, Grid, TextField, Button, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useSelector, useDispatch } from 'react-redux'
 import { createBlogAPI } from '~/api/main'
 import { showToast } from 'src/redux/slice/toastSlice'
+import ErrorMessages from '~/components/ErrorMessages'
 const BlogComponent = () => {
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
@@ -13,24 +14,23 @@ const BlogComponent = () => {
     } = useForm()
     const onBlog = async data => {
         const formData = new FormData()
-        formData.append('title', data.title)
-        formData.append('desc', data.desc)
-        formData.append('author', data.author)
-        formData.append('picture', data.picture[0])
+        formData.set('title', data.title)
+        formData.set('desc', data.desc)
+        formData.set('author', data.author)
+        formData.set('picture', data.picture[0])
         try {
             const res = await createBlogAPI(formData, token)
             if (res.status === 201) {
                 dispatch(showToast({ type: 'success', message: 'Tạo mới bài viết thành công!' }))
             }
-            console.log(data)
         } catch (err) {
-            console.log(err)
+            console.error(err)
             dispatch(showToast({ type: 'error', message: 'Tạo mới bài viết thất bại!' }))
         }
     }
     return (
         <Box component='form' onSubmit={handleSubmit(onBlog)}>
-            <Grid container spacing={1}>
+            <Grid container spacing={2}>
                 <Grid xs={12} item>
                     <TextField
                         type='text'
@@ -39,7 +39,7 @@ const BlogComponent = () => {
                         fullWidth
                         {...register('title', { required: true })}
                     />
-                    {errors.title && <p>Tiêu đề là bắt buộc</p>}
+                    <ErrorMessages errors={errors} fieldName='title' />
                 </Grid>
                 <Grid xs={12} item>
                     <TextField
@@ -51,7 +51,7 @@ const BlogComponent = () => {
                         fullWidth
                         {...register('desc', { required: true })}
                     />
-                    {errors.desc && <p>Mô tả là bắt buộc</p>}
+                    <ErrorMessages errors={errors} fieldName='desc' />
                 </Grid>
                 <Grid xs={12} item>
                     <TextField
@@ -64,10 +64,10 @@ const BlogComponent = () => {
                     />
                 </Grid>
                 <Grid xs={12} item>
-                    <TextField type='file' variant='outlined' fullWidth {...register('picture')} />
+                    <Typography component='input' type='file' variant='outlined' fullWidth {...register('picture')} />
                 </Grid>
                 <Grid xs={12} item>
-                    <Button type='submit' variant='contained' fullWidth>
+                    <Button type='submit' variant='contained'>
                         Tạo blog
                     </Button>
                 </Grid>

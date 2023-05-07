@@ -1,55 +1,37 @@
-import { useState, useEffect, lazy, useRef } from 'react'
-import { Box, Grid, Paper } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { Box, CircularProgress, Grid, Paper, Stack, Typography } from '@mui/material'
 import Image from 'mui-image'
 import useDocumentTitle from '~/hooks/useDocumentTitle'
 import useScrollToTop from '~/hooks/useScrollToTop'
 import flashSale from '~/assets/imgs/flash-sale.jpg'
-import { getAllProducts } from '~/api/main'
+import { getAllProductByQueryAPI } from '~/api/main'
 import CardProductItem from '~/components/CardProductItem'
-// const FilterList = lazy(() => import('./FilterList'))
 import FilterList from './FilterList'
+import useStyles from '~/assets/styles/useStyles'
 
 const ProductPage = () => {
     const [page, setPage] = useState(1)
     const [products, setProducts] = useState([])
-    const [limit, setLimit] = useState(10)
     const [isFetching, setIsFetching] = useState(false)
-
-    const observer = useRef()
-    const lastProductRef = useRef()
+    const [url, setUrl] = useState('')
 
     useDocumentTitle('Sản phẩm')
     useScrollToTop()
-
+    const classes = useStyles()
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 setIsFetching(true)
-                const res = await getAllProducts()
+                const res = await getAllProductByQueryAPI(url)
                 setProducts(res.docs)
                 setIsFetching(false)
-                // if (observer.current && !isFetching) {
-                //     observer.current.disconnect()
-                // }
-                // observer.current = new IntersectionObserver(entries => {
-                //     if (entries[0].isIntersecting) {
-                //         setPage(prevPage => prevPage + 1)
-                //     }
-                // })
-
-                // if (lastProductRef.current) {
-                //     observer.current.observe(lastProductRef.current)
-                // }
             } catch (error) {
                 console.error(error)
                 setIsFetching(false)
             }
         }
         fetchProducts()
-    }, [page, limit])
-
-    console.log(products)
-
+    }, [page, url])
     return (
         <Box display='flex' marginY={5} justifyContent='center'>
             <Box width={1400}>
@@ -57,17 +39,35 @@ const ProductPage = () => {
                 <Grid marginY={2} container spacing={2}>
                     <Grid xs={3} item>
                         <Paper>
-                            <FilterList />
+                            <FilterList url={url} setUrl={setUrl} />
                         </Paper>
                     </Grid>
                     <Grid xs={9} item spacing={2} container>
-                        {products?.map((product, index) => (
-                            <Grid item key={index} xs={3}>
-                                <Paper elevation={6}>
-                                    <CardProductItem data={product} />
-                                </Paper>
-                            </Grid>
-                        ))}
+                        {isFetching ? (
+                            <Stack width='100%' className={classes.flexBox}>
+                                <CircularProgress color='secondary' />
+                                <Typography variant='subtitle1'>Đang tìm kiếm...</Typography>
+                            </Stack>
+                        ) : (
+                            <>
+                                {products.map((product, index) => (
+                                    <Grid item key={index} xs={3}>
+                                        <Paper elevation={6}>
+                                            <CardProductItem data={product} />
+                                        </Paper>
+                                    </Grid>
+                                ))}
+                                {products.length === 0 && (
+                                    <Grid item xs={3}>
+                                        <Box elevation={6}>
+                                            <Typography variant='body1' color='primary'>
+                                                Không có sản phẩm nào phù hợp!
+                                            </Typography>
+                                        </Box>
+                                    </Grid>
+                                )}
+                            </>
+                        )}
                     </Grid>
                 </Grid>
             </Box>

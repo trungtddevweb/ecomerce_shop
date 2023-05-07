@@ -26,18 +26,39 @@ export const getAProduct = async (req, res) => {
 }
 
 export const getAllProduct = async (req, res) => {
-    const { page, limit } = req.query
-    const fields = req.query.fields
-    const selectedFields = fields ? fields.split(' ') : null
+    const { page, limit, category, brand, sizes, price } = req.query
     const options = {
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
         sort: { createdAt: 'desc' },
-        select: selectedFields
+        query: {
+            ...(sizes && { sizes }),
+            ...(category && { category: { $regex: new RegExp(category, 'i') } }),
+            ...(brand && { brand: { $regex: new RegExp(brand, 'i') } }),
+            ...(price &&
+                (() => {
+                    let [minPrice, maxPrice] = price.split('-').map(p => parseInt(p))
+                    if (minPrice && maxPrice) {
+                        return { price: { $gte: minPrice, $lte: maxPrice } }
+                    } else if (minPrice) {
+                        minPrice = parseInt(price.substring(2))
+                        return { price: { $gte: minPrice } }
+                    } else if (maxPrice) {
+                        maxPrice = parseInt(price.substring(2))
+                        return { price: { $lte: maxPrice } }
+                    } else if (price.startsWith('lt')) {
+                        const upperBound = parseInt(price.substring(2))
+                        return { price: { $lt: upperBound } }
+                    } else if (price.startsWith('gt')) {
+                        const lowerBound = parseInt(price.substring(2))
+                        return { price: { $gt: lowerBound } }
+                    }
+                })())
+        }
     }
+
     try {
-        const products = await Product.paginate({}, options)
-        console.log('Select', fields)
+        const products = await Product.paginate(options.query, options)
         responseHandler.getData(res, products)
     } catch (error) {
         res.status(500).json({ message: error })

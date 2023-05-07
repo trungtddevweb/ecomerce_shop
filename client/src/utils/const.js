@@ -47,3 +47,36 @@ export const optionValueSizes = [
     { value: '3xl', label: '3xl' },
     { value: '4xl', label: '4xl' }
 ]
+
+export const brandLists = [
+    { label: 'Việt Nam', value: 'việt nam' },
+    { label: 'Trung Quôc', value: 'trung quốc' },
+    { label: 'Hàn Quốc', value: 'hàn quốc' },
+    { label: 'Thái Lan', value: 'thái lan' },
+    { label: 'Canada', value: 'Canada' }
+]
+
+export const categoryLists = [
+    { label: 'Áo', value: 'áo' },
+    { label: 'Đầm', value: 'đầm' },
+    { label: 'Quần', value: 'quần' },
+    { label: 'Giày', value: 'giày' },
+    { label: 'Dép', value: 'dép' },
+    { label: 'Phụ kiện', value: 'phụ kiện' }
+]
+
+export const sizeLists = [
+    { label: 'S', value: 's' },
+    { label: 'M', value: 'm' },
+    { label: 'L', value: 'l' },
+    { label: 'XXL', value: 'xxl' },
+    { label: '3XL', value: '3xl' },
+    { label: '4XL', value: '4XL' }
+]
+
+export const priceLists = [
+    { label: 'Nhỏ hơn 100.000 VNĐ', value: 'lt100000' },
+    { label: '100.000 - 200.000 VNĐ', value: '100000-200000' },
+    { label: '200.000 - 350.000 VNĐ', value: '200000-350000' },
+    { label: 'Lớn hơn 350.000 VNĐ', value: 'gt350000' }
+]
