@@ -42,6 +42,10 @@ const UserSchema = new Schema(
             unique: true,
             lowercase: true
         },
+        phone: {
+            type: String,
+            default: ''
+        },
         password: {
             type: String,
             required: true

@@ -1,25 +1,41 @@
-import { IconButton, TextField, Box } from '@mui/material'
+import { TextField, FormControl } from '@mui/material'
 import { Search as SearchIcon } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import useDocumentTitle from '~/hooks/useDocumentTitle'
+import useScrollToTop from '~/hooks/useScrollToTop'
 
 const Search = () => {
-    const navigate = useNavigate()
-    const handleSearch = () => {
-        navigate('/search')
+    useDocumentTitle('Tìm kiếm')
+    useScrollToTop()
+    const [value, setValue] = useState('')
+
+    const handleSearch = e => {
+        e.preventDefault()
     }
+
     return (
-        <Box component='form' noValidate autoComplete='off'>
+        <FormControl noValidate>
             <TextField
                 id='search'
                 label='Tìm sản phẩm...'
                 variant='outlined'
                 size='small'
                 fullWidth
+                autoComplete='off'
+                onChange={e => setValue(e.target.value)}
                 InputProps={{
-                    endAdornment: <SearchIcon cursor='pointer' onClick={handleSearch} />
+                    endAdornment: (
+                        <SearchIcon
+                            sx={{
+                                visibility: value === '' ? 'hidden' : 'visible'
+                            }}
+                            cursor='pointer'
+                            onClick={e => handleSearch(e)}
+                        />
+                    )
                 }}
             />
-        </Box>
+        </FormControl>
     )
 }
 

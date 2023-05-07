@@ -51,8 +51,9 @@ export const getAllProducts = async (limit, page) => {
     return response.data
 }
 
-export const getAllProductByQueryAPI = async url => {
-    const res = await mainAPI.get(`/products${url}`)
+export const getAllProductByQueryAPI = async (limit, url) => {
+    const query = url.split('?')[1]
+    const res = await mainAPI.get(`/products?limit=${limit}&${query}`)
     return res.data
 }
 

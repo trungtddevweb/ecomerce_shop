@@ -70,14 +70,25 @@ export const getProductsByHot = async (req, res) => {
     const options = {
         limit,
         page,
-        // limit: parseInt(limit, 10) || 10,
-        // page: parseInt(page, 10) || 1,
         sort: { createdAt: 'desc' }
     }
     try {
         const products = await Product.paginate({ isHot: true }, options)
         responseHandler.getData(res, products)
     } catch (error) {
+        responseHandler.error(res, error)
+    }
+}
+
+export const getRandomProducts = async (req, res) => {
+    try {
+        const numProducts = req.query.num || 10 // Lấy số lượng sản phẩm từ query parameter
+        const products = await Product.aggregate([
+            { $sample: { size: parseInt(numProducts) } } // Lấy ngẫu nhiên numProducts sản phẩm
+        ])
+        responseHandler.success(res, products)
+    } catch (error) {
+        console.error(error)
         responseHandler.error(res, error)
     }
 }
