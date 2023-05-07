@@ -3,14 +3,18 @@ import { Search as SearchIcon } from '@mui/icons-material'
 import { useState } from 'react'
 import useDocumentTitle from '~/hooks/useDocumentTitle'
 import useScrollToTop from '~/hooks/useScrollToTop'
+import { useNavigate } from 'react-router-dom'
 
 const Search = () => {
     useDocumentTitle('Tìm kiếm')
     useScrollToTop()
+
+    const navigate = useNavigate()
     const [value, setValue] = useState('')
 
     const handleSearch = e => {
         e.preventDefault()
+        navigate(`/search?name=${value}`)
     }
 
     return (
