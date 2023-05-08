@@ -79,7 +79,7 @@ function DrawerComponent({ openDrawer, onCloses, onLoading }) {
                         <Divider component='div' variant='fullWidth' />
                         <ListItem disablePadding>
                             <ListItemButton>
-                                <MenuUser onLoading={onLoading} onClose={handleClose} />
+                                <MenuUser onLoading={onLoading} onClose={onCloses} />
                             </ListItemButton>
                         </ListItem>
                     </List>

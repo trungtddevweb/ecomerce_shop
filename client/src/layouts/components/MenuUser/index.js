@@ -1,17 +1,31 @@
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import noImage from 'src/assets/imgs'
 import { logoutSuccess } from 'src/redux/slice/usersSlice'
 import { Inventory, Logout } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '~/api/main'
-import { Avatar, Fade, ListItemIcon, Menu, MenuItem, Stack, Tooltip, Typography, useTheme } from '@mui/material'
+import {
+    Avatar,
+    Fade,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    Stack,
+    Tooltip,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from '@mui/material'
 import routes from 'src/utils/routes'
 import { Link, useNavigate } from 'react-router-dom'
 import useStyles from '~/assets/styles/useStyles'
-import { memo } from 'react'
+import CustomBackDrop from '~/components/BackDrop'
 
 const MenuUser = ({ onClose, onLoading }) => {
     const [anchorEl, setAnchorEl] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     const classes = useStyles()
     const navigate = useNavigate()
 
@@ -26,21 +40,27 @@ const MenuUser = ({ onClose, onLoading }) => {
 
     const handleClose = () => {
         setAnchorEl(null)
-        onClose()
+        if (isMatch) {
+            onClose(false)
+        }
+    }
+
+    const checkFunction = value => {
+        return isMatch ? onLoading(value) : setIsLoading(value)
     }
 
     const handleLogout = async () => {
-        handleClose()
-        onLoading(true)
+        handleClose(false)
+        checkFunction(true)
         try {
             await logout(token)
             dispatch(logoutSuccess())
-            onLoading(true)
+            checkFunction(false)
             navigate('/login')
         } catch (error) {
-            onLoading(false)
+            checkFunction(false)
             console.error('Error; ', error)
-            handleClose()
+            handleClose(false)
         }
     }
 
@@ -126,14 +146,14 @@ const MenuUser = ({ onClose, onLoading }) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <Link onClick={handleClose} to={routes.personal.path} className={classes.hoverItem}>
-                    <MenuItem>
+                <MenuItem>
+                    <Link onClick={handleClose} to={routes.personal.path} className={classes.hoverItem}>
                         <ListItemIcon>
                             <Avatar fontSize='small' />
                         </ListItemIcon>
                         Thông tin
-                    </MenuItem>
-                </Link>
+                    </Link>
+                </MenuItem>
                 <MenuItem
                     className={classes.hoverItem}
                     component={Link}
@@ -153,6 +173,7 @@ const MenuUser = ({ onClose, onLoading }) => {
                     Đăng xuất
                 </MenuItem>
             </Menu>
+            <CustomBackDrop height='100vh' open={isLoading} />
         </>
     )
 }

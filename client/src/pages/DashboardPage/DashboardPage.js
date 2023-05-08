@@ -10,7 +10,8 @@ import {
     ListItem,
     ListItemAvatar,
     Avatar,
-    Typography
+    Typography,
+    Box
 } from '@mui/material'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -59,8 +60,8 @@ const DashboardPage = () => {
     }
 
     return (
-        <Grid className='dashboard-page' padding='0px' display='flex' justifyContent='center'>
-            <Grid container spacing={4} className='dashboard-wrapper'>
+        <Box display='flex' paddingY={5} minHeight='70vh' bgcolor='lightgray' justifyContent='center'>
+            <Grid width={1400} container spacing={4}>
                 <Grid item xs={4}>
                     <Paper elevation={6}>
                         <List
@@ -135,7 +136,7 @@ const DashboardPage = () => {
                     <Paper elevation={6}>{getFields(selectedParam)}</Paper>
                 </Grid>
             </Grid>
-        </Grid>
+        </Box>
     )
 }
 

@@ -44,6 +44,8 @@ const Header = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [prevScrollpos])
 
+    console.log(isLoading)
+
     return (
         <Box
             component={Paper}
@@ -107,7 +109,7 @@ const Header = () => {
                     </Stack>
                 </Toolbar>
             </Box>
-            <CustomBackDrop open={isLoading} />
+            <CustomBackDrop height='100vh' open={isLoading} />
         </Box>
     )
 }

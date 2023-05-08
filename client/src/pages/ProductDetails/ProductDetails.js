@@ -161,7 +161,7 @@ const ProductDetails = () => {
                                 </Typography>
                                 <Typography
                                     className={classes.limitLines}
-                                    minHeight={120}
+                                    minHeight={116}
                                     variant='subtitle1'
                                     color='GrayText'
                                 >
