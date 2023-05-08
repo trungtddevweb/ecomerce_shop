@@ -7,11 +7,11 @@ import bannerShipping from '~/assets/imgs/banner-shopping.jpg'
 
 import useScrollToTop from '~/hooks/useScrollToTop'
 
-const ListPostsBlog = lazy(() => import('~/pages/HomePage/ListPostsBlog'))
+const ListPostsBlog = lazy(() => import('./ListPostsBlog'))
 const Sliders = lazy(() => import('~/components/Slider'))
 const NewLetters = lazy(() => import('~/components/NewLetters'))
 const Onboarding = lazy(() => import('./Onboading'))
-const ListProducts = lazy(() => import('~/pages/HomePage/ListProducts'))
+const ListProducts = lazy(() => import('./ListProducts'))
 
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
@@ -24,9 +24,9 @@ const HomePage = () => {
                 <ListProducts title='Sản phẩm hot nhất' />
                 <Onboarding />
                 <NewLastestProduct />
-                <Image width='100%' src={bannerShipping} alt='Shipping' />
-                <NewLetters />
+                <Image width='100%' height='50%' src={bannerShipping} alt='Shipping' />
                 <ListPostsBlog />
+                <NewLetters />
             </Stack>
         </Box>
     )

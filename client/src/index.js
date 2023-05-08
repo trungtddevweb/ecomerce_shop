@@ -27,7 +27,7 @@ root.render(
                     </Suspense>
                 </ErrorBoundaryCustom>
             </PersistGate>
-            <ToastContainer position='bottom-left' limit={5} />
+            <ToastContainer position='top-right' limit={5} />
             <ConfirmDialog />
         </Provider>
     </React.StrictMode>

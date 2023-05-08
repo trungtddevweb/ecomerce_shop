@@ -1,11 +1,7 @@
 import Slider from 'react-slick'
 import { Grid } from '@mui/material'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
-import banner1 from '~/assets/imgs/banner1.png'
-import banner2 from '~/assets/imgs/banner2.jpg'
-import banner3 from '~/assets/imgs/banner3.png'
-import Image from '../Image/Image'
+import Image from 'mui-image'
+import { imagesSlider } from 'src/utils/const'
 
 const Sliders = () => {
     const settings = {
@@ -30,16 +26,12 @@ const Sliders = () => {
             }
         ]
     }
-    const imagesSlider = [
-        { src: banner1, alt: 'Slider 1' },
-        { src: banner2, alt: 'Slider 2' },
-        { src: banner3, alt: 'Slider 3' },
-    ]
+
     return (
         <Grid className='slide-container'>
             <Slider {...settings}>
                 {imagesSlider.map(slider => (
-                    <Image key={slider.src} src={slider.src} alt={slider.alt} />
+                    <Image duration={500} key={slider.src} src={slider.src} alt={slider.alt} />
                 ))}
             </Slider>
         </Grid>

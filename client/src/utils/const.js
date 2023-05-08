@@ -1,3 +1,7 @@
+import banner1 from '~/assets/imgs/banner1.png'
+import banner2 from '~/assets/imgs/banner2.jpg'
+import banner3 from '~/assets/imgs/banner3.png'
+
 export const baseURL = process.env.REACT_APP_BASE_URL
 
 export const tabsNavigationHeader = [
@@ -79,4 +83,10 @@ export const priceLists = [
     { label: '100.000 - 200.000 VNĐ', value: '100000-200000' },
     { label: '200.000 - 350.000 VNĐ', value: '200000-350000' },
     { label: 'Lớn hơn 350.000 VNĐ', value: 'gt350000' }
+]
+
+export const imagesSlider = [
+    { src: banner1, alt: 'Slider 1' },
+    { src: banner2, alt: 'Slider 2' },
+    { src: banner3, alt: 'Slider 3' }
 ]

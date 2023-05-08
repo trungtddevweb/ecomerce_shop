@@ -47,14 +47,7 @@ const theme = createTheme({
         ].join(',')
     },
     spacing: [0, 4, 8, 16, 32, 64],
-    breakpoints: {
-        values: {
-            mobile: 0,
-            tablet: 640,
-            laptop: 1024,
-            desktop: 1200
-        }
-    },
+
     components: {
         MuiButton: {
             defaultProps: {
