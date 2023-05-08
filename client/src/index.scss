@@ -10,12 +10,10 @@
 
 @import './assets/scss/variables';
 // SCSS files
-@import './assets/scss/header.scss';
 @import './assets/scss/login.scss';
 @import './assets/scss/register.scss';
 @import './assets/scss/dashboard.scss';
 @import './assets/scss/sliders.scss';
-@import './assets/scss/footer.scss';
 @import './assets/scss/contact.scss';
 
 
@@ -77,4 +75,51 @@ input[type=number] {
 // Overide react-credit-cards
 .rccs {
     margin: 0 !important;
+}
+
+// Navbar
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+    transition: transform 0.3s ease-in-out;
+    z-index: 9999;
+}
+
+
+.navbar--hidden {
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+    animation-name: fadeOutUp;
+}
+
+@keyframes fadeOutUp {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        visibility: hidden;
+        transform: translate3d(0, -100%, 0);
+    }
+}
+
+.navbar--visible {
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+    animation-name: fadeInDown;
+}
+
+@keyframes fadeInDown {
+    from {
+        transform: translate3d(0, -100%, 0);
+        visibility: visible;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+    }
 }

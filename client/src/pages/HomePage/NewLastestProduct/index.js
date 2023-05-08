@@ -1,13 +1,15 @@
-import { Box, Grid, Stack, Typography } from '@mui/material'
+import { Box, Button, Grid, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useEffect, useState } from 'react'
 import CardProductItem from '../../../components/CardProductItem'
 import { getAllProducts } from '~/api/main'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 import useStyles from '~/assets/styles/useStyles'
+import routes from 'src/utils/routes'
 
 const NewLastestProduct = () => {
-    // const classes = useStyles()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     const [lists, setLists] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const classes = useStyles()
@@ -28,25 +30,44 @@ const NewLastestProduct = () => {
     const sortedData = [...lists].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
     return (
-        <Box display='flex' marginY={6} alignItems='center' flexDirection='column'>
-            <Box width={1400}>
+        <Box
+            p={2}
+            marginY={isMatch ? 2 : 6}
+            sx={{
+                display: 'flex',
+                alignItems: {
+                    md: 'center'
+                },
+                flexDirection: 'column'
+            }}
+        >
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px',
+                        sm: 'auto'
+                    }
+                }}
+            >
                 <Stack direction='row' alignItems='center' justifyContent='space-between'>
                     <Typography variant='h6' color='primary.main'>
                         Những sản phẩm mới nhất
                     </Typography>
-                    <Typography
-                        variant='subtitle2'
-                        className={classes.hoverItem}
-                        component={Link}
-                        to='/products'
-                        color='blue'
-                    >
-                        Xem thêm {'>>'}
-                    </Typography>
+                    {!isMatch && (
+                        <Typography
+                            variant='subtitle2'
+                            className={classes.hoverItem}
+                            component={Link}
+                            to='/products'
+                            color='blue'
+                        >
+                            Xem thêm {'>>'}
+                        </Typography>
+                    )}
                 </Stack>
                 <Grid container spacing={2}>
                     {(isLoading ? Array.from(new Array(5)) : sortedData).map((list, index) => (
-                        <Grid item key={list?._id || index} xs={2.4}>
+                        <Grid item key={list?._id || index} xs={6} md={2.4}>
                             {list ? (
                                 <CardProductItem data={list} />
                             ) : (
@@ -60,6 +81,13 @@ const NewLastestProduct = () => {
                             )}
                         </Grid>
                     ))}
+                    {isMatch && (
+                        <Grid item xs={12} className={classes.flexBox}>
+                            <Link to={routes.product.path}>
+                                <Button size='small'>Xem thêm</Button>
+                            </Link>
+                        </Grid>
+                    )}
                 </Grid>
             </Box>
         </Box>

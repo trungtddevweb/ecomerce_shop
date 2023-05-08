@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardMedia, Grid, Typography } from '@mui/material'
+import { Box, Card, CardContent, CardMedia, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 import onBoardingImg from '~/assets/imgs/onboarding.jpg'
 import useStyles from '~/assets/styles/useStyles'
 import orderImage from '~/assets/imgs/orderStatus/order.png'
@@ -7,16 +7,27 @@ import shippingImage from '~/assets/imgs/orderStatus/shipping.png'
 import returnImage from '~/assets/imgs/orderStatus/return.png'
 
 const Onboarding = () => {
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     const classes = useStyles()
+
     return (
         <Box
+            p={2}
             sx={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundImage: `url(${onBoardingImg})`,
+                backgroundImage: {
+                    md: `url(${onBoardingImg})`
+                },
+                backgroundColor: {
+                    sm: 'lightgray'
+                },
                 backgroundSize: 'cover',
-                height: 450,
+                height: {
+                    md: 450
+                },
                 position: 'relative',
                 '&::before': {
                     content: '""',
@@ -30,15 +41,18 @@ const Onboarding = () => {
             }}
         >
             <Grid width={1400} zIndex={10} container spacing={3}>
-                <Grid item xs={3}>
+                <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            height: 350
+                            minHeight: {
+                                md: 350,
+                                sm: 250
+                            }
                         }}
                         className={classes.flexBox}
                     >
                         <CardContent>
-                            <Box className={classes.itemOnboarding} bgcolor='info'>
+                            <Box className={isMatch ? classes.flexBox : classes.itemOnboarding} bgcolor='info'>
                                 <CardMedia
                                     sx={{
                                         width: '75px !important',
@@ -57,21 +71,26 @@ const Onboarding = () => {
                             >
                                 Chọn sản phẩm
                             </Typography>
-                            <Typography variant='body2' color='gray' textAlign='center'>
-                                Hãy chọn sản phẩm yêu thích và thêm vào giỏ hàng
-                            </Typography>
+                            {!isMatch && (
+                                <Typography variant='body2' color='gray' textAlign='center'>
+                                    Hãy chọn sản phẩm yêu thích và thêm vào giỏ hàng
+                                </Typography>
+                            )}
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            height: 350
+                            minHeight: {
+                                md: 350,
+                                sm: 250
+                            }
                         }}
                         className={classes.flexBox}
                     >
                         <CardContent>
-                            <Box className={classes.itemOnboarding} bgcolor='info'>
+                            <Box className={isMatch ? classes.flexBox : classes.itemOnboarding} bgcolor='info'>
                                 <CardMedia
                                     sx={{
                                         width: '75px !important',
@@ -90,21 +109,26 @@ const Onboarding = () => {
                             >
                                 Đặt hàng đã chọn
                             </Typography>
-                            <Typography variant='body2' color='gray' textAlign='center'>
-                                Khi đã chọn được món hàng ưng ý, hãy đặt liền tay
-                            </Typography>
+                            {!isMatch && (
+                                <Typography variant='body2' color='gray' textAlign='center'>
+                                    Khi đã chọn được món hàng ưng ý, hãy đặt liền tay
+                                </Typography>
+                            )}
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            height: 350
+                            minHeight: {
+                                md: 350,
+                                sm: 250
+                            }
                         }}
                         className={classes.flexBox}
                     >
                         <CardContent>
-                            <Box className={classes.itemOnboarding} bgcolor='info'>
+                            <Box className={isMatch ? classes.flexBox : classes.itemOnboarding} bgcolor='info'>
                                 <CardMedia
                                     sx={{
                                         width: '75px !important',
@@ -121,23 +145,28 @@ const Onboarding = () => {
                                 fontWeight='bold'
                                 textAlign='center'
                             >
-                                Giao hàng
+                                Vận chuyển hàng
                             </Typography>
-                            <Typography variant='body2' color='gray' textAlign='center'>
-                                Chờ đơn hàng được giao tới tay bạn và thanh toán
-                            </Typography>
+                            {!isMatch && (
+                                <Typography variant='body2' color='gray' textAlign='center'>
+                                    Chờ đơn hàng được giao tới tay bạn và thanh toán
+                                </Typography>
+                            )}
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            height: 350
+                            minHeight: {
+                                md: 350,
+                                sm: 250
+                            }
                         }}
                         className={classes.flexBox}
                     >
                         <CardContent>
-                            <Box className={classes.itemOnboarding} bgcolor='info'>
+                            <Box className={isMatch ? classes.flexBox : classes.itemOnboarding} bgcolor='info'>
                                 <CardMedia
                                     sx={{
                                         width: '75px !important',
@@ -156,9 +185,11 @@ const Onboarding = () => {
                             >
                                 Trả hàng và hoàn phí
                             </Typography>
-                            <Typography variant='body2' color='gray' textAlign='center'>
-                                Nếu đơn hàng không như bạn mong muốn, có thể đổi trả trong vòng 7 ngày
-                            </Typography>
+                            {!isMatch && (
+                                <Typography variant='body2' color='gray' textAlign='center'>
+                                    Nếu đơn hàng không như bạn mong muốn, có thể đổi trả trong vòng 7 ngày
+                                </Typography>
+                            )}
                         </CardContent>
                     </Card>
                 </Grid>

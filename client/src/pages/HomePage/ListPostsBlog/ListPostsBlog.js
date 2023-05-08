@@ -9,13 +9,16 @@ import {
     Divider,
     Grid,
     Stack,
-    Typography
+    Typography,
+    useMediaQuery,
+    useTheme
 } from '@mui/material'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 import { optionsQuery } from 'src/utils/const'
+import routes from 'src/utils/routes'
 import { getAllBlogs } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
@@ -23,6 +26,8 @@ const ListPostsBlog = () => {
     const [listBlogs, setListBlogs] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const classes = useStyles()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -39,67 +44,97 @@ const ListPostsBlog = () => {
     }, [])
 
     return (
-        <Stack width={1400} margin='auto'>
-            <Stack direction='row' alignItems='center' justifyContent='space-between'>
-                <Typography variant='h6' color='primary.main'>
-                    Bài viết nổi bật
-                </Typography>
-                <Typography variant='subtitle2' className={classes.hoverItem} component={Link} to='/blogs' color='blue'>
-                    Xem thêm {'>>'}
-                </Typography>
-            </Stack>
-            <Grid container marginBottom={5}>
-                {(isLoading ? Array.from(new Array(4)) : listBlogs).map((item, index) => (
-                    <Grid item key={item?._id || index} xs={3}>
-                        <Card sx={{ maxWidth: 340 }}>
-                            <CardActionArea>
-                                {item ? (
-                                    <CardMedia component='img' height='200' image={item?.picture} />
-                                ) : (
-                                    <SkeletonFallback key={index} sx={{ height: 200 }} variant='rectangular' />
-                                )}
-                                <CardContent>
+        <Box
+            p={2}
+            marginY={isMatch ? 2 : 6}
+            sx={{
+                display: 'flex',
+                alignItems: {
+                    md: 'center'
+                },
+                flexDirection: 'column'
+            }}
+        >
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px',
+                        sm: 'auto'
+                    }
+                }}
+            >
+                <Stack direction='row' alignItems='center' justifyContent='space-between'>
+                    <Typography variant='h6' color='primary.main'>
+                        Bài viết nổi bật
+                    </Typography>
+                    {!isMatch && (
+                        <Typography
+                            variant='subtitle2'
+                            className={classes.hoverItem}
+                            component={Link}
+                            to='/blogs'
+                            color='blue'
+                        >
+                            Xem thêm {'>>'}
+                        </Typography>
+                    )}
+                </Stack>
+                <Grid container marginBottom={5}>
+                    {(isLoading ? Array.from(new Array(4)) : listBlogs).map((item, index) => (
+                        <Grid item key={item?._id || index} xs={12} md={3}>
+                            <Card sx={{ maxWidth: 340 }}>
+                                <CardActionArea>
                                     {item ? (
-                                        <Link className={classes.hoverItem} to={`/blogs/${item._id}`}>
-                                            <Typography gutterBottom variant='h6' minHeight={64} component='p'>
-                                                {item?.title}
-                                            </Typography>
-                                            <Typography
-                                                variant='body2'
-                                                color='text.secondary'
-                                                component='div'
-                                                className={classes.limitLines}
-                                            >
-                                                {item?.desc}
-                                            </Typography>
-                                            <Typography
-                                                marginTop={2}
-                                                color='text.secondary'
-                                                component='p'
-                                                textAlign='right'
-                                                fontSize={14}
-                                            >
-                                                Ngày đăng:
-                                                <Typography fontSize={14} component='span'>
-                                                    {' '}
+                                        <CardMedia component='img' height='200' image={item?.picture} />
+                                    ) : (
+                                        <SkeletonFallback key={index} sx={{ height: 200 }} variant='rectangular' />
+                                    )}
+                                    <CardContent>
+                                        {item ? (
+                                            <Link className={classes.hoverItem} to={`/blogs/${item._id}`}>
+                                                <Typography gutterBottom variant='h6' minHeight={64} component='p'>
+                                                    {item?.title}
+                                                </Typography>
+                                                <Typography
+                                                    variant='body2'
+                                                    color='text.secondary'
+                                                    component='div'
+                                                    className={classes.limitLines}
+                                                >
+                                                    {item?.desc}
+                                                </Typography>
+                                                <Typography
+                                                    marginTop={2}
+                                                    color='text.secondary'
+                                                    component='p'
+                                                    textAlign='right'
+                                                    fontSize={14}
+                                                >
                                                     {item?.createdAt.split('T')[0]}
                                                 </Typography>
-                                            </Typography>
-                                        </Link>
-                                    ) : (
-                                        <Box>
-                                            <SkeletonFallback />
-                                            <SkeletonFallback height={100} />
-                                            <SkeletonFallback width='80%' />
-                                        </Box>
-                                    )}
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-        </Stack>
+                                            </Link>
+                                        ) : (
+                                            <Box>
+                                                <SkeletonFallback />
+                                                <SkeletonFallback height={100} />
+                                                <SkeletonFallback width='80%' />
+                                            </Box>
+                                        )}
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        </Grid>
+                    ))}
+                    {isMatch && (
+                        <Grid item xs={12} mt={2} className={classes.flexBox}>
+                            <Link to={routes.blog.path}>
+                                <Button size='small'>Xem thêm</Button>
+                            </Link>
+                        </Grid>
+                    )}
+                </Grid>
+            </Box>
+        </Box>
     )
 }
 

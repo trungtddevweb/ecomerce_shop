@@ -9,7 +9,9 @@ const Cart = ({ onClick, ...props }) => {
     return (
         <IconButton
             sx={{
-                marginLeft: '12px'
+                sm: {
+                    ml: '12px'
+                }
             }}
             aria-label='cart'
             onClick={onClick}
