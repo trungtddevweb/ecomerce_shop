@@ -79,10 +79,16 @@ const ListPostsBlog = () => {
                         </Typography>
                     )}
                 </Stack>
-                <Grid container marginBottom={5}>
+                <Grid container marginBottom={5} spacing={2}>
                     {(isLoading ? Array.from(new Array(4)) : listBlogs).map((item, index) => (
                         <Grid item key={item?._id || index} xs={12} md={3}>
-                            <Card sx={{ maxWidth: 340 }}>
+                            <Card
+                                sx={{
+                                    maxWidth: {
+                                        md: 340
+                                    }
+                                }}
+                            >
                                 <CardActionArea>
                                     {item ? (
                                         <CardMedia component='img' height='200' image={item?.picture} />

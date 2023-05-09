@@ -21,13 +21,14 @@ const Onboarding = () => {
                 backgroundImage: {
                     md: `url(${onBoardingImg})`
                 },
+                height: {
+                    md: '450px'
+                },
                 backgroundColor: {
                     sm: 'lightgray'
                 },
                 backgroundSize: 'cover',
-                height: {
-                    md: 450
-                },
+
                 position: 'relative',
                 '&::before': {
                     content: '""',
@@ -40,14 +41,20 @@ const Onboarding = () => {
                 }
             }}
         >
-            <Grid width={1400} zIndex={10} container spacing={3}>
+            <Grid
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+                zIndex={10}
+                container
+                spacing={3}
+            >
                 <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            minHeight: {
-                                md: 350,
-                                sm: 250
-                            }
+                            minHeight: isMatch ? '250px' : '350px'
                         }}
                         className={classes.flexBox}
                     >
@@ -82,10 +89,7 @@ const Onboarding = () => {
                 <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            minHeight: {
-                                md: 350,
-                                sm: 250
-                            }
+                            minHeight: isMatch ? '250px' : '350px'
                         }}
                         className={classes.flexBox}
                     >
@@ -120,10 +124,7 @@ const Onboarding = () => {
                 <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            minHeight: {
-                                md: 350,
-                                sm: 250
-                            }
+                            minHeight: isMatch ? '250px' : '350px'
                         }}
                         className={classes.flexBox}
                     >
@@ -158,10 +159,7 @@ const Onboarding = () => {
                 <Grid item xs={6} md={3}>
                     <Card
                         sx={{
-                            minHeight: {
-                                md: 350,
-                                sm: 250
-                            }
+                            minHeight: isMatch ? '250px' : '350px'
                         }}
                         className={classes.flexBox}
                     >
