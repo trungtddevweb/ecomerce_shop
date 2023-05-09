@@ -3,7 +3,6 @@ import { IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import { alpha } from '@mui/material/styles'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Add } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { deleteItemByParams } from '~/api/main'
@@ -15,7 +14,7 @@ function EnhancedTableToolbar(props) {
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
 
-    const handleDelete = async dispatch => {
+    const handleDelete = async () => {
         try {
             setDeleting(true)
             const res = await deleteItemByParams(managerId, token, selectedItem)
