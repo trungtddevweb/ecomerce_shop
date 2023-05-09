@@ -32,7 +32,7 @@ const ListPostsBlog = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await getAllBlogs(optionsQuery.limit, optionsQuery.page)
+                const response = await getAllBlogs(optionsQuery.limit - 1, optionsQuery.page)
                 setIsLoading(false)
                 setListBlogs(response.docs)
             } catch (error) {

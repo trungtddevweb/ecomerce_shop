@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Box, Stepper, Step, StepLabel, Paper, Typography, Card, Button } from '@mui/material'
+import { Box, Stepper, Step, StepLabel, Paper, Typography, Card, Button, useTheme, useMediaQuery } from '@mui/material'
 import Image from 'mui-image'
 import { stepsCart } from 'src/utils/const'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
@@ -17,6 +17,8 @@ import usePrevious from '~/hooks/usePrevious'
 const CartPage = () => {
     useDocumentTitle('Giỏ hàng')
     useScrollToTop()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     const classes = useStyles()
     const [orderCode, setOrderCode] = useState('')
     const [order, setOrder] = useState({
@@ -30,6 +32,7 @@ const CartPage = () => {
     const previousPaymentMethod = usePrevious(order.paymentMethod)
     const handleNext = useCallback(() => {
         setActiveStep(activeStep + 1)
+        window.scrollTo(0, 0)
     }, [activeStep])
 
     const handleBack = useCallback(() => {
@@ -77,13 +80,28 @@ const CartPage = () => {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <CartItems onNext={handleProductSelect} />
+                return <CartItems isMatch={isMatch} onNext={handleProductSelect} />
             case 1:
-                return <AddressForm onNext={handleAddressSelect} onBack={handleBack} />
+                return <AddressForm isMatch={isMatch} onNext={handleAddressSelect} onBack={handleBack} />
             case 2:
-                return <PaymentForm onNext={handlePaymentMethodSelect} order={order} onBack={handleBack} />
+                return (
+                    <PaymentForm
+                        isMatch={isMatch}
+                        onNext={handlePaymentMethodSelect}
+                        order={order}
+                        onBack={handleBack}
+                    />
+                )
             case 3:
-                return <Review onBack={handleBack} onNext={handleNext} order={order} setOrderCode={setOrderCode} />
+                return (
+                    <Review
+                        isMatch={isMatch}
+                        onBack={handleBack}
+                        onNext={handleNext}
+                        order={order}
+                        setOrderCode={setOrderCode}
+                    />
+                )
             default:
                 throw new Error('Unknown step')
         }
@@ -91,27 +109,37 @@ const CartPage = () => {
 
     return (
         <Box className={classes.flexBox} bgcolor='lightGray' paddingY={6}>
-            <Box width={1400}>
-                <Paper
-                    elevation={6}
-                    sx={{
-                        padding: '12px'
-                    }}
-                >
-                    <Stepper activeStep={activeStep}>
-                        {stepsCart.map(label => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Paper>
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+            >
+                {!isMatch && (
+                    <Paper
+                        elevation={6}
+                        sx={{
+                            padding: '12px'
+                        }}
+                    >
+                        <Stepper activeStep={activeStep}>
+                            {stepsCart.map(label => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </Paper>
+                )}
                 {activeStep === stepsCart.length ? (
                     <Box className={classes.flexBox}>
                         <Card
                             sx={{
                                 marginTop: '24px',
-                                width: '1000px',
+                                width: {
+                                    md: '1000px'
+                                },
                                 padding: '20px'
                             }}
                         >
@@ -137,7 +165,9 @@ const CartPage = () => {
                         </Card>
                     </Box>
                 ) : (
-                    <Box className={classes.flexBox}>{getStepContent(activeStep)}</Box>
+                    <Box p={isMatch ? 1 : 0} className={classes.flexBox}>
+                        {getStepContent(activeStep)}
+                    </Box>
                 )}
             </Box>
         </Box>

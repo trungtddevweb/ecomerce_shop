@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import Image from 'mui-image'
 import useDocumentTitle from '~/hooks/useDocumentTitle'
 import useScrollToTop from '~/hooks/useScrollToTop'
@@ -15,6 +15,8 @@ const ProductPage = () => {
     const [products, setProducts] = useState([])
     const [isFetching, setIsFetching] = useState(false)
     const [url, setUrl] = useState('')
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
 
     useDocumentTitle('Sản phẩm')
     useScrollToTop()
@@ -51,16 +53,22 @@ const ProductPage = () => {
     const hasMore = data.totalDocs > products.length
 
     return (
-        <Box display='flex' marginY={5} justifyContent='center'>
-            <Box width={1400}>
-                <Image src={flashSale} duration={500} alt='Flash sale' height={300} />
+        <Box p={1} display='flex' marginY={5} justifyContent='center'>
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+            >
+                {!isMatch && <Image src={flashSale} duration={500} alt='Flash sale' height={300} />}
                 <Grid marginY={2} container spacing={2}>
-                    <Grid xs={3} item>
+                    <Grid xs={12} md={3} item>
                         <Paper>
                             <FilterList url={url} setUrl={setUrl} />
                         </Paper>
                     </Grid>
-                    <Grid xs={9} item spacing={2} container>
+                    <Grid xs={12} md={9} item spacing={2} container>
                         {isFetching ? (
                             <Stack width='100%' minHeight='60vh' className={classes.flexBox}>
                                 <CircularProgress color='secondary' />
@@ -69,7 +77,7 @@ const ProductPage = () => {
                         ) : (
                             <>
                                 {products.map((product, index) => (
-                                    <Grid item key={index} xs={3}>
+                                    <Grid item key={index} xs={6} md={3}>
                                         <Paper elevation={6}>
                                             <CardProductItem data={product} />
                                         </Paper>

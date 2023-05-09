@@ -44,8 +44,6 @@ const Header = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [prevScrollpos])
 
-    console.log(isLoading)
-
     return (
         <Box
             component={Paper}

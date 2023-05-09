@@ -16,12 +16,14 @@ import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { orderProductAPI } from '~/api/main'
+import useStyles from '~/assets/styles/useStyles'
 
-export default function Review({ order, onBack, onNext, setOrderCode }) {
+export default function Review({ order, onBack, onNext, setOrderCode, isMatch }) {
     const { products, address, paymentMethod } = order
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
     const isPaid = paymentMethod === 'credit'
+    const classes = useStyles()
 
     const totalPrice = useMemo(
         () => products.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
@@ -49,7 +51,6 @@ export default function Review({ order, onBack, onNext, setOrderCode }) {
         shippingAddress,
         isPaid
     }
-    console.log(payload)
     const handleOrder = async () => {
         try {
             const res = await orderProductAPI(token, payload)
@@ -68,7 +69,9 @@ export default function Review({ order, onBack, onNext, setOrderCode }) {
         <Card
             sx={{
                 marginTop: '24px',
-                width: '1000px'
+                width: {
+                    md: '1000px'
+                }
             }}
         >
             <CardHeader title='Chi tiết hóa đơn' />
@@ -77,27 +80,33 @@ export default function Review({ order, onBack, onNext, setOrderCode }) {
                 <List disablePadding>
                     {products.map(product => (
                         <ListItem key={product._id} sx={{ py: 1, px: 0 }}>
-                            <ListItemText
-                                primary={<Typography fontWeight={600}>{product.productId.name}</Typography>}
-                                secondary={
-                                    <>
-                                        <Typography component='span' variant='body2'>
-                                            Số lượng: {product.quantity}
-                                        </Typography>
-                                        {' | '}
-                                        <Typography component='span' variant='body2'>
-                                            Màu sắc: {product.color}
-                                        </Typography>
-                                        {' | '}
-                                        <Typography component='span' variant='body2'>
-                                            Kích thước: {product.size}
-                                        </Typography>
-                                    </>
-                                }
-                            />
-                            <Typography fontWeight={600} variant='body2'>
-                                {product.sumPrice?.toLocaleString('vi-VN')} VNĐ
-                            </Typography>
+                            <Grid container>
+                                <Grid item xs={8}>
+                                    <ListItemText
+                                        primary={<Typography fontWeight={600}>{product.productId.name}</Typography>}
+                                        secondary={
+                                            <>
+                                                <Typography component='span' variant='body2'>
+                                                    Số lượng: {product.quantity}
+                                                </Typography>
+                                                {' | '}
+                                                <Typography component='span' variant='body2'>
+                                                    Màu sắc: {product.color}
+                                                </Typography>
+                                                {' | '}
+                                                <Typography component='span' variant='body2'>
+                                                    Kích thước: {product.size}
+                                                </Typography>
+                                            </>
+                                        }
+                                    />
+                                </Grid>
+                                <Grid item xs={4} className={isMatch ? classes.flexBox : 'd-flex justify-content-end'}>
+                                    <Typography fontWeight={600} color='error' variant='body2'>
+                                        {product.sumPrice?.toLocaleString('vi-VN')} VNĐ
+                                    </Typography>
+                                </Grid>
+                            </Grid>
                         </ListItem>
                     ))}
                     <ListItem sx={{ py: 1, px: 0 }}>
@@ -114,37 +123,44 @@ export default function Review({ order, onBack, onNext, setOrderCode }) {
                     </ListItem>
                 </List>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} md={6}>
                         <Typography variant='h6' fontWeight={600} color='error' gutterBottom sx={{ mt: 2 }}>
                             Thông tin khách hàng
                         </Typography>
                         <Stack direction='row'>
-                            <Typography gutterBottom>Họ và tên:</Typography>
+                            <Typography minWidth={150} gutterBottom>
+                                Họ và tên:
+                            </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
                                 {address.fullName}
                             </Typography>
                         </Stack>
                         <Stack direction='row'>
-                            <Typography gutterBottom>Số điện thoại: </Typography>
+                            <Typography minWidth={150} gutterBottom>
+                                Số điện thoại:
+                            </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
                                 {address.phoneNumber}
                             </Typography>
                         </Stack>
                         <Stack direction='row'>
-                            <Typography gutterBottom>Địa chỉ thường trú: </Typography>
+                            <Typography gutterBottom minWidth={150}>
+                                Địa chỉ thường trú:{' '}
+                            </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
                                 {address.address1}
                             </Typography>
                         </Stack>
                         <Stack direction='row'>
-                            <Typography gutterBottom>Địa chỉ nhận hàng: </Typography>
+                            <Typography gutterBottom minWidth={150}>
+                                Địa chỉ nhận hàng:{' '}
+                            </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
                                 {address.address2}
                             </Typography>
                         </Stack>
                     </Grid>
-
-                    <Grid item container direction='column' xs={12} sm={6}>
+                    <Grid item container direction='column' xs={12} md={6}>
                         <Typography variant='h6' fontWeight={600} gutterBottom sx={{ mt: 2 }}>
                             Phương thức thanh toán
                         </Typography>

@@ -9,7 +9,9 @@ import {
     TextField,
     Typography,
     ToggleButtonGroup,
-    ToggleButton
+    ToggleButton,
+    useTheme,
+    useMediaQuery
 } from '@mui/material'
 import useStyles from '~/assets/styles/useStyles'
 import { useEffect, lazy, useState } from 'react'
@@ -25,6 +27,8 @@ const SliderImagesProduct = lazy(() => import('./SlideImagesProduct'))
 
 const ProductDetails = () => {
     const [product, setProduct] = useState({})
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     useDocumentTitle(product?.name)
     useScrollToTop()
     const { productId } = useParams()
@@ -126,10 +130,16 @@ const ProductDetails = () => {
         }
     }
     return (
-        <Box display='flex' justifyContent='center' marginY={4}>
-            <Box width={1400}>
-                <Box paddingX={4}>
-                    <Breadcrumbs separator={<NavigateNext fontSize='small' />} marginBottom={2} aria-label='breadcrumb'>
+        <Box display='flex' padding={1} justifyContent='center' marginY={4}>
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+            >
+                <Box paddingX={isMatch ? 0 : 4}>
+                    <Breadcrumbs separator={<NavigateNext fontSize='small' />} marginBottom={4} aria-label='breadcrumb'>
                         <LinkMUI
                             className={classes.hoverItem}
                             component={Link}
@@ -150,13 +160,13 @@ const ProductDetails = () => {
                         </LinkMUI>
                         <Typography color='primary'>Chi tiết sản phẩm</Typography>
                     </Breadcrumbs>
-                    <Grid marginBottom={16} container spacing={4}>
-                        <Grid item xs={4}>
-                            <SliderImagesProduct images={product} />
+                    <Grid container spacing={4}>
+                        <Grid item xs={12} md={4}>
+                            <SliderImagesProduct isMatch={isMatch} images={product} />
                         </Grid>
-                        <Grid item xs={7}>
+                        <Grid item xs={12} md={7}>
                             <Box component='form'>
-                                <Typography variant='h4' minHeight={100}>
+                                <Typography variant={isMatch ? 'h6' : 'h4'} minHeight={100}>
                                     {product.name}
                                 </Typography>
                                 <Typography
@@ -175,7 +185,7 @@ const ProductDetails = () => {
                                     color='GrayText'
                                 >
                                     Xuất xứ :{' '}
-                                    <Typography variant='h6' color='primary' component='span'>
+                                    <Typography variant={isMatch ? 'body1' : 'h6'} color='primary' component='span'>
                                         {product.brand}
                                     </Typography>
                                 </Typography>
@@ -274,12 +284,12 @@ const ProductDetails = () => {
                                 <Typography color='GrayText' marginY={2} fontStyle='italic' variant='subtitle2'>
                                     Trong kho còn lại {product.quantity}
                                 </Typography>
-                                <Typography marginY={2} variant='h4' color='red'>
+                                <Typography marginY={2} variant={isMatch ? 'h6' : 'h4'} color='red'>
                                     Giá: {totalPrice.toLocaleString('vi-VN')} VNĐ
                                 </Typography>
                                 <Stack direction='row' spacing={2}>
                                     <Button
-                                        size='large'
+                                        size={isMatch ? 'medium' : 'large'}
                                         startIcon={<AddShoppingCart fontSize='large' />}
                                         variant='contained'
                                         color='error'
@@ -287,7 +297,11 @@ const ProductDetails = () => {
                                     >
                                         Thêm vào giỏ hàng
                                     </Button>
-                                    <Button size='large' variant='contained' onClick={handleBuyNow}>
+                                    <Button
+                                        size={isMatch ? 'medium' : 'large'}
+                                        variant='contained'
+                                        onClick={handleBuyNow}
+                                    >
                                         Mua ngay
                                     </Button>
                                 </Stack>
@@ -295,6 +309,7 @@ const ProductDetails = () => {
                         </Grid>
                     </Grid>
                     <AnotherProductByCategory
+                        isMatch={isMatch}
                         fields='category'
                         productId={productId}
                         value={valueOfField}

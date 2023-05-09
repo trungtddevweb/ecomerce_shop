@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import CheckoutForm from '../CheckoutForm'
 import { gePublicKey, getClientSecret } from '~/api/main'
 
-const PaymentForm = ({ onNext, onBack, order }) => {
+const PaymentForm = ({ onNext, onBack, order, isMatch }) => {
     const [value, setValue] = useState('credit')
     const { products } = order
     const [stripePromise, setStripePromise] = useState(null)
@@ -40,7 +40,9 @@ const PaymentForm = ({ onNext, onBack, order }) => {
         <Card
             sx={{
                 marginTop: '24px',
-                width: '1000px'
+                width: {
+                    md: '1000px'
+                }
             }}
         >
             <CardHeader title='Phương thức thanh toán' />

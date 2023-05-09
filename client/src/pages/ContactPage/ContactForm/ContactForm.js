@@ -1,12 +1,14 @@
 import emailjs from '@emailjs/browser'
 import { useRef, useState } from 'react'
 import { LoadingButton } from '@mui/lab'
-import { Box, CardContent, Grid, TextField, Typography } from '@mui/material'
+import { Box, CardContent, Grid, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { toast } from 'react-toastify'
 
 const ContactForm = () => {
     const [isLoading, setIsLoading] = useState(false)
     const form = useRef()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
 
     const sendEmail = e => {
         e.preventDefault()
@@ -26,9 +28,9 @@ const ContactForm = () => {
     }
 
     return (
-        <Box className='register'>
-            <Grid className='register-wrapper'>
-                <Box padding={4}>
+        <Box>
+            <Grid>
+                <Box padding={isMatch ? 0 : 4}>
                     <CardContent>
                         <Typography variant='caption' fontStyle='italic' color='gray'>
                             Lưu ý: Hãy điền đầy đủ thông tin dưới đây!

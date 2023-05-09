@@ -19,9 +19,7 @@ import {
     Button
 } from '@mui/material'
 import Image from 'mui-image'
-import { Fragment } from 'react'
-import { useMemo } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, Fragment } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import LinearIndeterminate from 'src/fallback/LinearProgress/LinearProgress'
@@ -33,7 +31,7 @@ import useStyles from '~/assets/styles/useStyles'
 import paymentMethod from '~/assets/imgs/payment.png'
 import { showDialog } from 'src/redux/slice/dialogSlice'
 
-const CartItems = ({ onNext }) => {
+const CartItems = ({ onNext, isMatch }) => {
     const classes = useStyles()
     const [checked, setChecked] = useState([])
     const [products, setProducts] = useState([])
@@ -125,9 +123,15 @@ const CartItems = ({ onNext }) => {
     }
 
     return (
-        <Box width={1400}>
-            <Grid container className='row d-flex justify-content-center my-4'>
-                <Grid item className='col-md-8'>
+        <Box
+            sx={{
+                width: {
+                    md: '1400px'
+                }
+            }}
+        >
+            <Grid marginTop={2} container spacing={2}>
+                <Grid item md={8} xs={12}>
                     <Card className='card mb-4'>
                         <CardHeader title='Giỏ hàng' className='card-header py-3' />
                         <ListItem
@@ -154,7 +158,9 @@ const CartItems = ({ onNext }) => {
                                         />
                                     </ListItemIcon>
 
-                                    <Typography variant='h6'>Chọn tất cả {`(${products.length})`}</Typography>
+                                    <Typography variant={isMatch ? 'body1' : 'h6'}>
+                                        Chọn tất cả {`(${products.length})`}
+                                    </Typography>
                                 </ListItemButton>
                             )}
                         </ListItem>
@@ -205,20 +211,26 @@ const CartItems = ({ onNext }) => {
                                                             inputProps={{ 'aria-labelledby': labelId }}
                                                         />
                                                     </ListItemIcon>
-                                                    <Image
-                                                        duration={500}
-                                                        width={120}
-                                                        height={120}
-                                                        src={product.productId?.productImages?.[0] || ''}
-                                                        alt={product.productId?.name}
-                                                    />
+                                                    <Box>
+                                                        <Image
+                                                            duration={500}
+                                                            width={isMatch ? 80 : 120}
+                                                            height={isMatch ? 80 : 120}
+                                                            src={product.productId?.productImages?.[0] || ''}
+                                                            alt={product.productId?.name}
+                                                        />
+                                                    </Box>
                                                     <ListItemText
                                                         sx={{
                                                             marginLeft: '12px'
                                                         }}
                                                         id={labelId}
                                                         primary={
-                                                            <Typography color='primary' variant='h6'>
+                                                            <Typography
+                                                                color='primary'
+                                                                variant='h6'
+                                                                className={isMatch ? classes.title : ''}
+                                                            >
                                                                 {product.productId?.name}
                                                             </Typography>
                                                         }
@@ -251,14 +263,16 @@ const CartItems = ({ onNext }) => {
                             </List>
                         )}
                     </Card>
-                    <Card className='card mb-4 mb-lg-0'>
-                        <CardContent className='card-body'>
-                            <Typography fontWeight={600}>Có thể thanh toán bằng ví điện tử</Typography>
-                            <Image duration={500} alt='Payment methods' width='250px' src={paymentMethod} />
-                        </CardContent>
-                    </Card>
+                    {!isMatch && (
+                        <Card className='card mb-4 mb-lg-0'>
+                            <CardContent className='card-body'>
+                                <Typography fontWeight={600}>Có thể thanh toán bằng ví điện tử</Typography>
+                                <Image duration={500} alt='Payment methods' width='250px' src={paymentMethod} />
+                            </CardContent>
+                        </Card>
+                    )}
                 </Grid>
-                <Grid item className='col-md-4'>
+                <Grid item md={4} xs={12}>
                     <Card position='sticky' className='card mb-4'>
                         <CardHeader title='Tổng giá' className='card-header py-3' />
                         <CardContent>

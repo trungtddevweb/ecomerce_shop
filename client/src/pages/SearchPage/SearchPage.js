@@ -1,4 +1,17 @@
-import { Box, Button, Divider, Grid, List, ListItem, ListItemButton, Paper, Stack, Typography } from '@mui/material'
+import {
+    Box,
+    Button,
+    Divider,
+    Grid,
+    List,
+    ListItem,
+    ListItemButton,
+    Paper,
+    Stack,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from '@mui/material'
 import Image from 'mui-image'
 import { useState, useEffect, lazy, Fragment } from 'react'
 import { Link, useLocation } from 'react-router-dom'
@@ -12,6 +25,8 @@ const SearchPage = () => {
     const [products, setProducts] = useState([])
     const [isFetching, setIsFetching] = useState(false)
     const [limit, setLimit] = useState(10)
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
 
     const location = useLocation()
     const queryParams = new URLSearchParams(location.search.toString())
@@ -49,15 +64,21 @@ const SearchPage = () => {
     const hasMore = data?.totalDocs > products.length
 
     return (
-        <Box display='flex' minHeight='100vh' justifyContent='center'>
-            <Box width={1400} padding={2}>
+        <Box p={1} display='flex' marginY={4} minHeight={isMatch ? '50vh' : '100vh'} justifyContent='center'>
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+            >
                 <Typography marginBottom={3} variant='h6' color='primary'>
                     Tìm kiếm sản phẩm
                 </Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={8}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={8}>
                         <Paper elevation={3}>
-                            <Box padding={2}>
+                            <Box padding={isMatch ? 0 : 2}>
                                 <Typography component='div' padding={2} variant='body1' fontWeight={600}>
                                     Kết quả tìm kiếm cho:{' '}
                                     <Typography component='span' color='secondary'>
@@ -76,49 +97,69 @@ const SearchPage = () => {
                                     <Fragment>
                                         <List disablePadding>
                                             {products.map(product => (
-                                                <Link className={classes.hoverItem} to={`/products/${product._id}`}>
-                                                    <ListItem key={product._id}>
-                                                        <ListItemButton>
-                                                            <Stack spacing={1} direction='row'>
-                                                                <Image
-                                                                    width='150px'
-                                                                    height='150px'
-                                                                    alt={product.name}
-                                                                    src={product.productImages?.[0]}
-                                                                    duration={500}
-                                                                />
-                                                                <Stack spacing={1}>
-                                                                    <Typography
-                                                                        variant='body1'
-                                                                        fontWeight={600}
-                                                                        color='primary'
-                                                                    >
-                                                                        {product.name}
-                                                                    </Typography>
-                                                                    <Typography variant='body2' fontStyle='initial'>
-                                                                        {product.colors.length} màu sắc
-                                                                    </Typography>
-                                                                    <Typography variant='body2' fontStyle='initial'>
-                                                                        {product.sizes.length} kích thước
-                                                                    </Typography>
-                                                                    <Typography variant='body2' fontStyle='initial'>
-                                                                        Thương hiệu: {product.brand}
-                                                                    </Typography>
-                                                                    <Typography
-                                                                        component='div'
-                                                                        variant='body2'
-                                                                        fontStyle='initial'
-                                                                    >
-                                                                        Giá tiền:{' '}
-                                                                        <Typography component='span' color='error'>
-                                                                            {product.price.toLocaleString('vi-VN')} VNĐ
+                                                <Fragment key={product._id}>
+                                                    <Link className={classes.hoverItem} to={`/products/${product._id}`}>
+                                                        <ListItem disablePadding={isMatch}>
+                                                            <ListItemButton>
+                                                                <Stack spacing={1} direction='row'>
+                                                                    <Box>
+                                                                        <Image
+                                                                            width={isMatch ? 100 : 150}
+                                                                            height={isMatch ? 100 : 150}
+                                                                            alt={product.name}
+                                                                            src={product.productImages?.[0]}
+                                                                            duration={500}
+                                                                        />
+                                                                    </Box>
+                                                                    <Stack spacing={1}>
+                                                                        <Typography
+                                                                            variant='body1'
+                                                                            fontWeight={600}
+                                                                            color='primary'
+                                                                            className={isMatch ? classes.title : ''}
+                                                                        >
+                                                                            {product.name}
                                                                         </Typography>
-                                                                    </Typography>
+                                                                        {!isMatch && (
+                                                                            <>
+                                                                                <Typography
+                                                                                    variant='body2'
+                                                                                    fontStyle='initial'
+                                                                                >
+                                                                                    {product.colors.length} màu sắc
+                                                                                </Typography>
+                                                                                <Typography
+                                                                                    variant='body2'
+                                                                                    fontStyle='initial'
+                                                                                >
+                                                                                    {product.sizes.length} kích thước
+                                                                                </Typography>
+                                                                                <Typography
+                                                                                    variant='body2'
+                                                                                    fontStyle='initial'
+                                                                                >
+                                                                                    Thương hiệu: {product.brand}
+                                                                                </Typography>
+                                                                            </>
+                                                                        )}
+                                                                        <Typography
+                                                                            component='div'
+                                                                            variant='body2'
+                                                                            fontStyle='initial'
+                                                                        >
+                                                                            Giá tiền:{' '}
+                                                                            <Typography component='span' color='error'>
+                                                                                {product.price.toLocaleString('vi-VN')}{' '}
+                                                                                VNĐ
+                                                                            </Typography>
+                                                                        </Typography>
+                                                                    </Stack>
                                                                 </Stack>
-                                                            </Stack>
-                                                        </ListItemButton>
-                                                    </ListItem>
-                                                </Link>
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                    </Link>
+                                                    <Divider variant='fullWidth' component='div' />
+                                                </Fragment>
                                             ))}
                                         </List>
                                         {products.length === 0 && (
@@ -136,8 +177,11 @@ const SearchPage = () => {
                             )}
                         </Paper>
                     </Grid>
-                    <Grid item xs={4}>
-                        <RandomProduct nameValue={nameValue} />
+                    <Grid item md={4} xs={12}>
+                        <Typography marginTop={isMatch ? 2 : 0} fontWeight={600} color='secondary'>
+                            Một số sản phẩm khác
+                        </Typography>
+                        <RandomProduct isMatch={isMatch} nameValue={nameValue} />
                     </Grid>
                 </Grid>
             </Box>

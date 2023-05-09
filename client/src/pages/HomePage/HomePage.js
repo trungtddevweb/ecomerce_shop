@@ -1,17 +1,14 @@
 import { Box, Stack } from '@mui/material'
-import { lazy } from 'react'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import NewLastestProduct from './NewLastestProduct'
 import Image from 'mui-image'
 import bannerShipping from '~/assets/imgs/banner-shopping.jpg'
-
 import useScrollToTop from '~/hooks/useScrollToTop'
-
-const ListPostsBlog = lazy(() => import('./ListPostsBlog'))
-const Sliders = lazy(() => import('~/components/Slider'))
-const NewLetters = lazy(() => import('~/components/NewLetters'))
-const Onboarding = lazy(() => import('./Onboading'))
-const ListProducts = lazy(() => import('./ListProducts'))
+import ListPostsBlog from './ListPostsBlog/ListPostsBlog'
+import Sliders from '~/components/Slider'
+import NewLetters from '~/components/NewLetters/NewLetters'
+import Onboarding from './Onboading/Onboarding'
+import ListProducts from './ListProducts/ListProducts'
 
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
