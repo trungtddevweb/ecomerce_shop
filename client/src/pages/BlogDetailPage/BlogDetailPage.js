@@ -1,5 +1,16 @@
 import { useParams, Link } from 'react-router-dom'
-import { Box, Breadcrumbs, CircularProgress, Grid, Link as LinkMUI, Paper, Stack, Typography } from '@mui/material'
+import {
+    Box,
+    Breadcrumbs,
+    CircularProgress,
+    Grid,
+    Link as LinkMUI,
+    Paper,
+    Stack,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from '@mui/material'
 import useStyles from '~/assets/styles/useStyles'
 import Image from 'mui-image'
 import { useEffect, useState, lazy } from 'react'
@@ -16,6 +27,8 @@ const BlogDetailPage = () => {
     const [isLoading, setIsLoading] = useState(true)
     const { blogId } = useParams()
     const classes = useStyles()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -33,8 +46,14 @@ const BlogDetailPage = () => {
     }, [blogId])
 
     return (
-        <Box display='flex' minHeight='70vh' marginY={5} justifyContent='center'>
-            <Box width={1400}>
+        <Box display='flex' p={1} minHeight='70vh' marginY={5} justifyContent='center'>
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+            >
                 <Box role='presentation'>
                     <Breadcrumbs aria-label='breadcrumb'>
                         <LinkMUI
@@ -58,7 +77,7 @@ const BlogDetailPage = () => {
                         <Typography color='primary'>Chi tiết bài viết</Typography>
                     </Breadcrumbs>
                     <Grid paddingY={2} container spacing={2}>
-                        <Grid item xs={7}>
+                        <Grid item md={7} xs={12}>
                             {isLoading ? (
                                 <CircularProgress />
                             ) : (
@@ -97,11 +116,11 @@ const BlogDetailPage = () => {
                                 </Paper>
                             )}
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item md={5} xs={12}>
                             <Typography variant='h6' marginBottom={2} fontWeight={600}>
                                 Những bài viết liên quan
                             </Typography>
-                            <RecentPosts blogId={blogId} />
+                            <RecentPosts isMatch={isMatch} blogId={blogId} />
                         </Grid>
                     </Grid>
                 </Box>

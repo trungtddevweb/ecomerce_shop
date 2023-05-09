@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 
-const AddressForm = ({ onNext, onBack }) => {
+const AddressForm = ({ onNext, onBack, isMatch }) => {
     const [info, setInfo] = useState({
         fullName: '',
         phoneNumber: '',
@@ -39,7 +39,9 @@ const AddressForm = ({ onNext, onBack }) => {
         <Card
             sx={{
                 marginTop: '24px',
-                width: '1000px'
+                width: {
+                    md: '1000px'
+                }
             }}
         >
             <CardHeader title='Địa chỉ nhận hàng' />

@@ -1,5 +1,5 @@
 import Slider from 'react-slick'
-import { Grid } from '@mui/material'
+import { Box } from '@mui/material'
 import Image from 'mui-image'
 import { imagesSlider } from 'src/utils/const'
 
@@ -13,28 +13,26 @@ const Sliders = () => {
         arrows: true,
         autoplay: true,
         autoplaySpeed: 3000,
-        draggable: false,
-        fade: true,
         lazyLoad: true,
+        draggable: true,
         responsive: [
             {
                 breakpoint: 480,
                 settings: {
-                    arrows: false,
-                    draggable: true
+                    arrows: false
                 }
             }
         ]
     }
 
     return (
-        <Grid className='slide-container'>
+        <Box className='slide-container'>
             <Slider {...settings}>
                 {imagesSlider.map(slider => (
                     <Image duration={500} key={slider.src} src={slider.src} alt={slider.alt} />
                 ))}
             </Slider>
-        </Grid>
+        </Box>
     )
 }
 

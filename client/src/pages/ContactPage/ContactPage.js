@@ -9,7 +9,9 @@ import {
     ListItemText,
     Stack,
     Tooltip,
-    Typography
+    Typography,
+    useMediaQuery,
+    useTheme
 } from '@mui/material'
 import ContactForm from './ContactForm/ContactForm'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
@@ -21,20 +23,30 @@ const ContactPage = () => {
     useDocumentTitle('Liên hệ')
     useScrollToTop()
     const classes = useStyles()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (
-        <Box className='contact-page'>
-            <Card className='contact-wrapper'>
+        <Box display='flex' padding={isMatch ? '32px 8px' : 6} bgcolor='lightgray' justifyContent='center'>
+            <Card
+                sx={{
+                    width: {
+                        md: '1000px',
+                        sm: 'auto'
+                    }
+                }}
+            >
                 <Grid container>
                     <Grid
                         borderRadius={2}
                         bgcolor='#01579b'
-                        padding={4}
+                        padding={isMatch ? 2 : 4}
                         display='flex'
                         flexDirection='column'
                         gap='20px'
                         item
-                        xs={5}
+                        xs={12}
+                        md={5}
                     >
                         <Stack spacing={1}>
                             <Typography variant='h5' color='white'>
@@ -74,7 +86,7 @@ const ContactPage = () => {
                             <Typography variant='body2' color='whitesmoke'>
                                 Mạng xã hội
                             </Typography>
-                            <List aria-label='contacts-icon'>
+                            <List aria-label='contacts-icon' className={isMatch ? classes.flexBox : ''}>
                                 <ListItemIcon>
                                     <Tooltip title='Facebook'>
                                         <IconButton className={classes.iconButton}>
@@ -113,7 +125,7 @@ const ContactPage = () => {
                             </List>
                         </Stack>
                     </Grid>
-                    <Grid item xs={7} padding={3}>
+                    <Grid item xs={12} md={7} padding={isMatch ? 0 : 3}>
                         <ContactForm />
                     </Grid>
                 </Grid>

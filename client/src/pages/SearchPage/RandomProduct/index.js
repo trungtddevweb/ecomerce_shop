@@ -1,4 +1,4 @@
-import { Box, List, ListItemButton, Paper, Stack, Typography } from '@mui/material'
+import { Box, Grid, List, ListItemButton, Paper, Stack, Typography } from '@mui/material'
 import Image from 'mui-image'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
@@ -6,7 +6,7 @@ import SkeletonFallback from 'src/fallback/Skeleton'
 import { getRandomProductsAPI } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
-const RandomProduct = ({ nameValue }) => {
+const RandomProduct = ({ nameValue, isMatch }) => {
     const [data, setData] = useState([])
     const [isFetching, setIsFetching] = useState(true)
     const classes = useStyles()
@@ -38,7 +38,7 @@ const RandomProduct = ({ nameValue }) => {
     return (
         <List>
             {data?.map(item => (
-                <Link className={classes.hoverItem} to={`/products/${item._id}`}>
+                <Link key={item._id} className={classes.hoverItem} to={`/products/${item._id}`}>
                     <Paper
                         sx={{
                             marginBottom: '12px'
@@ -49,15 +49,19 @@ const RandomProduct = ({ nameValue }) => {
                             <Stack direction='row' spacing={1}>
                                 <Box>
                                     <Image
-                                        width='100px'
-                                        height='100px'
+                                        width={isMatch ? 80 : 100}
+                                        height={isMatch ? 80 : 100}
                                         alt={item.name}
                                         src={item.productImages?.[0]}
                                         duration={500}
                                     />
                                 </Box>
                                 <Stack spacing={1}>
-                                    <Typography variant='body2' fontWeight={600}>
+                                    <Typography
+                                        className={isMatch ? classes.title : ''}
+                                        variant='body2'
+                                        fontWeight={600}
+                                    >
                                         {item.name}
                                     </Typography>
                                     <Typography color='error'>{item.price.toLocaleString('vi-VN')} VNĐ</Typography>

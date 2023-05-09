@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import useStyles from '~/assets/styles/useStyles'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 
-const AnotherProductByCategory = ({ title, fields, value, productId }) => {
+const AnotherProductByCategory = ({ title, fields, value, productId, isMatch }) => {
     const [lists, setLists] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const classes = useStyles()
@@ -36,13 +36,19 @@ const AnotherProductByCategory = ({ title, fields, value, productId }) => {
         [lists, productId]
     )
     return (
-        <Box display='flex' marginY={6} alignItems='center' flexDirection='column'>
-            <Box width={1400}>
+        <Box display='flex' marginY={6} alignItems={!isMatch && 'center'} flexDirection='column'>
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+            >
                 <Stack direction='row' alignItems='center' justifyContent='space-between'>
                     <Typography variant='h6' color='primary.main'>
                         {title}
                     </Typography>
-                    {processedResult.length > 6 && (
+                    {processedResult.length > 6 && !isMatch && (
                         <Typography
                             className={classes.hoverItem}
                             variant='subtitle2'
@@ -61,7 +67,7 @@ const AnotherProductByCategory = ({ title, fields, value, productId }) => {
                 )}
                 <Grid container minHeight={360} spacing={2}>
                     {(isLoading ? Array.from(new Array(6)) : processedResult).map((list, index) => (
-                        <Grid item key={list?._id || index} xs={2}>
+                        <Grid item key={list?._id || index} xs={6} md={2}>
                             {list ? (
                                 <CardProductItem data={list} />
                             ) : (
