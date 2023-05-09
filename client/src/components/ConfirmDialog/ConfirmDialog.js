@@ -1,6 +1,5 @@
-import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Divider } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Divider, DialogContentText } from '@mui/material'
 import { hideDialog } from 'src/redux/slice/dialogSlice'
 
 const ConfirmDialog = () => {
@@ -17,16 +16,25 @@ const ConfirmDialog = () => {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle bgcolor='lightGray'>{title}</DialogTitle>
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+        >
+            <DialogTitle id='alert-dialog-title' bgcolor='lightgray'>
+                {title}
+            </DialogTitle>
             <DialogContent
                 sx={{
-                    minWidth: '400px',
                     minHeight: '40px',
-                    marginY: '20px'
+                    marginY: '20px',
+                    md: {
+                        minWidth: '400px'
+                    }
                 }}
             >
-                {message}
+                <DialogContentText id='alert-dialog-description'>{message}</DialogContentText>
             </DialogContent>
             <Divider variant='fullWidth' component='div' />
             <DialogActions>

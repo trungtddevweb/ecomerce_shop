@@ -15,7 +15,7 @@ function EnhancedTableToolbar(props) {
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
 
-    const handleDelete = async () => {
+    const handleDelete = async dispatch => {
         try {
             setDeleting(true)
             const res = await deleteItemByParams(managerId, token, selectedItem)

@@ -44,8 +44,7 @@ const ListProducts = ({ title }) => {
             <Box
                 sx={{
                     width: {
-                        md: '1400px',
-                        sm: 'auto'
+                        md: '1400px'
                     }
                 }}
             >

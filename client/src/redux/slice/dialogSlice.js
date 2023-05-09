@@ -5,7 +5,8 @@ const dialogSlice = createSlice({
     initialState: {
         open: false,
         title: '',
-        message: ''
+        message: '',
+        onConfirm: null
     },
 
     reducers: {
@@ -20,7 +21,7 @@ const dialogSlice = createSlice({
             state.open = false
             state.title = ''
             state.message = ''
-            state.onConfirm = undefined
+            state.onConfirm = ''
         }
     }
 })
