@@ -50,7 +50,7 @@ const Login = () => {
     }
 
     return (
-        <Grid className='login-page'>
+        <Grid>
             <Grid className='form-container d-flex justify-content-center align-items-center'>
                 <Box component='form' onSubmit={handleSubmit(onSubmit)} className='shadow rounded py-5 px-4 form-wrap '>
                     <Stack className='img-wrap mb-3'>

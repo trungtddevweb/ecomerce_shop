@@ -26,7 +26,7 @@ const ProductComponent = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, dirtyFields }
+        formState: { errors }
     } = useForm()
 
     const handleFileUpload = event => {

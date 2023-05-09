@@ -2,7 +2,18 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Box, Button, FormGroup, Grid, InputLabel, Stack, TextField, Typography } from '@mui/material'
+import {
+    Box,
+    Button,
+    FormGroup,
+    Grid,
+    InputLabel,
+    Stack,
+    TextField,
+    Typography,
+    useMediaQuery,
+    useTheme
+} from '@mui/material'
 import { registerAPI } from '~/api/main'
 import { Link, useNavigate } from 'react-router-dom'
 import CustomLoading from '~/components/CustomLoading'
@@ -29,7 +40,8 @@ const registerData = yup.object().shape({
 
 const RegisterPage = () => {
     useDocumentTitle('Đăng kí')
-
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     const dispatch = useDispatch()
     const [previewImg, setPreviewImg] = useState(null)
     const navigate = useNavigate()
@@ -63,17 +75,13 @@ const RegisterPage = () => {
     }
 
     return (
-        <Grid container className='register-page'>
-            <Grid item className='form-container d-flex justify-content-center align-items-center'>
-                <Box
-                    component='form'
-                    onSubmit={handleSubmit(onSubmitRegiser)}
-                    className='shadow py-5 px-4 rounded form-wrap'
-                >
+        <Grid container>
+            <Grid item>
+                <Box component='form' onSubmit={handleSubmit(onSubmitRegiser)}>
                     {/* <div className='mb-3 img-wrap'>
                         <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
                     </div> */}
-                    <Typography variant='h5' className='mb-3 text-center'>
+                    <Typography variant='h5' color={isMatch ? 'red' : 'green'}>
                         Đăng Kí
                     </Typography>
                     <Stack className='choose-image my-3 m-auto'>
@@ -149,6 +157,7 @@ const RegisterPage = () => {
                     <LoadingButton variant='contained' size='large' type='submit' fullWidth loading={loading}>
                         Tạo tài khoản
                     </LoadingButton>
+                    {isMatch && <p>hello</p>}
                 </Box>
                 <ToastContainer />
             </Grid>
