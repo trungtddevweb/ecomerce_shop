@@ -37,37 +37,10 @@ export const updatedUser = async (req, res) => {
     const userId = req.user._id
     const updateFields = req.body
 
-    // Danh sách các trường được cho phép cập nhật
-    const allowedFields = ['name', 'email', 'phone', 'picture']
-
-    // Kiểm tra xem các trường trong `updateFields` có hợp lệ hay không
-    const invalidFields = Object.keys(updateFields).filter(field => !allowedFields.includes(field))
-
-    if (invalidFields.length > 0) {
-        // Nếu có trường không hợp lệ, trả về mã lỗi 400 và một thông báo lỗi tương ứng
-        return res.status(400).json({
-            message: `Các trường không hợp lệ: ${invalidFields.join(', ')}`
-        })
-    }
-
     try {
-        const user = await User.findById(userId)
-        if (user) {
-            delete user.password
-            // Nếu người dùng tồn tại, cập nhật các trường được cho phép
-            allowedFields.forEach(field => {
-                if (updateFields.hasOwnProperty(field)) {
-                    user[field] = updateFields[field]
-                }
-            })
-            const updatedUser = await user.save()
-            res.status(200).json(updatedUser)
-        } else {
-            // Nếu không tìm thấy người dùng, trả về mã lỗi 404 và một thông báo tương ứng
-            res.status(404).json({ message: 'Không tìm thấy người dùng' })
-        }
+        const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true })
+        res.status(200).json(updatedUser)
     } catch (error) {
-        // Nếu xảy ra lỗi trong quá trình cập nhật, trả về mã lỗi 500 và một thông báo lỗi tương ứng
         res.status(500).json({ message: 'Lỗi trong quá trình cập nhật người dùng', error })
     }
 }

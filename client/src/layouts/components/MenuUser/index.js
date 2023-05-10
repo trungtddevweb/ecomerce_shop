@@ -30,7 +30,7 @@ const MenuUser = ({ onClose, onLoading }) => {
     const navigate = useNavigate()
 
     const dispatch = useDispatch()
-    const user = useSelector(state => state.auth?.user?.userInfo)
+    const user = useSelector(state => state.auth.info)
     const open = Boolean(anchorEl)
     const token = localStorage.getItem('token')
 
