@@ -64,7 +64,7 @@ const BlogComponent = () => {
                     />
                 </Grid>
                 <Grid xs={12} item>
-                    <Typography component='input' type='file' variant='outlined' fullWidth {...register('picture')} />
+                    <Typography component='input' type='file' variant='outlined' {...register('picture')} />
                 </Grid>
                 <Grid xs={12} item>
                     <Button type='submit' variant='contained'>

@@ -169,9 +169,13 @@ export default function CustomPaginationActionsTable() {
                     </StyledTableRow>
                 </TableHead>
                 {loading ? (
-                    <StyledTableCell colSpan={6}>
-                        <LinearIndeterminate />
-                    </StyledTableCell>
+                    <TableBody>
+                        <TableRow>
+                            <StyledTableCell colSpan={6}>
+                                <LinearIndeterminate />
+                            </StyledTableCell>
+                        </TableRow>
+                    </TableBody>
                 ) : (
                     <TableBody>
                         {orders.map(row => (

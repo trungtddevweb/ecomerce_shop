@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginAPI } from '~/api/main'
-import { loginSuccess, loginFailed } from 'src/redux/slice/usersSlice'
+import { login, loginSuccess } from 'src/redux/slice/usersSlice'
 import { useForm } from 'react-hook-form'
 import { Box, Grid, Stack, TextField, Typography, FormGroup, useTheme, useMediaQuery } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -63,11 +63,10 @@ const Login = () => {
         setLoading(true)
         try {
             const res = await loginAPI(data)
-            dispatch(loginSuccess(res))
+            dispatch(login(res))
             setLoading(false)
             navigate('/')
         } catch (error) {
-            dispatch(loginFailed(error))
             setLoading(false)
             dispatch(showToast({ type: 'error', message: `${error.message}` }))
             setError(error.response?.data.message)
