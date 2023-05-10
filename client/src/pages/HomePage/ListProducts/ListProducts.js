@@ -44,7 +44,7 @@ const ListProducts = ({ title }) => {
             <Box
                 sx={{
                     width: {
-                        xl: '1400px'
+                        xl: 1400
                     }
                 }}
             >
@@ -70,7 +70,7 @@ const ListProducts = ({ title }) => {
                             {list ? (
                                 <CardProductItem data={list} />
                             ) : (
-                                <Box width={{ md: 160, xl: 245 }}>
+                                <Box width={{ md: 160, lg: 220, xl: 245 }}>
                                     <SkeletonFallback height={200} />
                                     <SkeletonFallback height={50} />
                                     <SkeletonFallback />

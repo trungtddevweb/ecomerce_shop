@@ -101,7 +101,7 @@ const MenuUser = ({ onClose, onLoading }) => {
                                 textOverflow: 'ellipsis',
                                 maxWidth: '150px'
                             }}
-                            display={{ md: 'none', xl: 'block' }}
+                            display={{ md: 'none', lg: 'block', xl: 'block' }}
                             variant='inherit'
                         >
                             {user?.name}

@@ -38,11 +38,12 @@ const ProductPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url])
 
+    console.log('products', products)
     const loadMore = async () => {
         try {
             setIsFetching(true)
             const res = await getAllProductByQueryAPI(limit + 10, url)
-            setProducts([...products, ...res.docs])
+            setProducts(res.docs)
             setLimit(limit + 10)
             setIsFetching(false)
         } catch (err) {
