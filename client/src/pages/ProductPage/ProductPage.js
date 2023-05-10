@@ -53,7 +53,17 @@ const ProductPage = () => {
     const hasMore = data.totalDocs > products.length
 
     return (
-        <Box p={1} display='flex' marginY={5} justifyContent='center'>
+        <Box
+            p={1}
+            sx={{
+                display: {
+                    xs: 'flow-root',
+                    md: 'flex'
+                }
+            }}
+            marginY={isMatch ? 2 : 5}
+            justifyContent='center'
+        >
             <Box
                 sx={{
                     width: {
@@ -65,7 +75,7 @@ const ProductPage = () => {
                 <Grid marginY={2} container spacing={2}>
                     <Grid xs={12} md={3} item>
                         <Paper>
-                            <FilterList url={url} setUrl={setUrl} />
+                            <FilterList isMatch={isMatch} url={url} setUrl={setUrl} />
                         </Paper>
                     </Grid>
                     <Grid xs={12} md={9} item spacing={2} container>
@@ -85,7 +95,7 @@ const ProductPage = () => {
                                 ))}
 
                                 {products.length === 0 && (
-                                    <Grid item xs={3}>
+                                    <Grid item xs={12} md={3}>
                                         <Box elevation={6}>
                                             <Typography variant='body1' color='primary'>
                                                 Không có sản phẩm nào phù hợp!

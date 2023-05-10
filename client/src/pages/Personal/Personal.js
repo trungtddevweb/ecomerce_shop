@@ -27,15 +27,33 @@ const Personal = () => {
     }
 
     return (
-        <Box minHeight='70vh' display='flex' bgcolor='lightgray' justifyContent='center'>
-            <Box width={1400} marginY={5}>
-                <Grid container spacing={2}>
-                    <Grid item xs={4}>
+        <Box
+            p={1}
+            sx={{
+                display: {
+                    xs: 'flow-root',
+                    md: 'flex'
+                }
+            }}
+            minHeight='70vh'
+            bgcolor='lightgray'
+            justifyContent='center'
+        >
+            <Box
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+                marginY={5}
+            >
+                <Grid container direction={{ xs: 'row' }} spacing={2}>
+                    <Grid item xs={12} md={4}>
                         <Paper elevation={6}>
                             <TabsNavigation selected={selected} setSelected={setSelected} />
                         </Paper>
                     </Grid>
-                    <Grid item xs={8}>
+                    <Grid item xs={12} md={8}>
                         <Paper elevation={6}>{getSelectedField(selected)}</Paper>
                     </Grid>
                 </Grid>

@@ -17,7 +17,7 @@ import {
 import { LoadingButton } from '@mui/lab'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { optionValueSizes } from 'src/utils/const'
-const ProductComponent = () => {
+const ProductComponent = ({ isMatch }) => {
     const [files, setFiles] = useState([])
     const token = useSelector(state => state.auth.user.token)
     const [isLoading, setIsLoading] = useState(false)
@@ -85,6 +85,7 @@ const ProductComponent = () => {
                 <Grid container spacing={2}>
                     <Grid xs={12} item>
                         <TextField
+                            size={isMatch ? 'small' : 'medium'}
                             label='Tên sản phẩm'
                             variant='outlined'
                             fullWidth
@@ -94,6 +95,7 @@ const ProductComponent = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
+                            size={isMatch ? 'small' : 'medium'}
                             label='Chi tiết sản phẩm'
                             multiline
                             rows={4}
@@ -105,6 +107,7 @@ const ProductComponent = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
+                            size={isMatch ? 'small' : 'medium'}
                             type='text'
                             label='Thương hiệu'
                             variant='outlined'
@@ -117,6 +120,7 @@ const ProductComponent = () => {
                     <Grid container item xs={12} spacing={1}>
                         <Grid item xs={6}>
                             <TextField
+                                size={isMatch ? 'small' : 'medium'}
                                 type='number'
                                 fullWidth
                                 label='Giá'
@@ -139,11 +143,18 @@ const ProductComponent = () => {
                             )}
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField fullWidth label='Màu sắc' variant='outlined' {...register('colors')} />
+                            <TextField
+                                size={isMatch ? 'small' : 'medium'}
+                                fullWidth
+                                label='Màu sắc'
+                                variant='outlined'
+                                {...register('colors')}
+                            />
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
+                            size={isMatch ? 'small' : 'medium'}
                             type='number'
                             label='Số lượng'
                             variant='outlined'
@@ -167,7 +178,13 @@ const ProductComponent = () => {
                         <Grid item xs={4}>
                             <FormControl fullWidth>
                                 <InputLabel>Kích cỡ</InputLabel>
-                                <Select label='Kích cỡ' defaultValue={['l']} multiple {...register('sizes')}>
+                                <Select
+                                    size={isMatch ? 'small' : 'medium'}
+                                    label='Kích cỡ'
+                                    defaultValue={['l']}
+                                    multiple
+                                    {...register('sizes')}
+                                >
                                     {optionValueSizes.map(size => (
                                         <MenuItem value={size.value} key={size.value}>
                                             {size.label}
@@ -178,6 +195,7 @@ const ProductComponent = () => {
                         </Grid>
                         <Grid item xs={4}>
                             <TextField
+                                size={isMatch ? 'small' : 'medium'}
                                 label='Phân loại'
                                 variant='outlined'
                                 fullWidth
@@ -188,7 +206,12 @@ const ProductComponent = () => {
                         <Grid item xs={4}>
                             <FormControl fullWidth>
                                 <InputLabel>Hot</InputLabel>
-                                <Select label='Hot' {...register('isHot')} defaultValue={'true'}>
+                                <Select
+                                    size={isMatch ? 'small' : 'medium'}
+                                    label='Hot'
+                                    {...register('isHot')}
+                                    defaultValue={'true'}
+                                >
                                     <MenuItem value='true'>True</MenuItem>
                                     <MenuItem value='false'>False</MenuItem>
                                 </Select>
@@ -211,7 +234,13 @@ const ProductComponent = () => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <LoadingButton loading={isLoading} type='submit' variant='contained' color='primary'>
+                        <LoadingButton
+                            loading={isLoading}
+                            fullWidth={isMatch}
+                            type='submit'
+                            variant='contained'
+                            color='primary'
+                        >
                             Tạo mới
                         </LoadingButton>
                     </Grid>
