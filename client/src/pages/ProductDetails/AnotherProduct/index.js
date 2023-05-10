@@ -36,11 +36,11 @@ const AnotherProductByCategory = ({ title, fields, value, productId, isMatch }) 
         [lists, productId]
     )
     return (
-        <Box display='flex' marginY={6} alignItems={!isMatch && 'center'} flexDirection='column'>
+        <Box display='flex' marginY={6} flexDirection='column'>
             <Box
                 sx={{
                     width: {
-                        md: '1400px'
+                        xl: 1400
                     }
                 }}
             >
@@ -67,11 +67,11 @@ const AnotherProductByCategory = ({ title, fields, value, productId, isMatch }) 
                 )}
                 <Grid container minHeight={360} spacing={2}>
                     {(isLoading ? Array.from(new Array(6)) : processedResult).map((list, index) => (
-                        <Grid item key={list?._id || index} xs={6} md={2}>
+                        <Grid item key={list?._id || index} xs={6} sm={4} md={2}>
                             {list ? (
                                 <CardProductItem data={list} />
                             ) : (
-                                <Box>
+                                <Box width={{ md: 150, lg: 190, xl: 220 }}>
                                     <SkeletonFallback height={200} />
                                     <SkeletonFallback height={50} />
                                     <SkeletonFallback />

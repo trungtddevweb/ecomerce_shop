@@ -125,14 +125,7 @@ const CartItems = ({ onNext, isMatch }) => {
     }
 
     return (
-        <Box
-            sx={{
-                width: {
-                    md: '1400px'
-                },
-                minHeight: '60vh'
-            }}
-        >
+        <Box minHeight='60vh' width={{ sm: '98vw', md: '98vw', xl: 1400 }}>
             <Grid marginTop={2} container spacing={2}>
                 <Grid item md={8} xs={12}>
                     <Card className='card mb-4'>

@@ -71,7 +71,7 @@ const Settings = () => {
             <Divider variant='fullWidth' component='div' />
             <Grid p={2} container spacing={2}>
                 {isEdit ? (
-                    <Grid xs={12} item md={6} display='flex' gap={2} flexDirection='column'>
+                    <Grid xs={12} sm={6} item md={6} display='flex' gap={2} flexDirection='column'>
                         <Stack direction='row' alignItems='center'>
                             <Typography variant='body1' fontWeight={600} minWidth={150}>
                                 Tên đăng nhập:
@@ -171,7 +171,7 @@ const Settings = () => {
                         )}
                     </Grid>
                 ) : (
-                    <Grid xs={12} item md={6} display='flex' gap={2} flexDirection='column'>
+                    <Grid xs={12} sm={6} item md={6} display='flex' gap={2} flexDirection='column'>
                         <Stack direction='row'>
                             <Typography variant='body1' fontWeight={600} minWidth={150}>
                                 Tên đăng nhập:
@@ -204,7 +204,7 @@ const Settings = () => {
                         </Stack>
                     </Grid>
                 )}
-                <Grid item xs={12} md={6} className={classes.flexBox}>
+                <Grid item xs={12} sm={6} md={6} className={classes.flexBox}>
                     <Avatar src={user?.picture} alt='Avatar' sx={{ width: 120, height: 120 }} />
                 </Grid>
             </Grid>

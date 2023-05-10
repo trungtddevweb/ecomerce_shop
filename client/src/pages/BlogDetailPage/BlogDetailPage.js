@@ -46,11 +46,12 @@ const BlogDetailPage = () => {
     }, [blogId])
 
     return (
-        <Box display='flex' p={1} minHeight='70vh' marginY={5} justifyContent='center'>
+        <Box p={1} display='flex' minHeight='70vh' justifyContent={{ xl: 'center' }} marginY={5}>
             <Box
                 sx={{
                     width: {
-                        md: '1400px'
+                        xl: 1400,
+                        xs: '100vw'
                     }
                 }}
             >
@@ -77,7 +78,7 @@ const BlogDetailPage = () => {
                         <Typography color='primary'>Chi tiết bài viết</Typography>
                     </Breadcrumbs>
                     <Grid paddingY={2} container spacing={2}>
-                        <Grid item md={7} xs={12}>
+                        <Grid item sm={8} md={7} xs={12}>
                             {isLoading ? (
                                 <CircularProgress />
                             ) : (
@@ -116,7 +117,7 @@ const BlogDetailPage = () => {
                                 </Paper>
                             )}
                         </Grid>
-                        <Grid item md={5} xs={12}>
+                        <Grid item sm={4} md={5} xs={12}>
                             <Typography variant='h6' marginBottom={2} fontWeight={600}>
                                 Những bài viết liên quan
                             </Typography>
