@@ -30,8 +30,10 @@ import images from '~/assets/imgs'
 import useStyles from '~/assets/styles/useStyles'
 import paymentMethod from '~/assets/imgs/payment.png'
 import { showDialog } from 'src/redux/slice/dialogSlice'
+import useScrollToTop from '~/hooks/useScrollToTop'
 
 const CartItems = ({ onNext, isMatch }) => {
+    useScrollToTop()
     const classes = useStyles()
     const [checked, setChecked] = useState([])
     const [products, setProducts] = useState([])
@@ -127,7 +129,8 @@ const CartItems = ({ onNext, isMatch }) => {
             sx={{
                 width: {
                     md: '1400px'
-                }
+                },
+                minHeight: '60vh'
             }}
         >
             <Grid marginTop={2} container spacing={2}>
