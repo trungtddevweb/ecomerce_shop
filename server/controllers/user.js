@@ -53,6 +53,7 @@ export const updatedUser = async (req, res) => {
     try {
         const user = await User.findById(userId)
         if (user) {
+            delete user.password
             // Nếu người dùng tồn tại, cập nhật các trường được cho phép
             allowedFields.forEach(field => {
                 if (updateFields.hasOwnProperty(field)) {
@@ -60,7 +61,7 @@ export const updatedUser = async (req, res) => {
                 }
             })
             const updatedUser = await user.save()
-            res.status(200).json({ user: updatedUser })
+            res.status(200).json(updatedUser)
         } else {
             // Nếu không tìm thấy người dùng, trả về mã lỗi 404 và một thông báo tương ứng
             res.status(404).json({ message: 'Không tìm thấy người dùng' })

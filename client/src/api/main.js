@@ -46,6 +46,14 @@ export const getAllUsers = async token => {
     return response.data
 }
 
+export const updatedUserAPI = async (data, token) => {
+    return await mainAPI.patch('/users/update-user', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 export const getAllProducts = async (limit, page) => {
     const response = await mainAPI.get(`/products?limit=${limit}&page=${page}`)
     return response.data

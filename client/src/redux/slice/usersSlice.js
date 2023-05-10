@@ -1,33 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAction, createSlice } from '@reduxjs/toolkit'
+
+export const login = createAction('auth/login')
 
 const initialState = {
-    isAuthenticated: false,
-    error: false,
     user: null,
-    products: []
+    products: [],
+    info: null
 }
 
 export const userSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        loginSuccess: (state, action) => {
-            state.isAuthenticated = true
-            state.user = action.payload
-            state.products = action.payload.userInfo.products
-            state.totalItems = action.payload.userInfo.totalItems
-            state.error = null
-        },
-        loginFailed: (state, action) => {
-            state.isAuthenticated = false
-            state.user = null
-            state.error = action.payload
-        },
         logoutSuccess: state => {
-            state.isAuthenticated = false
             state.user = null
-            state.error = null
             state.products = []
+        },
+        updatedUser: (state, action) => {
+            state.info = action.payload
         },
         addProductToCart: (state, action) => {
             state.products = action.payload.products
@@ -41,10 +31,16 @@ export const userSlice = createSlice({
         clearCart: state => {
             state.products = []
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(login, (state, action) => {
+            state.user = action.payload
+            state.info = action.payload.userInfo
+            state.products = action.payload.userInfo.products
+        })
     }
 })
 
-export const { loginSuccess, loginFailed, logoutSuccess, removeProductFromCart, addProductToCart, clearCart } =
-    userSlice.actions
+export const { logoutSuccess, removeProductFromCart, addProductToCart, clearCart, updatedUser } = userSlice.actions
 
 export default userSlice.reducer

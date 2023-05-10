@@ -64,6 +64,7 @@ const UsersDashBoard = () => {
     }
 
     function stableSort(array, comparator) {
+        console.log(array)
         const stabilizedThis = array.map((el, index) => [el, index])
         stabilizedThis.sort((a, b) => {
             const order = comparator(a[0], b[0])
@@ -80,7 +81,7 @@ const UsersDashBoard = () => {
             id: 'id',
             numeric: false,
             disablePadding: true,
-            label: 'ID người dùng'
+            label: 'STT'
         },
         {
             id: 'name',

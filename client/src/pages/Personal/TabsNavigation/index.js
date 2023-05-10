@@ -1,8 +1,8 @@
 import { ListSubheader, List, ListItemButton, ListItemText } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
+import PersonIcon from '@mui/icons-material/Person'
 
-import { Settings, LocalShipping } from '@mui/icons-material'
+import { LocalShipping } from '@mui/icons-material'
 
 const TabsNavigation = ({ setSelected, selected }) => {
     const handleSelect = (event, value) => {
@@ -22,21 +22,15 @@ const TabsNavigation = ({ setSelected, selected }) => {
         >
             <ListItemButton selected={selected === 'settings'} onClick={e => handleSelect(e, 'settings')}>
                 <ListItemIcon>
-                    <Settings />
+                    <PersonIcon />
                 </ListItemIcon>
-                <ListItemText primary='Cài đặt chung' />
+                <ListItemText primary='Thông tin' />
             </ListItemButton>
             <ListItemButton selected={selected === 'shipping'} onClick={e => handleSelect(e, 'shipping')}>
                 <ListItemIcon>
                     <LocalShipping />
                 </ListItemIcon>
                 <ListItemText primary='Đơn hàng của tôi' />
-            </ListItemButton>
-            <ListItemButton selected={selected === 'inbox'} onClick={e => handleSelect(e, 'inbox')}>
-                <ListItemIcon>
-                    <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary='Inbox' />
             </ListItemButton>
         </List>
     )
