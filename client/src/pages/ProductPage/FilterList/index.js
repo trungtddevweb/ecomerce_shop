@@ -24,7 +24,7 @@ const FilterList = ({ setUrl, isMatch }) => {
     const [checked, setChecked] = useState([])
     const [fields, setFields] = useState({
         category: null,
-        size: null,
+        sizes: null,
         brand: null,
         price: null
     })
