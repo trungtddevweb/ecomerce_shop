@@ -57,8 +57,8 @@ const ListPostsBlog = () => {
         >
             <Box
                 sx={{
-                    width: {
-                        md: '1400px',
+                    maxWidth: {
+                        xl: 1400,
                         sm: 'auto'
                     }
                 }}
@@ -81,7 +81,7 @@ const ListPostsBlog = () => {
                 </Stack>
                 <Grid container marginBottom={5} spacing={2}>
                     {(isLoading ? Array.from(new Array(4)) : listBlogs).map((item, index) => (
-                        <Grid item key={item?._id || index} xs={12} md={3}>
+                        <Grid item key={item?._id || index} xs={12} sm={6} md={3}>
                             <Card
                                 sx={{
                                     maxWidth: {
@@ -93,12 +93,29 @@ const ListPostsBlog = () => {
                                     {item ? (
                                         <CardMedia component='img' height='200' image={item?.picture} />
                                     ) : (
-                                        <SkeletonFallback key={index} sx={{ height: 200 }} variant='rectangular' />
+                                        <SkeletonFallback
+                                            key={index}
+                                            sx={{
+                                                width: {
+                                                    md: 240,
+                                                    lg: 300,
+                                                    xl: 350
+                                                },
+                                                height: 200
+                                            }}
+                                            variant='rectangular'
+                                        />
                                     )}
                                     <CardContent>
                                         {item ? (
                                             <Link className={classes.hoverItem} to={`/blogs/${item._id}`}>
-                                                <Typography gutterBottom variant='h6' minHeight={64} component='p'>
+                                                <Typography
+                                                    className={classes.title}
+                                                    gutterBottom
+                                                    variant='h6'
+                                                    minHeight={64}
+                                                    component='p'
+                                                >
                                                     {item?.title}
                                                 </Typography>
                                                 <Typography

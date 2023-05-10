@@ -40,7 +40,8 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
             sx={{
                 marginTop: '24px',
                 width: {
-                    md: '1000px'
+                    md: '96vw',
+                    xl: 1000
                 }
             }}
         >

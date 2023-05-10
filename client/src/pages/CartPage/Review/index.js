@@ -70,7 +70,8 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
             sx={{
                 marginTop: '24px',
                 width: {
-                    md: '1000px'
+                    md: '96vw',
+                    xl: 1000
                 }
             }}
         >

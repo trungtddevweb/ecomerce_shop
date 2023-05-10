@@ -32,7 +32,7 @@ const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
     useScrollToTop()
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
     const { managerId } = useParams()
     const navigate = useNavigate()
     const user = useSelector(state => state.auth.user.userInfo)
@@ -91,9 +91,9 @@ const DashboardPage = () => {
                     }
                 }}
                 container
-                spacing={4}
+                spacing={{ xs: 2, md: 1, xl: 2 }}
             >
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3} xl={4}>
                     <Paper elevation={6}>
                         {isMatch ? (
                             <Tabs value={value} onChange={handleChange} aria-label='icon tabs example'>
@@ -142,7 +142,7 @@ const DashboardPage = () => {
                                         <ListItemIcon>
                                             <HistoryEduOutlined />
                                         </ListItemIcon>
-                                        <ListItemText primary='Tất cả bài viết' />
+                                        <ListItemText primary='Bài viết' />
                                     </ListItemButton>
                                     <ListItemButton
                                         selected={selectedParam === 'products'}
@@ -160,7 +160,7 @@ const DashboardPage = () => {
                                         <ListItemIcon>
                                             <ManageAccounts />
                                         </ListItemIcon>
-                                        <ListItemText primary='Thông tin người dùng' />
+                                        <ListItemText primary='Người dùng' />
                                     </ListItemButton>
                                     {/* <Divider variant='fullWidth' component='div' /> */}
                                     <ListItemButton
@@ -194,7 +194,7 @@ const DashboardPage = () => {
                         )}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={9} xl={8}>
                     <Paper elevation={6}>{getFields(selectedParam)}</Paper>
                 </Grid>
             </Grid>

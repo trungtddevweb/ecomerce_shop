@@ -7,7 +7,7 @@ import { LocalShipping, Person } from '@mui/icons-material'
 
 const TabsNavigation = ({ setSelected, selected }) => {
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
 
     const handleSelect = (event, value) => {
         setSelected(value)
@@ -57,7 +57,7 @@ const TabsNavigation = ({ setSelected, selected }) => {
                 <ListItemIcon>
                     <LocalShipping />
                 </ListItemIcon>
-                <ListItemText primary='Đơn hàng của tôi' />
+                <ListItemText primary='Đơn hàng' />
             </ListItemButton>
         </List>
     )

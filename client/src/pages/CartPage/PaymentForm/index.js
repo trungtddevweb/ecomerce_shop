@@ -41,7 +41,8 @@ const PaymentForm = ({ onNext, onBack, order, isMatch }) => {
             sx={{
                 marginTop: '24px',
                 width: {
-                    md: '1000px'
+                    sm: '96vw',
+                    xl: 1000
                 }
             }}
         >

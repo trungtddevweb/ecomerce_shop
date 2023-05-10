@@ -31,8 +31,8 @@ const Footer = () => {
             <Box
                 sx={{
                     zIndex: 10,
-                    width: {
-                        md: '1400px',
+                    maxWidth: {
+                        lg: '1400px',
                         sm: 'auto'
                     }
                 }}

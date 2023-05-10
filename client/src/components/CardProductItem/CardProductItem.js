@@ -55,12 +55,16 @@ const CardProductItem = ({ data }) => {
                                 >
                                     Thương hiệu: {data.brand}
                                 </Typography>
-                                <Typography variant='body2' component='p' color='text.secondary'>
+                                <Typography
+                                    minHeight={{ md: 45, xl: 0 }}
+                                    variant='body2'
+                                    component='p'
+                                    color='text.secondary'
+                                >
                                     Giá:{' '}
                                     <Typography component='span' color='error'>
-                                        {data.price.toLocaleString('vi-VN')}
-                                    </Typography>{' '}
-                                    VNĐ
+                                        {data.price.toLocaleString('vi-VN')}đ
+                                    </Typography>
                                 </Typography>
                             </>
                         )}

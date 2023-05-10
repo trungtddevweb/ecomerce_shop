@@ -48,12 +48,12 @@ const Personal = () => {
                 marginY={5}
             >
                 <Grid container direction={{ xs: 'row' }} spacing={2}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3} xl={4}>
                         <Paper elevation={6}>
                             <TabsNavigation selected={selected} setSelected={setSelected} />
                         </Paper>
                     </Grid>
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={9} xl={8}>
                         <Paper elevation={6}>{getSelectedField(selected)}</Paper>
                     </Grid>
                 </Grid>

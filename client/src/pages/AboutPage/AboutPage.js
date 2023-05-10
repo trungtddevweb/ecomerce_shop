@@ -22,7 +22,7 @@ function AboutPage() {
                 <Box
                     sx={{
                         width: {
-                            md: 1000,
+                            xl: 1000,
                             sm: 'auto'
                         }
                     }}

@@ -68,7 +68,8 @@ const SearchPage = () => {
             <Box
                 sx={{
                     width: {
-                        md: '1400px'
+                        sm: '96vw',
+                        md: 1400
                     }
                 }}
             >

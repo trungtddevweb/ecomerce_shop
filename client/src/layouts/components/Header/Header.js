@@ -21,7 +21,7 @@ const Header = () => {
 
     const activeTab = tabsNavigationHeader.findIndex(tab => tab.value === location.pathname)
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
 
     // Handlers
     const handleChange = (event, newValue) => {
@@ -49,7 +49,10 @@ const Header = () => {
             component={Paper}
             sx={{
                 display: 'flex',
-                justifyContent: 'center'
+                justifyContent: {
+                    sm: 'space-between',
+                    xl: 'center'
+                }
             }}
             className={`navbar ${visible ? 'navbar--visible' : 'navbar--hidden'}`}
             position='sticky'
@@ -57,8 +60,8 @@ const Header = () => {
             <Box
                 sx={{
                     width: {
-                        md: '1400px',
-                        sm: 'auto'
+                        xs: 'inherit',
+                        xl: 1400
                     }
                 }}
             >
@@ -79,7 +82,7 @@ const Header = () => {
                             className={classes.hoverItem}
                             component={Link}
                             to={routes.home.path}
-                            marginRight='20px'
+                            marginRight={{ xs: '20px', sm: 0, xl: 0 }}
                             marginLeft={isMatch ? '16px' : 0}
                             variant='h5'
                         >
@@ -92,6 +95,9 @@ const Header = () => {
                                 aria-label='nav tabs example'
                                 indicatorColor='secondary'
                                 textColor='secondary'
+                                variant='scrollable'
+                                scrollButtons
+                                allowScrollButtonsMobile
                             >
                                 {tabsNavigationHeader.map((tab, index) => (
                                     <Tab key={index} label={tab.label} value={tab.value} />

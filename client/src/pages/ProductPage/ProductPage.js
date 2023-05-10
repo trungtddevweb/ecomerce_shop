@@ -16,7 +16,7 @@ const ProductPage = () => {
     const [isFetching, setIsFetching] = useState(false)
     const [url, setUrl] = useState('')
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
 
     useDocumentTitle('Sản phẩm')
     useScrollToTop()
