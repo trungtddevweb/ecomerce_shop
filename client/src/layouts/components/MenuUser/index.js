@@ -146,13 +146,16 @@ const MenuUser = ({ onClose, onLoading }) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem>
-                    <Link onClick={handleClose} to={routes.personal.path} className={classes.hoverItem}>
-                        <ListItemIcon>
-                            <Avatar fontSize='small' />
-                        </ListItemIcon>
-                        Thông tin
-                    </Link>
+                <MenuItem
+                    component={Link}
+                    onClick={handleClose}
+                    to={routes.personal.path}
+                    className={classes.hoverItem}
+                >
+                    <ListItemIcon>
+                        <Avatar fontSize='small' />
+                    </ListItemIcon>
+                    Thông tin
                 </MenuItem>
                 <MenuItem
                     className={classes.hoverItem}
