@@ -7,22 +7,19 @@ import useFetchData from '~/hooks/useFetchData'
 import useStyles from '~/assets/styles/useStyles'
 import { Edit } from '@mui/icons-material'
 import { showToast } from 'src/redux/slice/toastSlice'
+import { updatedUser } from 'src/redux/slice/usersSlice'
 
 const Settings = () => {
     const token = localStorage.getItem('token')
     const [isEdit, setIsEdit] = useState(false)
     const classes = useStyles()
     const dispatch = useDispatch()
-    // const { user, isLoading } = useFetchData('/users/find/user', {
-    //     headers: { Authorization: `Bearer ${token}` }
-    // })
     const user = useSelector(state => state.auth.info)
-    const { name, email, phone, picture } = user
+    const { name, email, phone } = user
     const defaultValues = {
         name,
         email,
-        phone,
-        picture
+        phone
     }
 
     const {
@@ -44,20 +41,19 @@ const Settings = () => {
     }
 
     const onSubmitEdit = async data => {
-        const formData = new FormData()
         try {
             const res = await updatedUserAPI(data, token)
             if (res.status === 200) {
+                dispatch(updatedUser(res.data))
                 dispatch(showToast({ type: 'success', message: 'Cập nhập thành công!' }))
                 setIsEdit(false)
             }
         } catch (err) {
             console.error(err)
             dispatch(showToast({ type: 'error', message: 'Cập nhập thất bại!' }))
+            setIsEdit(false)
         }
     }
-
-    if (!user) return <div>Loading...</div>
 
     return (
         <Box component='form' onSubmit={handleSubmit(onSubmitEdit)}>
@@ -109,8 +105,7 @@ const Settings = () => {
                                 name='email'
                                 render={({
                                     field: { onChange, onBlur, value, name, ref },
-                                    fieldState: { invalid, isTouched, isDirty, error },
-                                    formState
+                                    fieldState: { invalid, isTouched, isDirty, error }
                                 }) => (
                                     <TextField
                                         defaultValue={defaultValues.email}
@@ -211,7 +206,7 @@ const Settings = () => {
                     </Grid>
                 )}
                 <Grid item xs={12} md={6} className={classes.flexBox}>
-                    <Avatar src={user?.picture} alt='img' sx={{ width: 120, height: 120 }} />
+                    <Avatar src={user?.picture} alt='Avatar' sx={{ width: 120, height: 120 }} />
                 </Grid>
             </Grid>
         </Box>
