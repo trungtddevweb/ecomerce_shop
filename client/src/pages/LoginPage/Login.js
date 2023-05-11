@@ -27,7 +27,8 @@ const useStyles = makeStyles({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        height: '100vh'
+        height: '100vh',
+        padding: '0 10px'
     },
     formWrap: {
         width: '500px',
@@ -40,7 +41,8 @@ const useStyles = makeStyles({
     loginBg: {
         backgroundImage: `url(${loginBg})`,
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
     }
 })
 
@@ -114,7 +116,6 @@ const Login = () => {
                     <LoadingButton fullWidth type='submit' loading={loading} variant='contained' size='large'>
                         Đăng nhập
                     </LoadingButton>
-                    {isMatch && <p color={'red'}>Hello world</p>}
                 </Box>
             </Grid>
         </Grid>

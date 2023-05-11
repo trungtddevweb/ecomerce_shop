@@ -45,7 +45,7 @@ const useStyles = makeStyles({
         alignItems: 'center',
         width: '100%',
         height: '100vh',
-        margin: '0 10px'
+        padding: '0 10px'
     },
     formWrap: {
         width: '500px',
@@ -63,9 +63,11 @@ const useStyles = makeStyles({
         marginRight: 'auto'
     },
     registerBg: {
+        height: '100vh',
         backgroundImage: `url(${registerBg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
     }
 })
 const RegisterPage = () => {
@@ -105,7 +107,7 @@ const RegisterPage = () => {
     }
     const classes = useStyles()
     return (
-        <Grid container spacing={1} className={classes.registerBg}>
+        <Grid container className={classes.registerBg}>
             <Grid item className={classes.container}>
                 <Box component='form' onSubmit={handleSubmit(onSubmitRegiser)} className={classes.formWrap}>
                     <Grid item xs={12}>
@@ -115,7 +117,7 @@ const RegisterPage = () => {
                                 type='file'
                                 id='image-upload'
                                 hidden
-                                accept='image/png, image/jpeg'
+                                accept='image/png, image/jpeg, image/jgp'
                                 {...register('picture', {
                                     required: true,
                                     onChange: e => {
@@ -128,8 +130,9 @@ const RegisterPage = () => {
                             htmlFor='image-upload'
                             sx={{
                                 position: 'relative',
-                                top: -22,
-                                left: '45%'
+                                top: '-22px',
+                                left: '45%',
+                                width: '50%'
                             }}
                         >
                             <Avatar sx={{ backgroundColor: '#0d6efd' }}>
