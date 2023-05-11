@@ -48,15 +48,23 @@ const CardProductItem = ({ data }) => {
                                 <Typography variant='body2' color='text.secondary'>
                                     {data.sizes.length} kích cỡ
                                 </Typography>
-                                <Typography variant='body2' color='text.secondary'>
+                                <Typography
+                                    minHeight={{ md: '40px', lg: 'auto' }}
+                                    variant='body2'
+                                    color='text.secondary'
+                                >
                                     Thương hiệu: {data.brand}
                                 </Typography>
-                                <Typography variant='body2' component='p' color='text.secondary'>
+                                <Typography
+                                    minHeight={{ md: 45, xl: 0 }}
+                                    variant='body2'
+                                    component='p'
+                                    color='text.secondary'
+                                >
                                     Giá:{' '}
                                     <Typography component='span' color='error'>
-                                        {data.price.toLocaleString('vi-VN')}
-                                    </Typography>{' '}
-                                    VNĐ
+                                        {data.price.toLocaleString('vi-VN')}đ
+                                    </Typography>
                                 </Typography>
                             </>
                         )}

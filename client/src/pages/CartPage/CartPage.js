@@ -19,6 +19,7 @@ const CartPage = () => {
     useScrollToTop()
     const theme = useTheme()
     const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatchLg = useMediaQuery(theme.breakpoints.down('lg'))
     const classes = useStyles()
     const [orderCode, setOrderCode] = useState('')
     const [order, setOrder] = useState({
@@ -108,14 +109,8 @@ const CartPage = () => {
     }
 
     return (
-        <Box className={classes.flexBox} bgcolor='lightGray' paddingY={6}>
-            <Box
-                sx={{
-                    width: {
-                        md: '1400px'
-                    }
-                }}
-            >
+        <Box className={classes.flexBox} bgcolor='lightGray' paddingY={6} paddingX={1}>
+            <Box>
                 {!isMatch && (
                     <Paper
                         elevation={6}
@@ -123,7 +118,7 @@ const CartPage = () => {
                             padding: '12px'
                         }}
                     >
-                        <Stepper activeStep={activeStep}>
+                        <Stepper activeStep={activeStep} alternativeLabel={isMatchLg}>
                             {stepsCart.map(label => (
                                 <Step key={label}>
                                     <StepLabel>{label}</StepLabel>

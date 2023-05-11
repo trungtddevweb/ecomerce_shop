@@ -28,7 +28,7 @@ const SliderImagesProduct = lazy(() => import('./SlideImagesProduct'))
 const ProductDetails = () => {
     const [product, setProduct] = useState({})
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
     useDocumentTitle(product?.name)
     useScrollToTop()
     const { productId } = useParams()
@@ -134,7 +134,8 @@ const ProductDetails = () => {
             <Box
                 sx={{
                     width: {
-                        md: '1400px'
+                        md: '100vw',
+                        xl: 1400
                     }
                 }}
             >
@@ -160,11 +161,11 @@ const ProductDetails = () => {
                         </LinkMUI>
                         <Typography color='primary'>Chi tiết sản phẩm</Typography>
                     </Breadcrumbs>
-                    <Grid container spacing={4}>
-                        <Grid item xs={12} md={4}>
+                    <Grid container spacing={{ md: 2, xl: 4 }}>
+                        <Grid item xs={12} md={6} xl={4}>
                             <SliderImagesProduct isMatch={isMatch} images={product} />
                         </Grid>
-                        <Grid item xs={12} md={7}>
+                        <Grid item xs={12} md={6} xl={7}>
                             <Box component='form'>
                                 <Typography variant={isMatch ? 'h6' : 'h4'} minHeight={100}>
                                     {product.name}

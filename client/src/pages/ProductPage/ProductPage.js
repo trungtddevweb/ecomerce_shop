@@ -16,7 +16,7 @@ const ProductPage = () => {
     const [isFetching, setIsFetching] = useState(false)
     const [url, setUrl] = useState('')
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
 
     useDocumentTitle('Sản phẩm')
     useScrollToTop()
@@ -38,11 +38,12 @@ const ProductPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url])
 
+    console.log('products', products)
     const loadMore = async () => {
         try {
             setIsFetching(true)
             const res = await getAllProductByQueryAPI(limit + 10, url)
-            setProducts([...products, ...res.docs])
+            setProducts(res.docs)
             setLimit(limit + 10)
             setIsFetching(false)
         } catch (err) {
@@ -53,7 +54,17 @@ const ProductPage = () => {
     const hasMore = data.totalDocs > products.length
 
     return (
-        <Box p={1} display='flex' marginY={5} justifyContent='center'>
+        <Box
+            p={1}
+            sx={{
+                display: {
+                    xs: 'flow-root',
+                    md: 'flex'
+                }
+            }}
+            marginY={isMatch ? 2 : 5}
+            justifyContent='center'
+        >
             <Box
                 sx={{
                     width: {
@@ -65,7 +76,7 @@ const ProductPage = () => {
                 <Grid marginY={2} container spacing={2}>
                     <Grid xs={12} md={3} item>
                         <Paper>
-                            <FilterList url={url} setUrl={setUrl} />
+                            <FilterList isMatch={isMatch} url={url} setUrl={setUrl} />
                         </Paper>
                     </Grid>
                     <Grid xs={12} md={9} item spacing={2} container>
@@ -85,7 +96,7 @@ const ProductPage = () => {
                                 ))}
 
                                 {products.length === 0 && (
-                                    <Grid item xs={3}>
+                                    <Grid item xs={12} md={3}>
                                         <Box elevation={6}>
                                             <Typography variant='body1' color='primary'>
                                                 Không có sản phẩm nào phù hợp!

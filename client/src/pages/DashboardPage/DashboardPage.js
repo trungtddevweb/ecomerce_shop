@@ -11,7 +11,11 @@ import {
     ListItemAvatar,
     Avatar,
     Typography,
-    Box
+    Box,
+    useTheme,
+    useMediaQuery,
+    Tabs,
+    Tab
 } from '@mui/material'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -27,16 +31,23 @@ import useScrollToTop from '~/hooks/useScrollToTop'
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
     useScrollToTop()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
     const { managerId } = useParams()
     const navigate = useNavigate()
-    const user = useSelector(state => state.auth?.user.userInfo)
-    const isAdmin = user?.isAdmin
+    const user = useSelector(state => state.auth.user.userInfo)
+    const isAdmin = user.isAdmin
+    const [value, setValue] = useState(managerId)
 
     const [selectedParam, setSelectedParam] = useState(managerId)
 
     const handleListItemClick = (event, path) => {
         setSelectedParam(path)
         navigate(`/dashboard/${path}`)
+    }
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue)
     }
 
     function getFields(params) {
@@ -48,7 +59,7 @@ const DashboardPage = () => {
             case 'blogs':
                 return <BlogsDashboard />
             case 'create':
-                return <CreateFields />
+                return <CreateFields isMatch={isMatch} />
             default:
                 return <ProductsDashboard />
         }
@@ -60,79 +71,130 @@ const DashboardPage = () => {
     }
 
     return (
-        <Box display='flex' paddingY={5} minHeight='70vh' bgcolor='lightgray' justifyContent='center'>
-            <Grid width={1400} container spacing={4}>
-                <Grid item xs={4}>
+        <Box
+            p={1}
+            sx={{
+                display: {
+                    xs: 'flow-root',
+                    md: 'flex'
+                }
+            }}
+            paddingY={5}
+            minHeight='70vh'
+            bgcolor='lightgray'
+            justifyContent='center'
+        >
+            <Grid
+                sx={{
+                    width: {
+                        md: '1400px'
+                    }
+                }}
+                container
+                spacing={{ xs: 2, md: 1, xl: 2 }}
+            >
+                <Grid item xs={12} md={3} xl={4}>
                     <Paper elevation={6}>
-                        <List
-                            component='nav'
-                            aria-label='manager products blogs'
-                            subheader={
-                                <ListSubheader component='div' id='nested-list-subheader'>
-                                    Danh mục quản lý
-                                </ListSubheader>
-                            }
-                        >
-                            <Divider variant='fullWidth' component='div' />
+                        {isMatch ? (
+                            <Tabs value={value} onChange={handleChange} aria-label='icon tabs example'>
+                                <Tab
+                                    icon={<HistoryEduOutlined />}
+                                    value='blogs'
+                                    aria-label='blogs'
+                                    onClick={event => handleListItemClick(event, 'blogs')}
+                                />
+                                <Tab
+                                    icon={<Inventory />}
+                                    aria-label='inventory'
+                                    value='products'
+                                    onClick={event => handleListItemClick(event, 'products')}
+                                />
+                                <Tab
+                                    icon={<ManageAccounts />}
+                                    aria-label='person'
+                                    value='users'
+                                    onClick={event => handleListItemClick(event, 'users')}
+                                />
+                                <Tab
+                                    icon={<Create />}
+                                    aria-label='create'
+                                    value='create'
+                                    onClick={event => handleListItemClick(event, 'create')}
+                                />
+                            </Tabs>
+                        ) : (
+                            <>
+                                <List
+                                    component='nav'
+                                    aria-label='manager products blogs'
+                                    subheader={
+                                        <ListSubheader component='div' id='nested-list-subheader'>
+                                            Danh mục quản lý
+                                        </ListSubheader>
+                                    }
+                                >
+                                    <Divider variant='fullWidth' component='div' />
 
-                            <ListItemButton
-                                selected={selectedParam === 'blogs'}
-                                onClick={event => handleListItemClick(event, 'blogs')}
-                            >
-                                <ListItemIcon>
-                                    <HistoryEduOutlined />
-                                </ListItemIcon>
-                                <ListItemText primary='Tất cả bài viết' />
-                            </ListItemButton>
-                            <ListItemButton
-                                selected={selectedParam === 'products'}
-                                onClick={event => handleListItemClick(event, 'products')}
-                            >
-                                <ListItemIcon>
-                                    <Inventory />
-                                </ListItemIcon>
-                                <ListItemText primary='Sản phẩm' />
-                            </ListItemButton>
-                            <ListItemButton
-                                selected={selectedParam === 'users'}
-                                onClick={event => handleListItemClick(event, 'users')}
-                            >
-                                <ListItemIcon>
-                                    <ManageAccounts />
-                                </ListItemIcon>
-                                <ListItemText primary='Thông tin người dùng' />
-                            </ListItemButton>
-                            {/* <Divider variant='fullWidth' component='div' /> */}
-                            <ListItemButton
-                                selected={selectedParam === 'create'}
-                                onClick={event => handleListItemClick(event, 'create')}
-                            >
-                                <ListItemIcon>
-                                    <Create />
-                                </ListItemIcon>
-                                <ListItemText primary='Tạo mới' />
-                            </ListItemButton>
-                        </List>
-                        <ListItem
-                            sx={{
-                                padding: '0 16px'
-                            }}
-                        >
-                            <ListItemAvatar>
-                                <Avatar src={user?.picture} />
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={user.name}
-                                secondary={
-                                    <Typography component='span' variant='body2' color='#bdbdbd'>
-                                        Người quản lý
-                                    </Typography>
-                                }
-                            />
-                        </ListItem>
+                                    <ListItemButton
+                                        selected={selectedParam === 'blogs'}
+                                        onClick={event => handleListItemClick(event, 'blogs')}
+                                    >
+                                        <ListItemIcon>
+                                            <HistoryEduOutlined />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Bài viết' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'products'}
+                                        onClick={event => handleListItemClick(event, 'products')}
+                                    >
+                                        <ListItemIcon>
+                                            <Inventory />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Sản phẩm' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'users'}
+                                        onClick={event => handleListItemClick(event, 'users')}
+                                    >
+                                        <ListItemIcon>
+                                            <ManageAccounts />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Người dùng' />
+                                    </ListItemButton>
+                                    {/* <Divider variant='fullWidth' component='div' /> */}
+                                    <ListItemButton
+                                        selected={selectedParam === 'create'}
+                                        onClick={event => handleListItemClick(event, 'create')}
+                                    >
+                                        <ListItemIcon>
+                                            <Create />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Tạo mới' />
+                                    </ListItemButton>
+                                </List>
+                                <ListItem
+                                    sx={{
+                                        padding: '0 16px'
+                                    }}
+                                >
+                                    <ListItemAvatar>
+                                        <Avatar src={user?.picture} />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={user.name}
+                                        secondary={
+                                            <Typography component='span' variant='body2' color='#bdbdbd'>
+                                                Người quản lý
+                                            </Typography>
+                                        }
+                                    />
+                                </ListItem>
+                            </>
+                        )}
                     </Paper>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={12} md={9} xl={8}>
                     <Paper elevation={6}>{getFields(selectedParam)}</Paper>
                 </Grid>
             </Grid>

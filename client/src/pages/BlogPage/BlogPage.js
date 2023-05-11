@@ -18,7 +18,6 @@ import {
     useTheme
 } from '@mui/material'
 import Image from 'mui-image'
-import { useEffect } from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import useStyles from '~/assets/styles/useStyles'
@@ -32,7 +31,7 @@ const BlogPage = () => {
     useScrollToTop()
     const classes = useStyles()
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
     const [limited, setLimited] = useState(10)
     const [query, setQuery] = useState('')
     const debouncedQuery = useDebounce(query, 500)
@@ -45,18 +44,18 @@ const BlogPage = () => {
     }
 
     return (
-        <Box marginY={5} p={1} minHeight={isMatch ? '50vh' : '100vh'} display='flex' justifyContent='center'>
+        <Box marginY={5} p={1} minHeight={{ xs: '50vh', xl: '70vh' }} display='flex' justifyContent='center'>
             <Grid
                 container
                 sx={{
                     width: {
-                        md: '1400px'
+                        xl: 1400
                     }
                 }}
                 spacing={3}
                 direction={'row-reverse'}
             >
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} sm={5} md={4} xl={4}>
                     <Typography marginBottom={2}>Tìm kiếm bài viết</Typography>
                     <Paper>
                         <InputBase
@@ -80,7 +79,7 @@ const BlogPage = () => {
                         />
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} sm={7} md={8} xl={8}>
                     <Stack display={query === '' ? 'none' : 'flex'} direction='row' spacing={2} marginBottom={2}>
                         <Typography variant='h6' color='primary'>
                             Kết quả tìm kiếm cho:{' '}

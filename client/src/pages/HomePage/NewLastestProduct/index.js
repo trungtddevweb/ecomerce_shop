@@ -44,7 +44,7 @@ const NewLastestProduct = () => {
             <Box
                 sx={{
                     width: {
-                        md: '1400px',
+                        xl: '1400px',
                         sm: 'auto'
                     }
                 }}
@@ -67,11 +67,11 @@ const NewLastestProduct = () => {
                 </Stack>
                 <Grid container spacing={2}>
                     {(isLoading ? Array.from(new Array(5)) : sortedData).map((list, index) => (
-                        <Grid item key={list?._id || index} xs={6} md={2.4}>
+                        <Grid item key={list?._id || index} xs={6} sm={4} md={2.4}>
                             {list ? (
                                 <CardProductItem data={list} />
                             ) : (
-                                <Box>
+                                <Box width={{ md: 160, lg: 230, xl: 245 }}>
                                     <SkeletonFallback height={200} />
                                     <SkeletonFallback height={50} />
                                     <SkeletonFallback />

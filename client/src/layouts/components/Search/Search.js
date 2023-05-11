@@ -14,7 +14,19 @@ const Search = () => {
 
     const handleSearch = e => {
         e.preventDefault()
+        if (!value) {
+            return
+        }
+        setValue('')
         navigate(`/search?name=${value}`)
+    }
+
+    const handleInputChange = event => {
+        const value = event.target.value
+        if (value.startsWith(' ')) {
+            return
+        }
+        setValue(value)
     }
 
     return (
@@ -26,8 +38,9 @@ const Search = () => {
                     variant='outlined'
                     size='small'
                     fullWidth
+                    value={value}
                     autoComplete='off'
-                    onChange={e => setValue(e.target.value)}
+                    onChange={e => handleInputChange(e)}
                     InputProps={{
                         endAdornment: (
                             <SearchIcon

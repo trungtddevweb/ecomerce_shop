@@ -1,4 +1,4 @@
-import { Box, Grid, List, ListItemButton, Paper, Stack, Typography } from '@mui/material'
+import { Box, List, ListItemButton, Paper, Stack, Typography } from '@mui/material'
 import Image from 'mui-image'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'

@@ -4,14 +4,14 @@ import { TabContext, TabList, TabPanel } from '@mui/lab'
 import ProductComponent from './ProductComponent'
 import BlogComponent from './BlogComponent'
 
-const CreateFields = () => {
+const CreateFields = ({ isMatch }) => {
     const [value, setValue] = useState('product')
 
     const handleChange = (event, newValue) => {
         setValue(newValue)
     }
     function getComponent(value) {
-        return value === 'product' ? <ProductComponent /> : <BlogComponent />
+        return value === 'product' ? <ProductComponent isMatch={isMatch} /> : <BlogComponent isMatch={isMatch} />
     }
 
     return (

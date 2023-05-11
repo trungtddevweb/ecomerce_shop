@@ -25,7 +25,7 @@ const MenuUser = ({ onClose, onLoading }) => {
     const [anchorEl, setAnchorEl] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+    const isMatch = useMediaQuery(theme.breakpoints.down('md'))
     const classes = useStyles()
     const navigate = useNavigate()
 
@@ -101,6 +101,7 @@ const MenuUser = ({ onClose, onLoading }) => {
                                 textOverflow: 'ellipsis',
                                 maxWidth: '150px'
                             }}
+                            display={{ md: 'none', lg: 'block', xl: 'block' }}
                             variant='inherit'
                         >
                             {user?.name}

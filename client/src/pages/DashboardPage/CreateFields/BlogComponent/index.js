@@ -1,10 +1,14 @@
-import { Box, Grid, TextField, Button, Typography } from '@mui/material'
+import { useState } from 'react'
+import { Box, Grid, TextField, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useSelector, useDispatch } from 'react-redux'
 import { createBlogAPI } from '~/api/main'
 import { showToast } from 'src/redux/slice/toastSlice'
 import ErrorMessages from '~/components/ErrorMessages'
-const BlogComponent = () => {
+import { LoadingButton } from '@mui/lab'
+
+const BlogComponent = ({ isMatch }) => {
+    const [isLoading, setIsLoading] = useState(false)
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
     const {
@@ -19,13 +23,16 @@ const BlogComponent = () => {
         formData.set('author', data.author)
         formData.set('picture', data.picture[0])
         try {
+            setIsLoading(true)
             const res = await createBlogAPI(formData, token)
             if (res.status === 201) {
                 dispatch(showToast({ type: 'success', message: 'Tạo mới bài viết thành công!' }))
+                setIsLoading(false)
             }
         } catch (err) {
             console.error(err)
             dispatch(showToast({ type: 'error', message: 'Tạo mới bài viết thất bại!' }))
+            setIsLoading(false)
         }
     }
     return (
@@ -33,6 +40,7 @@ const BlogComponent = () => {
             <Grid container spacing={2}>
                 <Grid xs={12} item>
                     <TextField
+                        size={isMatch ? 'small' : 'medium'}
                         type='text'
                         label='Tiêu đề'
                         variant='outlined'
@@ -43,6 +51,7 @@ const BlogComponent = () => {
                 </Grid>
                 <Grid xs={12} item>
                     <TextField
+                        size={isMatch ? 'small' : 'medium'}
                         type='text'
                         label='Mô tả bài viết'
                         multiline
@@ -55,6 +64,7 @@ const BlogComponent = () => {
                 </Grid>
                 <Grid xs={12} item>
                     <TextField
+                        size={isMatch ? 'small' : 'medium'}
                         type='text'
                         label='Tác giả'
                         variant='outlined'
@@ -67,9 +77,15 @@ const BlogComponent = () => {
                     <Typography component='input' type='file' variant='outlined' {...register('picture')} />
                 </Grid>
                 <Grid xs={12} item>
-                    <Button type='submit' variant='contained'>
-                        Tạo blog
-                    </Button>
+                    <LoadingButton
+                        loading={isLoading}
+                        fullWidth={isMatch}
+                        type='submit'
+                        variant='contained'
+                        color='primary'
+                    >
+                        Tạo Mới
+                    </LoadingButton>
                 </Grid>
             </Grid>
         </Box>

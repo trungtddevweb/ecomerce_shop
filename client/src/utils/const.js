@@ -79,10 +79,10 @@ export const sizeLists = [
 ]
 
 export const priceLists = [
-    { label: 'Nhỏ hơn 100.000 VNĐ', value: 'lt100000' },
-    { label: '100.000 - 200.000 VNĐ', value: '100000-200000' },
-    { label: '200.000 - 350.000 VNĐ', value: '200000-350000' },
-    { label: 'Lớn hơn 350.000 VNĐ', value: 'gt350000' }
+    { label: '< 100.000đ', value: 'lt100000' },
+    { label: '100.000 - 200.000đ', value: '100000-200000' },
+    { label: '200.000 - 350.000đ', value: '200000-350000' },
+    { label: '> 350.000đ', value: 'gt350000' }
 ]
 
 export const imagesSlider = [
