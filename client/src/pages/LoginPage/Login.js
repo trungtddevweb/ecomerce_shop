@@ -3,25 +3,10 @@ import { useDispatch } from 'react-redux'
 import { loginAPI } from '~/api/main'
 import { login } from 'src/redux/slice/usersSlice'
 import { useForm } from 'react-hook-form'
-import {
-    Box,
-    Grid,
-    Stack,
-    TextField,
-    Typography,
-    FormGroup,
-    Container,
-    FormControlLabel,
-    Checkbox,
-    OutlinedInput,
-    InputAdornment,
-    IconButton,
-    InputLabel
-} from '@mui/material'
+import { Box, Stack, TextField, Typography, FormGroup, InputAdornment, IconButton } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Link, useNavigate } from 'react-router-dom'
-import routes from 'src/utils/routes'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
 import { LoadingButton } from '@mui/lab'
@@ -35,31 +20,6 @@ import useToggle from '~/hooks/useToggle'
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required().min(6)
-})
-
-const useStyles = makeStyles({
-    container: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: '100vh',
-        padding: '0 10px'
-    },
-    formWrap: {
-        width: '500px',
-        maxWidth: '100%',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '16px',
-        boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.15)'
-    },
-    loginBg: {
-        backgroundImage: `url(${loginBg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-    }
 })
 
 const Login = () => {
@@ -91,9 +51,7 @@ const Login = () => {
             setError(err.response.data.message)
         }
     }
-    const classes = useStyles()
-    const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
+
     return (
         <Box
             p={1}
@@ -177,7 +135,13 @@ const Login = () => {
                         <Typography color='primary' variant='body2'>
                             Quên mật khẩu?
                         </Typography>
-                        <Typography component={Link} to='/register' color='primary' variant='body2'>
+                        <Typography
+                            component={Link}
+                            className={classes.hoverItem}
+                            to='/register'
+                            color='primary'
+                            variant='body2'
+                        >
                             Đăng kí ngay
                         </Typography>
                     </Stack>

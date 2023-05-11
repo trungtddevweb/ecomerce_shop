@@ -50,6 +50,30 @@ const useStyles = makeStyles(theme =>
             '&:hover': {
                 color: 'CurrentColor'
             }
+        },
+        formWrap: {
+            width: '500px',
+            maxWidth: '100%',
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            padding: '16px',
+            boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.15)',
+            zIndex: 10
+        },
+        authBg: {
+            width: '100vw',
+            height: '100vh',
+            backgroundSize: 'cover',
+            zIndex: 9,
+            '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)'
+            }
         }
     })
 )
