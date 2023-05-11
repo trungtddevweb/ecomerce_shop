@@ -3,25 +3,10 @@ import { useDispatch } from 'react-redux'
 import { loginAPI } from '~/api/main'
 import { login } from 'src/redux/slice/usersSlice'
 import { useForm } from 'react-hook-form'
-import {
-    Box,
-    Grid,
-    Stack,
-    TextField,
-    Typography,
-    FormGroup,
-    Container,
-    FormControlLabel,
-    Checkbox,
-    OutlinedInput,
-    InputAdornment,
-    IconButton,
-    InputLabel
-} from '@mui/material'
+import { Box, Stack, TextField, Typography, FormGroup, InputAdornment, IconButton } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { Link, useNavigate } from 'react-router-dom'
-import routes from 'src/utils/routes'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
 import { LoadingButton } from '@mui/lab'
@@ -70,22 +55,9 @@ const Login = () => {
     return (
         <Box
             p={1}
-            className={classes.flexBox}
+            className={[classes.flexBox, classes.authBg]}
             sx={{
-                width: '100vw',
-                height: '100vh',
-                background: `url(${loginBg})`,
-                backgroundSize: 'cover',
-                zIndex: 9,
-                '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                }
+                background: `url(${loginBg})`
             }}
         >
             <Box
@@ -150,7 +122,13 @@ const Login = () => {
                         <Typography color='primary' variant='body2'>
                             Quên mật khẩu?
                         </Typography>
-                        <Typography component={Link} to='/register' color='primary' variant='body2'>
+                        <Typography
+                            component={Link}
+                            className={classes.hoverItem}
+                            to='/register'
+                            color='primary'
+                            variant='body2'
+                        >
                             Đăng kí ngay
                         </Typography>
                     </Stack>

@@ -2,19 +2,16 @@
 @import 'react-toastify/dist/ReactToastify.css';
 
 // React-Slick
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
+@import 'slick-carousel/slick/slick.css';
+@import 'slick-carousel/slick/slick-theme.css';
 
 // React-credit-cards
 @import 'react-credit-cards-2/dist/lib/styles.scss';
 
 @import './assets/scss/variables';
 // SCSS files
-@import './assets/scss/register.scss';
-@import './assets/scss/dashboard.scss';
+
 @import './assets/scss/sliders.scss';
-
-
 
 body {
     margin: 0;
@@ -66,7 +63,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type='number'] {
     -moz-appearance: textfield;
 }
 
@@ -86,7 +83,6 @@ input[type=number] {
     transition: transform 0.3s ease-in-out;
     z-index: 29;
 }
-
 
 .navbar--hidden {
     animation-duration: 0.3s;

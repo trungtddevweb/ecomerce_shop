@@ -4,29 +4,34 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import {
     Box,
-    Button,
     FormGroup,
     Grid,
     InputLabel,
-    Stack,
     TextField,
     Typography,
     useMediaQuery,
-    useTheme
+    useTheme,
+    Avatar,
+    Stack,
+    InputAdornment,
+    IconButton
 } from '@mui/material'
 import { registerAPI } from '~/api/main'
 import { Link, useNavigate } from 'react-router-dom'
-import CustomLoading from '~/components/CustomLoading'
 import routes from 'src/utils/routes'
-import { Add } from '@mui/icons-material'
+import { Add, Visibility, VisibilityOff } from '@mui/icons-material'
 import images from '~/assets/imgs'
-import Image from '~/components/Image/Image'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import ErrorMessages from '~/components/ErrorMessages'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { LoadingButton } from '@mui/lab'
+import useStyles from '~/assets/styles/useStyles'
+import registerBg from '~/assets/imgs/register-bg.jpeg'
+import { green } from '@mui/material/colors'
+import Image from 'mui-image'
+import useToggle from '~/hooks/useToggle'
 
 const registerData = yup.object().shape({
     name: yup.string().required(),
@@ -40,13 +45,14 @@ const registerData = yup.object().shape({
 
 const RegisterPage = () => {
     useDocumentTitle('Đăng kí')
-    const theme = useTheme()
-    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     const dispatch = useDispatch()
     const [previewImg, setPreviewImg] = useState(null)
     const navigate = useNavigate()
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useToggle(false)
+    const [showConfirmPW, setShowConfirmPW] = useToggle(false)
+    const classes = useStyles()
 
     const {
         register,
@@ -69,29 +75,41 @@ const RegisterPage = () => {
             navigate('/login')
         } catch (err) {
             setLoading(false)
-            dispatch(showToast({ type: 'error', message: 'Đăng ký thất bại!' }))
             setError(err.response.data.message)
         }
     }
-
     return (
-        <Grid container>
-            <Grid item>
-                <Box component='form' onSubmit={handleSubmit(onSubmitRegiser)}>
-                    {/* <div className='mb-3 img-wrap'>
-                        <img src='https://cdn.pixabay.com/photo/2020/05/21/11/13/shopping-5200288_1280.jpg' alt='' />
-                    </div> */}
-                    <Typography variant='h5' color={isMatch ? 'red' : 'green'}>
-                        Đăng Kí
-                    </Typography>
-                    <Stack className='choose-image my-3 m-auto'>
-                        <FormGroup className='d-flex align-items-center justify-content-center'>
-                            <Image alt='' src={previewImg || images.registerLogo} className='register-profile-pic' />
+        <Box
+            p={1}
+            sx={{
+                background: `url(${registerBg})`
+            }}
+            className={[classes.flexBox, classes.authBg]}
+        >
+            <Grid container className={classes.flexBox}>
+                <Box component='form' onSubmit={handleSubmit(onSubmitRegiser)} className={classes.formWrap}>
+                    <Grid
+                        item
+                        xs={12}
+                        sx={{
+                            position: 'relative',
+                            marginY: 2
+                        }}
+                    >
+                        <FormGroup className={classes.flexBox}>
+                            <Image
+                                alt=''
+                                width={120}
+                                height={120}
+                                duration={0}
+                                sx={{ borderRadius: '50%' }}
+                                src={previewImg || images.registerLogo}
+                            />
                             <TextField
                                 type='file'
                                 id='image-upload'
                                 hidden
-                                accept='image/png, image/jpeg'
+                                accept='image/png, image/jpeg, image/jgp'
                                 {...register('picture', {
                                     required: true,
                                     onChange: e => {
@@ -100,68 +118,117 @@ const RegisterPage = () => {
                                 })}
                             />
                         </FormGroup>
-                        <InputLabel htmlFor='image-upload' className='image-upload-label bg-primary'>
-                            <Add className='upload-btn' />
+
+                        <InputLabel
+                            htmlFor='image-upload'
+                            sx={{
+                                position: 'absolute',
+                                left: '40%',
+                                bottom: 0
+                            }}
+                        >
+                            <Avatar sx={{ width: 24, height: 24, bgcolor: green[800] }}>
+                                <Add />
+                            </Avatar>
                         </InputLabel>
-                    </Stack>
-                    <Typography variant='inherit' className='text-danger mb-2'>
+                    </Grid>
+                    <Typography variant='body1' color='error'>
                         {error}
                     </Typography>
-                    <FormGroup className='mb-3'>
-                        <TextField
-                            required
-                            label='Tên'
-                            type='text'
-                            error={errors.name}
-                            {...register('name', { required: true })}
-                        />
-                        <ErrorMessages errors={errors} fieldName='name' />
-                    </FormGroup>
-                    <FormGroup className='mb-3'>
-                        <TextField
-                            required
-                            type='email'
-                            label='Email'
-                            error={errors.email}
-                            {...register('email', { required: true })}
-                        />
-                        <ErrorMessages errors={errors} fieldName='email' />
-                    </FormGroup>
-                    <FormGroup className='mb-3'>
-                        <TextField
-                            required
-                            type='password'
-                            label='Mật khẩu'
-                            error={errors.password}
-                            {...register('password', { required: true })}
-                        />
-                        <ErrorMessages errors={errors} fieldName='password' />
-                    </FormGroup>
-                    <FormGroup className='mb-3'>
-                        <TextField
-                            required
-                            type='password'
-                            label='Xác nhận mật khẩu'
-                            error={errors.confirmPassword}
-                            {...register('confirmPassword', { required: true })}
-                        />
-                        <ErrorMessages errors={errors} fieldName='confirmPassword' />
-                    </FormGroup>
-                    <Typography variant='inherit' className='mb-3 '>
-                        Đã có tài khoản.{' '}
-                        <Link className='text-primary' to={routes.login.path}>
-                            {' '}
-                            Đăng nhập!
-                        </Link>
-                    </Typography>
-                    <LoadingButton variant='contained' size='large' type='submit' fullWidth loading={loading}>
-                        Tạo tài khoản
-                    </LoadingButton>
-                    {isMatch && <p>hello</p>}
+                    <Grid xs={12} item>
+                        <FormGroup>
+                            <TextField
+                                required
+                                label='Tên'
+                                type='text'
+                                sx={{ mt: 2 }}
+                                fullWidth
+                                error={errors.name}
+                                {...register('name', { required: true })}
+                            />
+                            <ErrorMessages errors={errors} fieldName='name' />
+                        </FormGroup>
+                    </Grid>
+                    <Grid xs={12} item>
+                        <FormGroup>
+                            <TextField
+                                required
+                                type='email'
+                                label='Email'
+                                sx={{ mt: 2 }}
+                                error={errors.email}
+                                {...register('email', { required: true })}
+                            />
+                            <ErrorMessages errors={errors} fieldName='email' />
+                        </FormGroup>
+                    </Grid>
+                    <Grid xs={12} item>
+                        <FormGroup>
+                            <TextField
+                                type={showPassword ? 'text' : 'password'}
+                                label='Mật khẩu'
+                                {...register('password', { required: true })}
+                                error={errors.password}
+                                sx={{ mt: 2 }}
+                                fullWidth
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            <IconButton onClick={setShowPassword}>
+                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                            <ErrorMessages errors={errors} fieldName='password' />
+                        </FormGroup>
+                    </Grid>
+                    <Grid xs={12} item>
+                        <FormGroup>
+                            <TextField
+                                type={showConfirmPW ? 'text' : 'password'}
+                                label='Xác nhận mật khẩu'
+                                {...register('confirmPassword', { required: true })}
+                                error={errors.confirmPassword}
+                                fullWidth
+                                sx={{ mt: 2 }}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            <IconButton onClick={setShowConfirmPW}>
+                                                {showConfirmPW ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                            <ErrorMessages errors={errors} fieldName='confirmPassword' />
+                        </FormGroup>
+                    </Grid>
+                    <Grid xs={12} marginY={2} item>
+                        <Stack direction='row' sx={{ mb: 2 }} spacing={1}>
+                            <Typography variant='body1'>Đã có tài khoản.</Typography>
+                            <Typography
+                                component={Link}
+                                className={classes.hoverItem}
+                                to='/login'
+                                color='primary'
+                                variant='body1'
+                            >
+                                Đăng nhập!
+                            </Typography>
+                        </Stack>
+                    </Grid>
+                    <Grid xs={12} item marginBottom={2}>
+                        <LoadingButton variant='contained' size='large' type='submit' fullWidth loading={loading}>
+                            Tạo tài khoản
+                        </LoadingButton>
+                    </Grid>
                 </Box>
                 <ToastContainer />
             </Grid>
-        </Grid>
+        </Box>
     )
 }
 
