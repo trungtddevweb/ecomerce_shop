@@ -55,22 +55,9 @@ const Login = () => {
     return (
         <Box
             p={1}
-            className={classes.flexBox}
+            className={[classes.flexBox, classes.authBg]}
             sx={{
-                width: '100vw',
-                height: '100vh',
-                background: `url(${loginBg})`,
-                backgroundSize: 'cover',
-                zIndex: 9,
-                '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                }
+                background: `url(${loginBg})`
             }}
         >
             <Box

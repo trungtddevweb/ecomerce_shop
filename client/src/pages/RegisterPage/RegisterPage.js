@@ -220,7 +220,7 @@ const RegisterPage = () => {
                             </Typography>
                         </Stack>
                     </Grid>
-                    <Grid xs={12} item>
+                    <Grid xs={12} item marginBottom={2}>
                         <LoadingButton variant='contained' size='large' type='submit' fullWidth loading={loading}>
                             Tạo tài khoản
                         </LoadingButton>
