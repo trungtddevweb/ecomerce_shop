@@ -38,7 +38,6 @@ const ProductPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url])
 
-    console.log('products', products)
     const loadMore = async () => {
         try {
             setIsFetching(true)

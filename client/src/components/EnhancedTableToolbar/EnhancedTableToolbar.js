@@ -12,7 +12,7 @@ function EnhancedTableToolbar(props) {
     const { managerId } = useParams()
     const { numSelected, selectedItem, setSelected, setDeleting } = props
     const dispatch = useDispatch()
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth.user?.token)
 
     const handleDelete = async () => {
         try {

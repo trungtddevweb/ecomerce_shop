@@ -29,7 +29,7 @@ const UsersDashBoard = () => {
     const [data, setData] = useState(null)
     const [users, setUsers] = useState([])
 
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth.user?.token)
 
     useEffect(() => {
         const fetchData = async () => {

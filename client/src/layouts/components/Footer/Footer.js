@@ -44,15 +44,15 @@ const Footer = () => {
                                 MyStore
                             </Typography>
                             <Typography variant='body' paragraph textAlign='justify'>
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sapiente nihil voluptatibus
-                                accusantium qui minima dolorum repudiandae quasi voluptates voluptate vel id illo odio
-                                assumenda totam eos atque, tempore consequuntur corrupti.
+                                Chúng tôi thật sự tin tưởng vào sức mạnh khai triển của công nghệ và mong muốn góp phần
+                                làm cho thế giới trở nên tốt đẹp hơn bằng việc tạo ra nhiều sản phẩm có giá trị cho cuộc
+                                sống trong tương lai.
                             </Typography>
                         </Grid>
                     )}
                     <Grid item xs={12} sm={3}>
                         <Typography
-                            marginBottom={2}
+                            marginBottom={3}
                             color={isMatch ? 'secondary' : 'primary'}
                             variant={isMatch ? 'h6' : 'h5'}
                         >
@@ -75,7 +75,7 @@ const Footer = () => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Typography
-                            marginBottom={2}
+                            marginBottom={3}
                             color={isMatch ? 'secondary' : 'primary'}
                             variant={isMatch ? 'h6' : 'h5'}
                         >
@@ -89,7 +89,7 @@ const Footer = () => {
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <Typography
-                            marginBottom={2}
+                            marginBottom={3}
                             color={isMatch ? 'secondary' : 'primary'}
                             variant={isMatch ? 'h6' : 'h5'}
                         >

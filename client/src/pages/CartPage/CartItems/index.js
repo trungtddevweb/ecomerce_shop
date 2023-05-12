@@ -39,7 +39,7 @@ const CartItems = ({ onNext, isMatch }) => {
     const [products, setProducts] = useState([])
     const [isCheckedAll, setIsCheckedAll] = useState(false)
     const [loading, setLoading] = useState(false)
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth.user?.token)
     const dispatch = useDispatch()
     const totalQuantity = useMemo(
         () => checked.reduce((accumulator, currentValue) => accumulator + currentValue.quantity, 0),
@@ -233,7 +233,7 @@ const CartItems = ({ onNext, isMatch }) => {
                                                         secondary={
                                                             <>
                                                                 <Typography component='span' variant='body2'>
-                                                                    Giá: {product.sumPrice?.toLocaleString('vi-VN')} VNĐ
+                                                                    Giá: {product.sumPrice?.toLocaleString('vi-VN')} đ
                                                                 </Typography>
                                                                 {' | '}
                                                                 <Typography component='span' variant='body2'>
@@ -299,7 +299,7 @@ const CartItems = ({ onNext, isMatch }) => {
                                 <Stack direction='row' justifyContent='space-between'>
                                     <Typography variant='h6'>Tổng số tiền</Typography>
                                     <Typography variant='h6' color='error'>
-                                        {totalPrice.toLocaleString('vi-VN')} VNĐ
+                                        {totalPrice.toLocaleString('vi-VN')} đ
                                     </Typography>
                                 </Stack>
                             </CardContent>

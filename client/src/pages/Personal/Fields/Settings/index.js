@@ -9,7 +9,7 @@ import { showToast } from 'src/redux/slice/toastSlice'
 import { updatedUser } from 'src/redux/slice/usersSlice'
 
 const Settings = () => {
-    const token = localStorage.getItem('token')
+    const token = useSelector(state => state.auth.user?.token)
     const [isEdit, setIsEdit] = useState(false)
     const classes = useStyles()
     const dispatch = useDispatch()

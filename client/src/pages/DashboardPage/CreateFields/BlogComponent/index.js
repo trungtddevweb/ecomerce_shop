@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab'
 
 const BlogComponent = ({ isMatch }) => {
     const [isLoading, setIsLoading] = useState(false)
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth.user?.token)
     const dispatch = useDispatch()
     const {
         register,

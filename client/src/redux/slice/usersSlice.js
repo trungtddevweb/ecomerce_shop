@@ -15,6 +15,7 @@ export const userSlice = createSlice({
         logoutSuccess: state => {
             state.user = null
             state.products = []
+            state.info = null
         },
         updatedUser: (state, action) => {
             state.info = action.payload
