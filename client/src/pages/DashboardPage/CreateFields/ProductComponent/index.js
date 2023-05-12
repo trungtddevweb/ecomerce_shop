@@ -26,6 +26,7 @@ const ProductComponent = ({ isMatch }) => {
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors }
     } = useForm()
 
@@ -52,7 +53,7 @@ const ProductComponent = ({ isMatch }) => {
         })
 
         const sizesChange = data.sizes
-        sizesChange.forEach(size => {
+        sizesChange?.forEach(size => {
             formData.append('sizes', size)
         })
 
@@ -71,6 +72,7 @@ const ProductComponent = ({ isMatch }) => {
             if (res.status === 201) {
                 setIsLoading(false)
                 dispatch(showToast({ type: 'success', message: 'Tạo mới sản phẩm thành công!' }))
+                reset()
             }
         } catch (err) {
             console.error(err)

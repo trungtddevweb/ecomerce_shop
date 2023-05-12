@@ -13,6 +13,7 @@ const BlogComponent = ({ isMatch }) => {
     const dispatch = useDispatch()
     const {
         register,
+        reset,
         handleSubmit,
         formState: { errors }
     } = useForm()
@@ -28,6 +29,7 @@ const BlogComponent = ({ isMatch }) => {
             if (res.status === 201) {
                 dispatch(showToast({ type: 'success', message: 'Tạo mới bài viết thành công!' }))
                 setIsLoading(false)
+                reset()
             }
         } catch (err) {
             console.error(err)

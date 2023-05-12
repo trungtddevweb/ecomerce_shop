@@ -12,6 +12,7 @@ const ContactForm = () => {
 
     const sendEmail = e => {
         e.preventDefault()
+        setIsLoading(true)
         toast
             .promise(emailjs.sendForm('service_v4tix23', 'template_nlr2obv', form.current, 'd1CBIhunT7-fyL3nu'), {
                 pending: 'Đang gửi thư',
@@ -39,7 +40,6 @@ const ContactForm = () => {
                             <Grid container spacing={2}>
                                 <Grid xs={12} sm={6} item>
                                     <TextField
-                                        placeholder='Nhập họ'
                                         label='Họ'
                                         variant='outlined'
                                         name='user_fname'
@@ -50,7 +50,6 @@ const ContactForm = () => {
                                 </Grid>
                                 <Grid xs={12} sm={6} item>
                                     <TextField
-                                        placeholder='Nhập tên'
                                         label='Tên '
                                         variant='outlined'
                                         name='user_lname'
@@ -63,7 +62,6 @@ const ContactForm = () => {
                                 <Grid item xs={12}>
                                     <TextField
                                         type='email'
-                                        placeholder='Enter email'
                                         name='user_email'
                                         label='Email'
                                         variant='outlined'
@@ -75,7 +73,6 @@ const ContactForm = () => {
                                 <Grid item xs={12}>
                                     <TextField
                                         type='number'
-                                        placeholder='Nhập số điện thoại'
                                         name='user_number'
                                         label='Số điện thoại'
                                         variant='outlined'
@@ -89,7 +86,6 @@ const ContactForm = () => {
                                         label='Nội dung'
                                         multiline
                                         rows={4}
-                                        placeholder='Nhập lời nhắn...'
                                         name='user_message'
                                         variant='outlined'
                                         fullWidth
