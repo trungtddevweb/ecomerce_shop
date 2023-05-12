@@ -121,6 +121,7 @@ const ListPostsBlog = () => {
                                                 <Typography
                                                     variant='body2'
                                                     color='text.secondary'
+                                                    sx={{ minHeight: '80px' }}
                                                     component='div'
                                                     className={classes.limitLines}
                                                 >

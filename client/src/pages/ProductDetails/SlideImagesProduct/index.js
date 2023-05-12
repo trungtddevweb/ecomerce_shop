@@ -62,11 +62,11 @@ const SliderImagesProduct = ({ images, isMatch }) => {
             <Slider asNavFor={subNav} arrows={false} prevArrow={false} nextArrow={false} fade ref={slider1}>
                 {productImages?.map(img => (
                     <Box elevation={6} key={img}>
-                        <Image height={500} src={img} alt='' />
+                        <Image width='100%' height={500} src={img} alt='' />
                     </Box>
                 ))}
             </Slider>
-            <Slider asNavFo r={nav} ref={slider2} swipeToSlide={true} focusOnSelect={true} {...settings}>
+            <Slider asNavFor={nav} ref={slider2} swipeToSlide={true} focusOnSelect={true} {...settings}>
                 {productImages?.map(img => (
                     <Box key={img}>
                         <Image
