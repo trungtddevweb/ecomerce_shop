@@ -107,7 +107,7 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
             id: 'price',
             numeric: true,
             disablePadding: false,
-            label: 'Giá(VNĐ)'
+            label: 'Giá(đ)'
         },
         {
             id: 'category',

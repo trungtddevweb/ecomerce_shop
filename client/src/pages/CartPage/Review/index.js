@@ -21,7 +21,7 @@ import useStyles from '~/assets/styles/useStyles'
 export default function Review({ order, onBack, onNext, setOrderCode, isMatch }) {
     const { products, address, paymentMethod } = order
     const dispatch = useDispatch()
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth.user?.token)
     const isPaid = paymentMethod === 'credit'
     const classes = useStyles()
 
@@ -104,7 +104,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
                                 </Grid>
                                 <Grid item xs={4} className={isMatch ? classes.flexBox : 'd-flex justify-content-end'}>
                                     <Typography fontWeight={600} color='error' variant='body2'>
-                                        {product.sumPrice?.toLocaleString('vi-VN')} VNĐ
+                                        {product.sumPrice?.toLocaleString('vi-VN')} đ
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -112,14 +112,14 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
                     ))}
                     <ListItem sx={{ py: 1, px: 0 }}>
                         <ListItemText primary={<Typography fontWeight={600}>Phí vận chuyển</Typography>} />
-                        <Typography>{`0 VNĐ (Freeship)`}</Typography>
+                        <Typography>{`0 đ (Freeship)`}</Typography>
                     </ListItem>
                     <Divider variant='fullWidth' component='div' />
 
                     <ListItem sx={{ py: 1, px: 0 }}>
                         <ListItemText primary={<Typography fontWeight={600}>Tổng tiền</Typography>} />
                         <Typography variant='subtitle1' color='error' sx={{ fontWeight: 700 }}>
-                            {totalPrice.toLocaleString('vi-VN')} VNĐ
+                            {totalPrice.toLocaleString('vi-VN')} đ
                         </Typography>
                     </ListItem>
                 </List>

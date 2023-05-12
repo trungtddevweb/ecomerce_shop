@@ -45,7 +45,7 @@ const Login = () => {
             const res = await loginAPI(data)
             dispatch(login(res))
             setLoading(false)
-            navigate('/')
+            navigate(-1)
         } catch (err) {
             setLoading(false)
             setError(err.response.data.message)

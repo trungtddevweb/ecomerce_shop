@@ -64,7 +64,7 @@ const RandomProduct = ({ nameValue, isMatch }) => {
                                     >
                                         {item.name}
                                     </Typography>
-                                    <Typography color='error'>{item.price.toLocaleString('vi-VN')} VNĐ</Typography>
+                                    <Typography color='error'>{item.price.toLocaleString('vi-VN')} đ</Typography>
                                 </Stack>
                             </Stack>
                         </ListItemButton>

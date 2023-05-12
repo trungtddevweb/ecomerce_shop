@@ -101,7 +101,7 @@ export default function CustomPaginationActionsTable() {
 
     const [orders, setOrders] = useState([])
     const [loading, setLoading] = useState(false)
-    const token = useSelector(state => state.auth?.user.token)
+    const token = useSelector(state => state.auth.user?.token)
 
     useLayoutEffect(() => {
         const fetchOrder = async () => {

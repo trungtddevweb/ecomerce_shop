@@ -19,7 +19,7 @@ import { showToast } from 'src/redux/slice/toastSlice'
 import { optionValueSizes } from 'src/utils/const'
 const ProductComponent = ({ isMatch }) => {
     const [files, setFiles] = useState([])
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth.user?.token)
     const [isLoading, setIsLoading] = useState(false)
     const dispatch = useDispatch()
 
@@ -126,7 +126,7 @@ const ProductComponent = ({ isMatch }) => {
                                 label='Giá'
                                 variant='outlined'
                                 InputProps={{
-                                    endAdornment: <InputAdornment position='end'>VNĐ</InputAdornment>
+                                    endAdornment: <InputAdornment position='end'>đ</InputAdornment>
                                 }}
                                 required
                                 defaultValue={1}

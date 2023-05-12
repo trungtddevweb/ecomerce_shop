@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addProductToCart } from 'src/redux/slice/usersSlice'
 import { showToast } from 'src/redux/slice/toastSlice'
 import useScrollToTop from '~/hooks/useScrollToTop'
+import { showDialog } from 'src/redux/slice/dialogSlice'
 const AnotherProductByCategory = lazy(() => import('./AnotherProduct'))
 const SliderImagesProduct = lazy(() => import('./SlideImagesProduct'))
 
@@ -34,7 +35,7 @@ const ProductDetails = () => {
     const { productId } = useParams()
     const classes = useStyles()
     const [countQuantity, setCountQuantity] = useState(1)
-    const token = useSelector(state => state.auth.user.token)
+    const token = useSelector(state => state.auth.user?.token)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const totalPrice = Number(product.price * countQuantity) || 0
@@ -95,7 +96,21 @@ const ProductDetails = () => {
         }
     }
 
+    const navigateToLoginPage = () => {
+        navigate('/login')
+    }
+
     const handleAddToCart = async () => {
+        if (!token) {
+            return dispatch(
+                showDialog({
+                    title: 'Thông báo',
+                    message: 'Bạn cần phải đăng nhập để thực hiện chức năng này',
+                    onConfirm: () => navigateToLoginPage()
+                })
+            )
+        }
+
         try {
             const data = {
                 productId: product._id,
@@ -113,6 +128,15 @@ const ProductDetails = () => {
         }
     }
     const handleBuyNow = async () => {
+        if (!token) {
+            return dispatch(
+                showDialog({
+                    title: 'Thông báo',
+                    message: 'Bạn cần phải đăng nhập để thực hiện chức năng này',
+                    onConfirm: () => navigateToLoginPage()
+                })
+            )
+        }
         try {
             const data = {
                 productId: product._id,
@@ -286,7 +310,7 @@ const ProductDetails = () => {
                                     Trong kho còn lại {product.quantity}
                                 </Typography>
                                 <Typography marginY={2} variant={isMatch ? 'h6' : 'h4'} color='red'>
-                                    Giá: {totalPrice.toLocaleString('vi-VN')} VNĐ
+                                    Giá: {totalPrice.toLocaleString('vi-VN')} đ
                                 </Typography>
                                 <Stack direction='row' spacing={2}>
                                     <Button

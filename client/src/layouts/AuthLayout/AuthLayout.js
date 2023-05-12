@@ -1,16 +1,14 @@
-import { useSelector } from "react-redux"
-import { Navigate, Outlet } from "react-router-dom"
+import { Outlet } from 'react-router-dom'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 const AuthLayout = () => {
-    // Check if exist a user navigate to home page
-    const token = useSelector(state => state.auth.user?.token)
-
-    if (token) {
-        return <Navigate to='/' replace />
-    }
-
     return (
-        <Outlet />
+        <>
+            <Header />
+            <Outlet />
+            <Footer />
+        </>
     )
 }
 

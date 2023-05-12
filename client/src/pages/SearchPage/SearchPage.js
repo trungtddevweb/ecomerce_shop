@@ -151,7 +151,7 @@ const SearchPage = () => {
                                                                             Giá tiền:{' '}
                                                                             <Typography component='span' color='error'>
                                                                                 {product.price.toLocaleString('vi-VN')}{' '}
-                                                                                VNĐ
+                                                                                đ
                                                                             </Typography>
                                                                         </Typography>
                                                                     </Stack>

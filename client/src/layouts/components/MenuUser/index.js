@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '~/api/main'
 import {
     Avatar,
+    Button,
     Fade,
     ListItemIcon,
     Menu,
@@ -20,6 +21,7 @@ import routes from 'src/utils/routes'
 import { Link, useNavigate } from 'react-router-dom'
 import useStyles from '~/assets/styles/useStyles'
 import CustomBackDrop from '~/components/BackDrop'
+import { showToast } from 'src/redux/slice/toastSlice'
 
 const MenuUser = ({ onClose, onLoading }) => {
     const [anchorEl, setAnchorEl] = useState(null)
@@ -32,7 +34,7 @@ const MenuUser = ({ onClose, onLoading }) => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth.info)
     const open = Boolean(anchorEl)
-    const token = localStorage.getItem('token')
+    const token = useSelector(state => state.auth.user?.token)
 
     const handleClick = event => {
         setAnchorEl(event.currentTarget)
@@ -55,8 +57,8 @@ const MenuUser = ({ onClose, onLoading }) => {
         try {
             await logout(token)
             dispatch(logoutSuccess())
+            dispatch(showToast({ type: 'success', message: 'Đăng xuất thành công!' }))
             checkFunction(false)
-            navigate('/login')
         } catch (error) {
             checkFunction(false)
             console.error('Error; ', error)
@@ -64,7 +66,18 @@ const MenuUser = ({ onClose, onLoading }) => {
         }
     }
 
-    return (
+    return !user ? (
+        <Link to={routes.login.path}>
+            <Button
+                sx={{
+                    ml: 2
+                }}
+                variant='contained'
+            >
+                Đăng nhập
+            </Button>
+        </Link>
+    ) : (
         <>
             <Stack
                 id='fade-button'
