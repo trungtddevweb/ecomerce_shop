@@ -127,8 +127,13 @@ const CartPage = () => {
                         </Stepper>
                     </Paper>
                 )}
-                {activeStep === stepsCart.length ? (
-                    <Box className={classes.flexBox}>
+                {!activeStep === stepsCart.length ? (
+                    <Box
+                        className={classes.flexBox}
+                        sx={{
+                            minHeight: '60vh'
+                        }}
+                    >
                         <Card
                             sx={{
                                 marginTop: '24px',
@@ -152,7 +157,7 @@ const CartPage = () => {
                             </Typography>
                             <Box className={classes.flexBox} gap={4} flexDirection='column'>
                                 {' '}
-                                <Image src={shippingImage} duration={500} alt='Shiping' width={200} />
+                                <Image src={shippingImage} duration={0} alt='Shiping' width={200} />
                                 <Button variant='contained' component={Link} to='/' startIcon={<KeyboardReturn />}>
                                     Trang chủ
                                 </Button>
