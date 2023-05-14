@@ -180,3 +180,12 @@ export const getOrderByUserIdAPI = async (token, limit, pageSize) => {
         }
     })
 }
+
+//Voucher
+export const createVoucherAPI = async (data, token) => {
+    return await mainAPI.post('/vouchers', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
