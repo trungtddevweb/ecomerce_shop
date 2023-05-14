@@ -3,6 +3,7 @@ import { Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
 import ProductComponent from './ProductComponent'
 import BlogComponent from './BlogComponent'
+import VoucherComponent from './VoucherComponent/Voucher'
 
 const CreateFields = ({ isMatch }) => {
     const [value, setValue] = useState('product')
@@ -11,7 +12,14 @@ const CreateFields = ({ isMatch }) => {
         setValue(newValue)
     }
     function getComponent(value) {
-        return value === 'product' ? <ProductComponent isMatch={isMatch} /> : <BlogComponent isMatch={isMatch} />
+        if (value === 'product') {
+            return <ProductComponent isMatch={isMatch} />
+        } else if (value === 'blog') {
+            return <BlogComponent isMatch={isMatch} />
+        } else {
+            return <VoucherComponent isMatch={isMatch} />
+        }
+        // return value === 'product' ? <ProductComponent isMatch={isMatch} /> : <BlogComponent isMatch={isMatch} />
     }
 
     return (
@@ -21,6 +29,7 @@ const CreateFields = ({ isMatch }) => {
                     <TabList onChange={handleChange} aria-label='lab API tabs example'>
                         <Tab label='Sản phẩm' value='product' />
                         <Tab label='Bài viết' value='blog' />
+                        <Tab label='Giảm giá' value='voucher' />
                     </TabList>
                 </Box>
                 <TabPanel value={value}>{getComponent(value)}</TabPanel>
