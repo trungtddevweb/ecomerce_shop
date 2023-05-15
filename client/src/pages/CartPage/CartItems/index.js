@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, Fragment } from 'react'
-import { Delete, ExpandLess, ExpandMore } from '@mui/icons-material'
+import { Close, Delete, ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
     Box,
     Card,
@@ -35,7 +35,7 @@ import paymentMethod from '~/assets/imgs/payment.png'
 import { showDialog } from 'src/redux/slice/dialogSlice'
 import useScrollToTop from '~/hooks/useScrollToTop'
 
-const CartItems = ({ onNext, isMatch }) => {
+const CartItems = ({ onNext, isMatch, setVoucher }) => {
     useScrollToTop()
     const classes = useStyles()
     const token = useSelector(state => state.auth.user?.token)
@@ -61,6 +61,11 @@ const CartItems = ({ onNext, isMatch }) => {
     )
 
     let sumPrice = totalPrice - discount
+    useEffect(() => {
+        if (discount !== 0 && checked === []) {
+            setDiscount(0)
+        }
+    }, [checked, discount])
 
     useEffect(() => {
         const fetchCartOfUser = async () => {
@@ -74,11 +79,20 @@ const CartItems = ({ onNext, isMatch }) => {
                 console.error(error)
             }
         }
+
         fetchCartOfUser()
     }, [token])
 
+    useEffect(() => {
+        if (checked.length === 0) {
+            setDiscount(0)
+            setIsEditAble(true)
+        }
+    }, [checked])
+
     const handleNextClick = () => {
         onNext(checked)
+        setVoucher(discount)
     }
 
     const handleToggle = value => () => {
@@ -98,6 +112,7 @@ const CartItems = ({ onNext, isMatch }) => {
 
         setChecked(newChecked)
     }
+    // console.log('Discount===🚀🚀🚀🚀:', discount)
 
     const handleCheckAll = () => {
         if (isCheckedAll) {
@@ -368,7 +383,18 @@ const CartItems = ({ onNext, isMatch }) => {
                                             </Button>
                                         </>
                                     ) : (
-                                        <Typography p={1}>{voucherCode}</Typography>
+                                        <Stack direction='row' justifyContent='space-between'>
+                                            <Typography p={1}>{voucherCode}</Typography>
+                                            <IconButton
+                                                onClick={() => {
+                                                    setIsEditAble(true)
+                                                    setDiscount(0)
+                                                }}
+                                                aria-label='close voucher'
+                                            >
+                                                <Close fontSize='small' />
+                                            </IconButton>
+                                        </Stack>
                                     )}
                                 </Box>
                             </Collapse>

@@ -1,5 +1,4 @@
 import {
-    Box,
     Button,
     ListItemText,
     Grid,
@@ -18,7 +17,7 @@ import { showToast } from 'src/redux/slice/toastSlice'
 import { orderProductAPI } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
-export default function Review({ order, onBack, onNext, setOrderCode, isMatch }) {
+export default function Review({ order, onBack, onNext, setOrderCode, isMatch, voucher }) {
     const { products, address, paymentMethod } = order
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user?.token)
@@ -29,6 +28,8 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
         () => products.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
         [products]
     )
+    const sumPrice = totalPrice - voucher
+
     const newProducts = products.map(product => ({
         productId: product.productId,
         name: product.productId.name,
@@ -49,8 +50,10 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
         products: newProducts,
         paymentMethod,
         shippingAddress,
-        isPaid
+        isPaid,
+        discount: voucher
     }
+
     const handleOrder = async () => {
         try {
             const res = await orderProductAPI(token, payload)
@@ -84,7 +87,9 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
                             <Grid container>
                                 <Grid item xs={8}>
                                     <ListItemText
-                                        primary={<Typography fontWeight={600}>{product.productId.name}</Typography>}
+                                        primary={
+                                            <Typography className={classes.title}>{product.productId.name}</Typography>
+                                        }
                                         secondary={
                                             <>
                                                 <Typography component='span' variant='body2'>
@@ -102,7 +107,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
                                         }
                                     />
                                 </Grid>
-                                <Grid item xs={4} className={isMatch ? classes.flexBox : 'd-flex justify-content-end'}>
+                                <Grid item xs={4} className='d-flex align-items-center justify-content-end'>
                                     <Typography fontWeight={600} color='error' variant='body2'>
                                         {product.sumPrice?.toLocaleString('vi-VN')} đ
                                     </Typography>
@@ -111,15 +116,22 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch })
                         </ListItem>
                     ))}
                     <ListItem sx={{ py: 1, px: 0 }}>
+                        <ListItemText primary={<Typography fontWeight={600}>Voucher</Typography>} />
+                        <Typography variant='body2' fontWeight={600} color='error'>
+                            {' '}
+                            - {voucher.toLocaleString('vi-VN')} đ
+                        </Typography>
+                    </ListItem>
+                    <ListItem sx={{ py: 1, px: 0 }}>
                         <ListItemText primary={<Typography fontWeight={600}>Phí vận chuyển</Typography>} />
-                        <Typography>{`0 đ (Freeship)`}</Typography>
+                        <Typography>0 đ</Typography>
                     </ListItem>
                     <Divider variant='fullWidth' component='div' />
 
                     <ListItem sx={{ py: 1, px: 0 }}>
                         <ListItemText primary={<Typography fontWeight={600}>Tổng tiền</Typography>} />
                         <Typography variant='subtitle1' color='error' sx={{ fontWeight: 700 }}>
-                            {totalPrice.toLocaleString('vi-VN')} đ
+                            {sumPrice.toLocaleString('vi-VN')} đ
                         </Typography>
                     </ListItem>
                 </List>
