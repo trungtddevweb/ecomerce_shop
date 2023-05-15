@@ -183,11 +183,16 @@ export const getOrderByUserIdAPI = async (token, limit, pageSize) => {
 
 //Voucher
 export const createVoucherAPI = async (data, token) => {
-    return await mainAPI.post('/vouchers', data, {
+    const response = await mainAPI.post('/vouchers', data, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     })
+    return response.data
+}
+
+export const getAVoucher = async (voucherCode, token) => {
+    return await mainAPI.post('/vouchers/find', { voucherCode }, { headers: { Authorization: `Bearer ${token}` } })
 }
 
 export const getAllVouchers = async (limit, pageSize, token) => {

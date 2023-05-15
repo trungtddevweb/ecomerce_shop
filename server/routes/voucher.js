@@ -7,7 +7,7 @@ const router = express.Router()
 router.post('/', createVoucher)
 
 // Get a voucher
-router.get('/', getAVoucher)
+router.post('/find', getAVoucher)
 
 // Get all voucher
 router.get('/all-vouchers', getAllVoucher)

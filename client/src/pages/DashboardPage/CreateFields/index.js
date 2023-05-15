@@ -19,7 +19,6 @@ const CreateFields = ({ isMatch }) => {
         } else {
             return <VoucherComponent isMatch={isMatch} />
         }
-        // return value === 'product' ? <ProductComponent isMatch={isMatch} /> : <BlogComponent isMatch={isMatch} />
     }
 
     return (
@@ -29,7 +28,7 @@ const CreateFields = ({ isMatch }) => {
                     <TabList onChange={handleChange} aria-label='lab API tabs example'>
                         <Tab label='Sản phẩm' value='product' />
                         <Tab label='Bài viết' value='blog' />
-                        <Tab label='Giảm giá' value='voucher' />
+                        <Tab label='Mã giảm giá' value='voucher' />
                     </TabList>
                 </Box>
                 <TabPanel value={value}>{getComponent(value)}</TabPanel>
