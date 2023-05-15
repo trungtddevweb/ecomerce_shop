@@ -3,6 +3,13 @@ import mongoosePageinate from 'mongoose-paginate-v2'
 
 const { Schema } = mongoose
 
+const Voucher = new Schema({
+    voucherId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Voucher'
+    }
+})
+
 const ProductItem = new Schema(
     {
         productId: {
@@ -58,6 +65,7 @@ const UserSchema = new Schema(
             type: Boolean,
             default: false
         },
+        voucher: [Voucher],
         products: [ProductItem],
         totalItems: { type: Number, default: 0 },
         tokens: [{ type: Object }]

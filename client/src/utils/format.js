@@ -56,3 +56,20 @@ export function formatExpirationDate(value) {
 export function formatFormData(data) {
     return Object.keys(data).map(d => `${d}: ${data[d]}`)
 }
+
+function formatNumber(input) {
+    // Lấy giá trị số nhập vào
+    const value = input.valueAsNumber
+
+    // Kiểm tra nếu giá trị không phải là NaN
+    if (!isNaN(value)) {
+        // Định dạng giá trị số theo định dạng tiền tệ vi-VN
+        const formattedValue = value.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        })
+
+        // Cập nhật giá trị định dạng vào TextField
+        input.value = formattedValue
+    }
+}
