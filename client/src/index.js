@@ -11,6 +11,9 @@ import { CssBaseline } from '@mui/material'
 import ErrorBoundaryCustom from './components/ErrorBoundary'
 import { ToastContainer } from 'react-toastify'
 import ConfirmDialog from './components/ConfirmDialog'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 const LazyApp = lazy(() => import('./App'))
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
@@ -22,7 +25,9 @@ root.render(
                 <ErrorBoundaryCustom>
                     <Suspense fallback={<SpinnerAnimation />}>
                         <ThemeProvider theme={theme}>
-                            <LazyApp />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <LazyApp />
+                            </LocalizationProvider>
                         </ThemeProvider>
                     </Suspense>
                 </ErrorBoundaryCustom>
