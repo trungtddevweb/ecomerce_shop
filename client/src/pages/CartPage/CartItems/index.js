@@ -1,4 +1,5 @@
-import { Delete } from '@mui/icons-material'
+import { useEffect, useState, useMemo, Fragment } from 'react'
+import { Delete, ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
     Box,
     Card,
@@ -16,16 +17,18 @@ import {
     Divider,
     Tooltip,
     CardContent,
-    Button
+    Button,
+    Collapse,
+    TextField,
+    Paper
 } from '@mui/material'
 import Image from 'mui-image'
-import { useEffect, useState, useMemo, Fragment } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import LinearIndeterminate from 'src/fallback/LinearProgress/LinearProgress'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { removeProductFromCart } from 'src/redux/slice/usersSlice'
-import { getAUserAPI, removeProductIdFromCartAPI } from '~/api/main'
+import { getAUserAPI, getAVoucher, removeProductIdFromCartAPI } from '~/api/main'
 import images from '~/assets/imgs'
 import useStyles from '~/assets/styles/useStyles'
 import paymentMethod from '~/assets/imgs/payment.png'
@@ -35,12 +38,19 @@ import useScrollToTop from '~/hooks/useScrollToTop'
 const CartItems = ({ onNext, isMatch }) => {
     useScrollToTop()
     const classes = useStyles()
+    const token = useSelector(state => state.auth.user?.token)
+    const dispatch = useDispatch()
+
+    const [open, setOpen] = useState(false)
+    const [discount, setDiscount] = useState(0)
+    const [voucherCode, setVoucherCode] = useState('')
     const [checked, setChecked] = useState([])
     const [products, setProducts] = useState([])
     const [isCheckedAll, setIsCheckedAll] = useState(false)
     const [loading, setLoading] = useState(false)
-    const token = useSelector(state => state.auth.user?.token)
-    const dispatch = useDispatch()
+    const [error, setError] = useState(null)
+    const [isEditable, setIsEditAble] = useState(true)
+
     const totalQuantity = useMemo(
         () => checked.reduce((accumulator, currentValue) => accumulator + currentValue.quantity, 0),
         [checked]
@@ -49,6 +59,8 @@ const CartItems = ({ onNext, isMatch }) => {
         () => checked.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
         [checked]
     )
+
+    let sumPrice = totalPrice - discount
 
     useEffect(() => {
         const fetchCartOfUser = async () => {
@@ -122,6 +134,20 @@ const CartItems = ({ onNext, isMatch }) => {
                 onConfirm: () => handleDelete(checked)
             })
         )
+    }
+
+    const handleGetVoucher = async () => {
+        try {
+            const res = await getAVoucher(voucherCode, token)
+            if (res.status === 200) {
+                setDiscount(res.data.discount)
+                setIsEditAble(false)
+                dispatch(showToast({ type: 'success', message: 'Áp dụng mã thành công!' }))
+            }
+        } catch (error) {
+            console.log(error)
+            setError(error.response.data)
+        }
     }
 
     return (
@@ -270,7 +296,7 @@ const CartItems = ({ onNext, isMatch }) => {
                 </Grid>
                 <Grid item md={4} xs={12}>
                     <Card position='sticky' className='card mb-4'>
-                        <CardHeader title='Tổng giá' className='card-header py-3' />
+                        <CardHeader title='Tổng giá' className='card-header' />
                         <CardContent>
                             <Box>
                                 <Stack direction='row' justifyContent='space-between'>
@@ -283,6 +309,12 @@ const CartItems = ({ onNext, isMatch }) => {
                                     <Typography variant='h6'>Tổng số lượng</Typography>
                                     <Typography variant='h6' color='primary'>
                                         {totalQuantity}
+                                    </Typography>
+                                </Stack>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography variant='h6'>Mã giảm giá</Typography>
+                                    <Typography variant='h6' color='primary'>
+                                        {discount?.toLocaleString('vi-VN') + ' đ' || 'Chưa áp dụng'}
                                     </Typography>
                                 </Stack>
                                 <Stack direction='row' justifyContent='space-between'>
@@ -299,12 +331,49 @@ const CartItems = ({ onNext, isMatch }) => {
                                 <Stack direction='row' justifyContent='space-between'>
                                     <Typography variant='h6'>Tổng số tiền</Typography>
                                     <Typography variant='h6' color='error'>
-                                        {totalPrice.toLocaleString('vi-VN')} đ
+                                        {sumPrice.toLocaleString('vi-VN')} đ
                                     </Typography>
                                 </Stack>
                             </CardContent>
                         </Box>
                     </Card>
+                    <Paper
+                        sx={{ display: checked.length === 0 && 'none', mb: 3, transition: 'all ease-in-out 0.3s' }}
+                        elevation={3}
+                        bgcolor='white'
+                    >
+                        <List disablePadding>
+                            <ListItem disablePadding onClick={() => setOpen(!open)}>
+                                <ListItemButton>
+                                    <ListItemText primary={<Typography variant='h6'>Nhập mã giảm giá</Typography>} />
+                                    {open ? <ExpandLess /> : <ExpandMore />}
+                                </ListItemButton>
+                            </ListItem>
+                            <Collapse in={open} timeout='auto' unmountOnExit>
+                                <Box component='form' minHeight={40} p={1}>
+                                    {isEditable ? (
+                                        <>
+                                            <Typography variant='body1' color='error'>
+                                                {error}
+                                            </Typography>
+                                            <TextField
+                                                fullWidth
+                                                value={voucherCode}
+                                                placeholder='Nhập mã...'
+                                                onChange={e => setVoucherCode(e.target.value)}
+                                                sx={{ mb: 1 }}
+                                            />
+                                            <Button onClick={handleGetVoucher} variant='outlined'>
+                                                Áp dụng
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <Typography p={1}>{voucherCode}</Typography>
+                                    )}
+                                </Box>
+                            </Collapse>
+                        </List>
+                    </Paper>
                     <Button onClick={handleNextClick} disabled={checked.length === 0} variant='contained'>
                         Đặt hàng ngay
                     </Button>
