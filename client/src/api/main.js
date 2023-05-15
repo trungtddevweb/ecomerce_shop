@@ -189,3 +189,12 @@ export const createVoucherAPI = async (data, token) => {
         }
     })
 }
+
+export const getAllVouchers = async (limit, pageSize, token) => {
+    const response = await mainAPI.get(`/vouchers/all-vouchers?limit=${limit}&page=${pageSize}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data
+}

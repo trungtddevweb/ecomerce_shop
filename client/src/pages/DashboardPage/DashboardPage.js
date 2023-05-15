@@ -21,10 +21,12 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Create, HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
+import DiscountIcon from '@mui/icons-material/Discount'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import BlogsDashboard from './Blogs/BlogsDashboard'
 import ProductsDashboard from './Products/ProductsDashboard'
 import CreateFields from './CreateFields'
+import Vouchers from './Vouchers/Vochers'
 import UsersDashBoard from './Users/UsersDashBoard'
 import useScrollToTop from '~/hooks/useScrollToTop'
 
@@ -60,6 +62,8 @@ const DashboardPage = () => {
                 return <BlogsDashboard />
             case 'create':
                 return <CreateFields isMatch={isMatch} />
+            case 'vouchers':
+                return <Vouchers />
             default:
                 return <ProductsDashboard />
         }
@@ -171,6 +175,15 @@ const DashboardPage = () => {
                                             <Create />
                                         </ListItemIcon>
                                         <ListItemText primary='Tạo mới' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'vouchers'}
+                                        onClick={event => handleListItemClick(event, 'vouchers')}
+                                    >
+                                        <ListItemIcon>
+                                            <DiscountIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Giảm giá' />
                                     </ListItemButton>
                                 </List>
                                 <ListItem
