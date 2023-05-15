@@ -26,6 +26,10 @@ const OrderSchema = new Schema(
             address: { type: String, required: true },
             phone: { type: String, required: true }
         },
+        discount: {
+            type: Number,
+            default: 0
+        },
         status: {
             type: String,
             enum: ['prepare', 'pending', 'delivering', 'delivered'],

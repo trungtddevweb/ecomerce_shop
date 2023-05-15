@@ -192,6 +192,5 @@ export const createVoucherAPI = async (data, token) => {
 }
 
 export const getAVoucher = async (voucherCode, token) => {
-    const res = await mainAPI.post('/vouchers/find', { voucherCode }, { headers: { Authorization: `Bearer ${token}` } })
-    return res.data
+    return await mainAPI.post('/vouchers/find', { voucherCode }, { headers: { Authorization: `Bearer ${token}` } })
 }

@@ -22,12 +22,14 @@ const CartPage = () => {
     const isMatchLg = useMediaQuery(theme.breakpoints.down('lg'))
     const classes = useStyles()
     const [orderCode, setOrderCode] = useState('')
+    const [voucher, setVoucher] = useState(null)
     const [order, setOrder] = useState({
         products: [],
         address: {},
         paymentMethod: {}
     })
     const [activeStep, setActiveStep] = useState(0)
+    console.log('voucher====🚀', voucher)
 
     const previousAddress = usePrevious(order.address)
     const previousPaymentMethod = usePrevious(order.paymentMethod)
@@ -81,7 +83,7 @@ const CartPage = () => {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <CartItems isMatch={isMatch} onNext={handleProductSelect} />
+                return <CartItems isMatch={isMatch} setVoucher={setVoucher} onNext={handleProductSelect} />
             case 1:
                 return <AddressForm isMatch={isMatch} onNext={handleAddressSelect} onBack={handleBack} />
             case 2:
@@ -96,6 +98,7 @@ const CartPage = () => {
             case 3:
                 return (
                     <Review
+                        voucher={voucher}
                         isMatch={isMatch}
                         onBack={handleBack}
                         onNext={handleNext}
