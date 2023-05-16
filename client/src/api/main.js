@@ -203,3 +203,21 @@ export const getAllVouchersAPI = async (limit, pageSize, token) => {
     })
     return response.data
 }
+
+export const getAllOrdersAPI = async (limit, page, token) => {
+    const response = await mainAPI.get(`/orders/all-order?limit=${limit}&page=${page}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data
+}
+
+export const getAllProductsInFlashSaleAPI = async (limit, page, token) => {
+    const response = await mainAPI.get(`/products/flash-sale/products?limit=${limit}&page=${page}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data
+}

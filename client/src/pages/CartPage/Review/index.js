@@ -11,7 +11,6 @@ import {
     Divider,
     Stack
 } from '@mui/material'
-import axios from 'axios'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
@@ -59,12 +58,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
 
     const handleOrder = async () => {
         try {
-            // const res = await orderProductAPI(token, payload)
-            const res = await axios.post('http://localhost:5000/api/orders/', payload, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            const res = await orderProductAPI(token, payload)
             if (res.status === 200) {
                 dispatch(showToast({ type: 'success', message: 'Đặt hàng thành công!' }))
                 setOrderCode(res.data.orderCode)

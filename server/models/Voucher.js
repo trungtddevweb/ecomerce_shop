@@ -31,6 +31,10 @@ const VoucherSchema = new Schema(
         used: {
             type: Number,
             default: 0
+        },
+        expired: {
+            type: Boolean,
+            default: false
         }
     },
     {

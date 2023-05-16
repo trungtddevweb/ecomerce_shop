@@ -140,20 +140,7 @@ const Settings = () => {
                                 )}
                             />
                         </Stack>
-                        <Stack direction='row'>
-                            <Typography variant='body1' fontWeight={600} minWidth={150}>
-                                Hạng hội viên:
-                            </Typography>
-                            <Typography>{user?.ranking || 'Chưa cập nhập'}</Typography>
-                        </Stack>
-                        <Stack direction='row'>
-                            <Stack direction='row'>
-                                <Typography variant='body1' fontWeight={600} minWidth={150}>
-                                    Vai trò
-                                </Typography>
-                                <Typography>{user.isAdmin ? 'Quản lý' : 'Khách hàng'}</Typography>
-                            </Stack>
-                        </Stack>
+
                         {isEdit && (
                             <Stack direction='row' spacing={1} justifyContent='flex-end'>
                                 <Button onClick={cancelEdit} color='error' variant='contained'>
@@ -201,6 +188,14 @@ const Settings = () => {
                                 Vai trò
                             </Typography>
                             <Typography>{user.isAdmin ? 'Quản lý' : 'Khách hàng'}</Typography>
+                        </Stack>
+                        <Stack direction='row'>
+                            <Stack direction='row'>
+                                <Typography variant='body1' fontWeight={600} minWidth={150}>
+                                    Số đơn hàng
+                                </Typography>
+                                <Typography>{user.ordersCount?.length}</Typography>
+                            </Stack>
                         </Stack>
                     </Grid>
                 )}

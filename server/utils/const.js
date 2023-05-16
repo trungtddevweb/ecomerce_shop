@@ -32,7 +32,9 @@ export const updateProductQuantities = async products => {
         if (!product || product.quantity <= 0) {
             throw new Error('Sản phẩm không có sẵn trong cửa hàng')
         }
-        return Product.findByIdAndUpdate(productId.productId._id, { $inc: { quantity: -productId.quantity } })
+        return Product.findByIdAndUpdate(productId.productId._id, {
+            $inc: { quantity: -productId.quantity, countPurchased: productId.quantity }
+        })
     })
 
     await Promise.all(updateOperations)

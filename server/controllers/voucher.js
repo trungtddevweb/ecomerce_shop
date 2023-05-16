@@ -44,6 +44,9 @@ export const getAVoucher = async (req, res) => {
     try {
         const voucher = await Voucher.findOne({ voucherCode })
         if (!voucher) return res.status(404).json('Không tìm thấy voucher!')
+        if (voucher.expired) {
+            return res.status(400).json('Voucher đã hết hạn!')
+        }
         res.status(200).json(voucher)
     } catch (error) {
         res.status(500).json({ success: false, error: error.message })

@@ -9,7 +9,6 @@ import { createVoucherAPI } from '~/api/main'
 import { DatePicker } from '@mui/x-date-pickers'
 import { LoadingButton } from '@mui/lab'
 import { yupResolver } from '@hookform/resolvers/yup'
-import axios from 'axios'
 
 const schema = yup.object().shape({
     voucherCode: yup
@@ -48,11 +47,7 @@ const Voucher = () => {
     const Voucher = async data => {
         try {
             setIsLoading(true)
-            await axios.post('http://localhost:5000/api/vouchers', data, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            await createVoucherAPI(data, token)
             dispatch(showToast({ type: 'success', message: 'Tạo voucher thành công!' }))
             setIsLoading(false)
             reset()
