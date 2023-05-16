@@ -29,7 +29,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
         [products]
     )
     const sumPrice = totalPrice - voucher
-    console.log(voucher)
+
     const newProducts = products.map(product => ({
         productId: product.productId,
         name: product.productId.name,
@@ -54,7 +54,6 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
         discount: voucher,
         voucherCode
     }
-    console.log(payload)
 
     const handleOrder = async () => {
         try {
