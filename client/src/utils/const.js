@@ -90,3 +90,5 @@ export const imagesSlider = [
     { src: banner2, alt: 'Slider 2' },
     { src: banner3, alt: 'Slider 3' }
 ]
+
+export const statusShipping = ['prepare', 'pending', 'delivering', 'delivered']

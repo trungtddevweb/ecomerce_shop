@@ -8,6 +8,7 @@ import connectDB from './connect.js'
 import routes from './routes/index.js'
 import cors from 'cors'
 import path from 'path'
+import runJobs from './jobs/index.js'
 
 // Used for environment variables
 dotenv.config()
@@ -32,6 +33,8 @@ app.use((err, req, res, next) => {
 })
 
 app.use('/api', routes)
+
+runJobs()
 
 const server = app.listen(process.env.PORT || 5001, () => {
     connectDB()

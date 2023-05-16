@@ -3,12 +3,15 @@ import { useState } from 'react'
 import { useStripe, useElements } from '@stripe/react-stripe-js'
 import { Box } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
+import { useDispatch } from 'react-redux'
+import { showToast } from 'src/redux/slice/toastSlice'
 
 export default function CheckoutForm({ onNext }) {
     const stripe = useStripe()
     const elements = useElements()
 
     const [isProcessing, setIsProcessing] = useState(false)
+    const dispatch = useDispatch()
 
     const handleSubmit = async e => {
         e.preventDefault()
@@ -27,6 +30,7 @@ export default function CheckoutForm({ onNext }) {
             })
             if (paymentIntent.status === 'succeeded') {
                 onNext('credit')
+                dispatch(showToast({ type: 'success', message: 'Thanh toán thành công!' }))
             }
             setIsProcessing(false)
         } catch (error) {
