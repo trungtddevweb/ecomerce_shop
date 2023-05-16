@@ -7,37 +7,36 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { TablePagination, TableRow, Typography } from '@mui/material'
+import { Chip, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { getAllUsers } from '~/api/main'
-import { useSelector } from 'react-redux'
+import { getAllVouchersAPI } from '~/api/main'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
+import { useSelector } from 'react-redux'
 import { formatDate } from 'src/utils/format'
 
-const UsersDashBoard = () => {
+const VouchersDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [isDeleting, setIsDeleting] = useState(true)
     const [order, setOrder] = useState('asc')
-    const [orderBy, setOrderBy] = useState('calories')
+    const [orderBy, setOrderBy] = useState('total')
     const [selected, setSelected] = useState([])
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [vouchers, setVouchers] = useState([])
     const [data, setData] = useState(null)
-    const [users, setUsers] = useState([])
-
     const token = useSelector(state => state.auth.user?.token)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getAllUsers(token, rowsPerPage, page + 1)
+                const response = await getAllVouchersAPI(rowsPerPage, page + 1, token)
+                setVouchers(response.docs)
                 setData(response)
-                setUsers(response.docs)
                 setIsLoading(false)
             } catch (error) {
                 setIsLoading(false)
@@ -45,8 +44,7 @@ const UsersDashBoard = () => {
             }
         }
         fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rowsPerPage, page, isDeleting])
+    }, [rowsPerPage, page, isDeleting, token])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -75,31 +73,48 @@ const UsersDashBoard = () => {
         })
         return stabilizedThis.map(el => el[0])
     }
-
     const headCells = [
         {
-            id: 'id',
+            id: 'voucherCode',
             numeric: false,
             disablePadding: true,
-            label: 'ID'
+            label: 'Mã voucher'
         },
         {
-            id: 'name',
+            id: 'discount',
             numeric: true,
             disablePadding: false,
-            label: 'Tên người dùng'
+            label: 'Giá giảm'
         },
         {
-            id: 'email',
+            id: 'startTime',
             numeric: true,
             disablePadding: false,
-            label: 'Email'
+            label: 'Bắt đầu'
         },
         {
-            id: 'date',
+            id: 'endTime',
             numeric: true,
             disablePadding: false,
-            label: 'Ngày tạo'
+            label: 'Kết thúc'
+        },
+        {
+            id: 'total',
+            numeric: true,
+            disablePadding: false,
+            label: 'Số lượng'
+        },
+        {
+            id: 'used',
+            numeric: true,
+            disablePadding: false,
+            label: 'Đã dùng'
+        },
+        {
+            id: 'status',
+            numeric: true,
+            disablePadding: false,
+            label: 'Trạng thái'
         }
     ]
 
@@ -109,10 +124,10 @@ const UsersDashBoard = () => {
         setOrderBy(property)
     }
 
-    const handleSelectAllClick = event => {
-        if (event.target.checked) {
-            const newSelected = users?.map(n => n._id)
-            setSelected(newSelected)
+    const handleSelectAllClick = e => {
+        if (e.target.checked) {
+            const checkedList = vouchers?.map(voucher => voucher._id)
+            setSelected(checkedList)
             return
         }
         setSelected([])
@@ -145,9 +160,9 @@ const UsersDashBoard = () => {
         setPage(0)
     }
 
-    // const handleChangeDense = (event) => {
-    //     setDense(event.target.checked);
-    // };
+    const handleChangeDense = event => {
+        setDense(event.target.checked)
+    }
 
     const isSelected = id => selected.includes(id)
     const count = data?.totalDocs || 0
@@ -158,10 +173,10 @@ const UsersDashBoard = () => {
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 <EnhancedTableToolbar
-                    setSelected={setSelected}
                     numSelected={selected.length}
                     selectedItem={selected}
                     setDeleting={setIsDeleting}
+                    setSelected={setSelected}
                 />
                 {isLoading ? (
                     <LinearIndeterminate />
@@ -169,23 +184,24 @@ const UsersDashBoard = () => {
                     <TableContainer>
                         <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
                             <EnhancedTableHead
+                                page={page}
                                 headCells={headCells}
                                 numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
                                 onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
-                                rowCount={count}
+                                rowCount={vouchers?.length}
                             />
+
                             <TableBody>
-                                {stableSort(users, getComparator(order, orderBy)).map((row, index) => {
+                                {stableSort(vouchers, getComparator(order, orderBy)).map((row, index) => {
                                     const isItemSelected = isSelected(row._id)
                                     const labelId = `enhanced-table-checkbox-${index}`
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -195,6 +211,7 @@ const UsersDashBoard = () => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -202,12 +219,74 @@ const UsersDashBoard = () => {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell component='th' id={labelId} scope='row' padding='none'>
-                                                {row._id}
+                                            <TableCell
+                                                sx={{
+                                                    maxWidth: '120px',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis'
+                                                }}
+                                                component='th'
+                                                id={labelId}
+                                                scope='row'
+                                                padding='none'
+                                            >
+                                                {row.voucherCode}
                                             </TableCell>
-                                            <TableCell align='right'>{row.name}</TableCell>
-                                            <TableCell align='right'>{row.email}</TableCell>
-                                            <TableCell align='right'>{formatDate(row.createdAt)}</TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis'
+                                                }}
+                                                align='right'
+                                            >
+                                                {row.discount.toLocaleString('vi-VN')}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    maxWidth: '160px'
+                                                }}
+                                                align='right'
+                                            >
+                                                {formatDate(row.startTime)}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '120px'
+                                                }}
+                                                align='right'
+                                            >
+                                                {formatDate(row.endTime)}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '120px'
+                                                }}
+                                                align='right'
+                                            >
+                                                {row.total}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '120px'
+                                                }}
+                                                align='right'
+                                            >
+                                                {row.used}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '125px'
+                                                }}
+                                                align='right'
+                                            >
+                                                <Chip
+                                                    size='small'
+                                                    label={row.used !== row.total ? 'Khả dụng' : 'Hết mã'}
+                                                    color={row.used !== row.total ? 'success' : 'default'}
+                                                />
+                                            </TableCell>
                                         </TableRow>
                                     )
                                 })}
@@ -222,7 +301,7 @@ const UsersDashBoard = () => {
                                 )}
                             </TableBody>
                         </Table>
-                        {users.length === 0 && (
+                        {vouchers.length === 0 && (
                             <Box
                                 margin='auto'
                                 display='flex'
@@ -251,4 +330,4 @@ const UsersDashBoard = () => {
     )
 }
 
-export default withFallback(UsersDashBoard, ErrorFallback, LinearIndeterminate)
+export default withFallback(VouchersDashboard, ErrorFallback, LinearIndeterminate)

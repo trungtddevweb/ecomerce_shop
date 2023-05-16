@@ -21,6 +21,11 @@ export const optionsQueryAnotherProduct = {
     page: 1
 }
 
+export const optionsVouchers = {
+    limit: 5,
+    page: 1
+}
+
 export const stepsCart = [
     'Chọn sản phẩm',
     'Nhập địa chỉ',

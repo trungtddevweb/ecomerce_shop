@@ -29,7 +29,7 @@ import { Link } from 'react-router-dom'
 import LinearIndeterminate from 'src/fallback/LinearProgress/LinearProgress'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { removeProductFromCart } from 'src/redux/slice/usersSlice'
-import { getAUserAPI, getAVoucher, removeProductIdFromCartAPI } from '~/api/main'
+import { getAUserAPI, getAVoucherAPI, removeProductIdFromCartAPI } from '~/api/main'
 import images from '~/assets/imgs'
 import useStyles from '~/assets/styles/useStyles'
 import paymentMethod from '~/assets/imgs/payment.png'
@@ -158,7 +158,7 @@ const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode })
 
     const handleGetVoucher = async () => {
         try {
-            const res = await getAVoucher(voucherCode, token)
+            const res = await getAVoucherAPI(voucherCode, token)
             const { total, used } = res.data
             if (res.status === 200) {
                 if (total !== used) {

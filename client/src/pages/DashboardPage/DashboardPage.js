@@ -21,11 +21,13 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Create, HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
+import DiscountIcon from '@mui/icons-material/Discount'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import BlogsDashboard from './Blogs/BlogsDashboard'
-import ProductsDashboard from './Products/ProductsDashboard'
+import BlogsDashboard from './Blogs'
+import ProductsDashboard from './Products'
 import CreateFields from './CreateFields'
-import UsersDashBoard from './Users/UsersDashBoard'
+import VouchersDashboard from './Vouchers'
+import UsersDashBoard from './Users'
 import useScrollToTop from '~/hooks/useScrollToTop'
 
 const DashboardPage = () => {
@@ -60,6 +62,8 @@ const DashboardPage = () => {
                 return <BlogsDashboard />
             case 'create':
                 return <CreateFields isMatch={isMatch} />
+            case 'vouchers':
+                return <VouchersDashboard />
             default:
                 return <ProductsDashboard />
         }
@@ -96,7 +100,14 @@ const DashboardPage = () => {
                 <Grid item xs={12} md={3} xl={4}>
                     <Paper elevation={6}>
                         {isMatch ? (
-                            <Tabs value={value} onChange={handleChange} aria-label='icon tabs example'>
+                            <Tabs
+                                variant='scrollable'
+                                scrollButtons={false}
+                                allowScrollButtonsMobile
+                                value={value}
+                                onChange={handleChange}
+                                aria-label='icon tabs example'
+                            >
                                 <Tab
                                     icon={<HistoryEduOutlined />}
                                     value='blogs'
@@ -120,6 +131,12 @@ const DashboardPage = () => {
                                     aria-label='create'
                                     value='create'
                                     onClick={event => handleListItemClick(event, 'create')}
+                                />
+                                <Tab
+                                    icon={<DiscountIcon />}
+                                    aria-label='voucher'
+                                    value='voucher'
+                                    onClick={event => handleListItemClick(event, 'vouchers')}
                                 />
                             </Tabs>
                         ) : (
@@ -163,6 +180,15 @@ const DashboardPage = () => {
                                         <ListItemText primary='Người dùng' />
                                     </ListItemButton>
                                     {/* <Divider variant='fullWidth' component='div' /> */}
+                                    <ListItemButton
+                                        selected={selectedParam === 'vouchers'}
+                                        onClick={event => handleListItemClick(event, 'vouchers')}
+                                    >
+                                        <ListItemIcon>
+                                            <DiscountIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Mã giảm giá' />
+                                    </ListItemButton>
                                     <ListItemButton
                                         selected={selectedParam === 'create'}
                                         onClick={event => handleListItemClick(event, 'create')}
