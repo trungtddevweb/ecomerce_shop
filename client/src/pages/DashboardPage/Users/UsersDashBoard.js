@@ -16,6 +16,7 @@ import { getAllUsers } from '~/api/main'
 import { useSelector } from 'react-redux'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
+import { formatDate } from 'src/utils/format'
 
 const UsersDashBoard = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -206,7 +207,7 @@ const UsersDashBoard = () => {
                                             </TableCell>
                                             <TableCell align='right'>{row.name}</TableCell>
                                             <TableCell align='right'>{row.email}</TableCell>
-                                            <TableCell align='right'>{row.createdAt?.split('T')[0]}</TableCell>
+                                            <TableCell align='right'>{formatDate(row.createdAt)}</TableCell>
                                         </TableRow>
                                     )
                                 })}

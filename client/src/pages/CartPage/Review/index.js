@@ -54,6 +54,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
         discount: voucher,
         voucherCode
     }
+    console.log(payload)
 
     const handleOrder = async () => {
         try {
