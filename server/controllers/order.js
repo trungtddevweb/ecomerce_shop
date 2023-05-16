@@ -7,24 +7,27 @@ import Voucher from '../models/Voucher.js'
 
 export const createOrder = async (req, res) => {
     try {
-        const { productId, voucherCode } = req.body
+        const { products, voucherCode } = req.body
         const { _id: userId } = req.user
         let orderCode = nanoid(10)
         let existOrderId = await Order.findOne({ orderCode })
 
-        const product = await Product.findById(productId)
-        if (!product || product.quantity <= 0) {
-            return res.status(400).json({ message: 'Sản phẩm không có sẵn trong cửa hàng' })
+        for (const productId of products) {
+            const product = await Product.findById(productId.productId._id)
+            console.log(productId.productId)
+            if (!product || product.quantity <= 0) {
+                return res.status(400).json({ message: 'Sản phẩm không có sẵn trong cửa hàng' })
+            }
+            await Product.findOneAndUpdate({ _id: productId._id }, { $inc: { quantity: -1 } })
+        }
+
+        if (voucherCode) {
+            await Voucher.findOneAndUpdate({ voucherCode, used: { $lt: { $total: 1 } } }, { $inc: { used: 1 } })
         }
 
         while (existOrderId) {
             orderCode = nanoid(10)
             existOrderId = await Order.findOne({ orderCode })
-        }
-        await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: -1 } })
-
-        if (voucherCode) {
-            await Voucher.findOneAndUpdate({ voucherCode, used: { $lt: { $total: 1 } } }, { $inc: { used: 1 } })
         }
 
         const newOrder = Order({
@@ -35,7 +38,7 @@ export const createOrder = async (req, res) => {
         await newOrder.save()
         responseHandler.success(res, newOrder)
     } catch (error) {
-        res.status(500).json({ message: error })
+        res.status(500).json({ message: error.message })
     }
 }
 

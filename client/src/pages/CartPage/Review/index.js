@@ -11,6 +11,7 @@ import {
     Divider,
     Stack
 } from '@mui/material'
+import axios from 'axios'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
@@ -54,6 +55,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
         discount: voucher,
         voucherCode
     }
+    console.log(payload)
 
     const handleOrder = async () => {
         try {
@@ -61,12 +63,12 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
             if (res.status === 200) {
                 dispatch(showToast({ type: 'success', message: 'Đặt hàng thành công!' }))
                 setOrderCode(res.data.orderCode)
+                onNext()
             }
         } catch (error) {
             dispatch(showToast({ type: 'error', message: 'Có lỗi xảy ra !' }))
             console.error(error.message)
         }
-        onNext()
     }
 
     return (
