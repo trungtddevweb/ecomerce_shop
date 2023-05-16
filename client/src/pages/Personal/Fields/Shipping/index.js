@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux'
 import { Chip, TableHead, styled } from '@mui/material'
 import LinearIndeterminate from 'src/fallback/LinearProgress/LinearProgress'
 import { useLayoutEffect } from 'react'
+import { statusShipping } from 'src/utils/const'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -43,7 +44,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function TablePaginationActions(props) {
     const theme = useTheme()
-    const { count, page, rowsPerPage, onPageChange, data } = props
+    const { count, page, rowsPerPage, onPageChange } = props
 
     const handleFirstPageButtonClick = event => {
         onPageChange(event, 0)
@@ -119,6 +120,23 @@ export default function CustomPaginationActionsTable() {
         fetchOrder()
     }, [token, page, rowsPerPage])
 
+    console.log('orders', orders)
+
+    function getStatusShipping(status) {
+        switch (status) {
+            case statusShipping[0]:
+                return 'Chuẩn bị hàng'
+            case statusShipping[1]:
+                return 'Đang xử lý'
+            case statusShipping[2]:
+                return 'Đang giao'
+            case statusShipping[3]:
+                return 'Đã nhận hàng'
+            default:
+                return 'Chuẩn bị hàng'
+        }
+    }
+
     const columns = [
         { id: 'orderCode', label: 'Mã đơn hàng', minWidth: 100 },
         { id: 'orderedDate', label: 'Ngày đặt hàng', minWidth: 120 },
@@ -185,7 +203,7 @@ export default function CustomPaginationActionsTable() {
                                 </TableCell>
                                 <TableCell>{row?.orderedDate.split('T')[0]}</TableCell>
                                 <TableCell>{row.paymentMethod === 'cash' ? 'Tiền mặt' : 'Thẻ tín dụng/Visa'}</TableCell>
-                                <TableCell>{row.totalPrice.toLocaleString('vi-VN')}</TableCell>
+                                <TableCell>{(row.totalPrice - row.discount).toLocaleString('vi-VN')}</TableCell>
                                 <TableCell>
                                     <Chip
                                         size='small'
@@ -193,7 +211,7 @@ export default function CustomPaginationActionsTable() {
                                         color={row.isPaid ? 'success' : 'warning'}
                                     />
                                 </TableCell>
-                                <TableCell>{row.status === 'pending' ? 'Đang vận chuyển' : 'Thành công'}</TableCell>
+                                <TableCell>{getStatusShipping(row.status)}</TableCell>
                             </StyledTableRow>
                         ))}
                         {emptyRows > 0 && (

@@ -17,7 +17,7 @@ import { showToast } from 'src/redux/slice/toastSlice'
 import { orderProductAPI } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
-export default function Review({ order, onBack, onNext, setOrderCode, isMatch, voucher }) {
+export default function Review({ order, onBack, onNext, setOrderCode, voucher, voucherCode }) {
     const { products, address, paymentMethod } = order
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user?.token)
@@ -51,7 +51,8 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch, v
         paymentMethod,
         shippingAddress,
         isPaid,
-        discount: voucher
+        discount: voucher,
+        voucherCode
     }
 
     const handleOrder = async () => {
@@ -60,12 +61,12 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch, v
             if (res.status === 200) {
                 dispatch(showToast({ type: 'success', message: 'Đặt hàng thành công!' }))
                 setOrderCode(res.data.orderCode)
+                onNext()
             }
         } catch (error) {
             dispatch(showToast({ type: 'error', message: 'Có lỗi xảy ra !' }))
             console.error(error.message)
         }
-        onNext()
     }
 
     return (
@@ -119,7 +120,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, isMatch, v
                         <ListItemText primary={<Typography fontWeight={600}>Voucher</Typography>} />
                         <Typography variant='body2' fontWeight={600} color='error'>
                             {' '}
-                            - {voucher.toLocaleString('vi-VN')} đ
+                            - {voucher?.toLocaleString('vi-VN')} đ
                         </Typography>
                     </ListItem>
                     <ListItem sx={{ py: 1, px: 0 }}>

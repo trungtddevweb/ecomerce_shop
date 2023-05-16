@@ -1,18 +1,40 @@
 import responseHandler from '../handler/responseHandler.js'
 import Order from '../models/Order.js'
+import Product from '../models/Product.js'
 import User from '../models/User.js'
 import { nanoid } from 'nanoid'
+import Voucher from '../models/Voucher.js'
 
 export const createOrder = async (req, res) => {
     try {
+        const { products, voucherCode } = req.body
         const { _id: userId } = req.user
         let orderCode = nanoid(10)
         let existOrderId = await Order.findOne({ orderCode })
+
+        for (const productId of products) {
+            const product = await Product.findById(productId.productId._id)
+            if (!product || product.quantity <= 0) {
+                return res.status(400).json({ message: 'Sản phẩm không có sẵn trong cửa hàng' })
+            }
+            await Product.findByIdAndUpdate(productId.productId._id, { $inc: { quantity: -productId.quantity } })
+        }
+
+        if (voucherCode) {
+            // Kiểm tra xem voucher đã hết lượt sử dụng hay chưa
+            const voucher = await Voucher.findOne({ voucherCode })
+            if (voucher.used === voucher.total) {
+                console.log('Voucher đã được sử dụng hết')
+            } else {
+                await Voucher.findOneAndUpdate({ voucherCode }, { $inc: { used: 1 } })
+            }
+        }
 
         while (existOrderId) {
             orderCode = nanoid(10)
             existOrderId = await Order.findOne({ orderCode })
         }
+
         const newOrder = Order({
             ...req.body,
             orderCode,
@@ -21,7 +43,7 @@ export const createOrder = async (req, res) => {
         await newOrder.save()
         responseHandler.success(res, newOrder)
     } catch (error) {
-        res.status(500).json({ message: error })
+        res.status(500).json({ message: error.message })
     }
 }
 

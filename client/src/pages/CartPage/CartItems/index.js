@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, Fragment } from 'react'
-import { Close, Delete, ExpandLess, ExpandMore } from '@mui/icons-material'
+import { Close, Delete } from '@mui/icons-material'
 import {
     Box,
     Card,
@@ -20,7 +20,8 @@ import {
     Button,
     Collapse,
     TextField,
-    Paper
+    Paper,
+    Switch
 } from '@mui/material'
 import Image from 'mui-image'
 import { useDispatch, useSelector } from 'react-redux'
@@ -34,16 +35,16 @@ import useStyles from '~/assets/styles/useStyles'
 import paymentMethod from '~/assets/imgs/payment.png'
 import { showDialog } from 'src/redux/slice/dialogSlice'
 import useScrollToTop from '~/hooks/useScrollToTop'
+import useToggle from '~/hooks/useToggle'
 
-const CartItems = ({ onNext, isMatch, setVoucher }) => {
+const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode }) => {
     useScrollToTop()
     const classes = useStyles()
     const token = useSelector(state => state.auth.user?.token)
     const dispatch = useDispatch()
 
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useToggle(false)
     const [discount, setDiscount] = useState(0)
-    const [voucherCode, setVoucherCode] = useState('')
     const [checked, setChecked] = useState([])
     const [products, setProducts] = useState([])
     const [isCheckedAll, setIsCheckedAll] = useState(false)
@@ -93,6 +94,10 @@ const CartItems = ({ onNext, isMatch, setVoucher }) => {
     const handleNextClick = () => {
         onNext(checked)
         setVoucher(discount)
+        if (!open || discount === 0) {
+            setVoucher(0)
+            setVoucherCode('')
+        }
     }
 
     const handleToggle = value => () => {
@@ -154,10 +159,15 @@ const CartItems = ({ onNext, isMatch, setVoucher }) => {
     const handleGetVoucher = async () => {
         try {
             const res = await getAVoucher(voucherCode, token)
+            const { total, used } = res.data
             if (res.status === 200) {
-                setDiscount(res.data.discount)
-                setIsEditAble(false)
-                dispatch(showToast({ type: 'success', message: 'Áp dụng mã thành công!' }))
+                if (total !== used) {
+                    setDiscount(res.data.discount)
+                    setIsEditAble(false)
+                    dispatch(showToast({ type: 'success', message: 'Áp dụng mã thành công!' }))
+                } else {
+                    setError('Voucher đã hết lượt sử dụng')
+                }
             }
         } catch (error) {
             console.log(error)
@@ -329,7 +339,7 @@ const CartItems = ({ onNext, isMatch, setVoucher }) => {
                                 <Stack direction='row' justifyContent='space-between'>
                                     <Typography variant='h6'>Mã giảm giá</Typography>
                                     <Typography variant='h6' color='primary'>
-                                        {discount?.toLocaleString('vi-VN') + ' đ' || 'Chưa áp dụng'}
+                                        {(open && discount?.toLocaleString('vi-VN') + ' đ') || 'Chưa áp dụng'}
                                     </Typography>
                                 </Stack>
                                 <Stack direction='row' justifyContent='space-between'>
@@ -358,11 +368,9 @@ const CartItems = ({ onNext, isMatch, setVoucher }) => {
                         bgcolor='white'
                     >
                         <List disablePadding>
-                            <ListItem disablePadding onClick={() => setOpen(!open)}>
-                                <ListItemButton>
-                                    <ListItemText primary={<Typography variant='h6'>Nhập mã giảm giá</Typography>} />
-                                    {open ? <ExpandLess /> : <ExpandMore />}
-                                </ListItemButton>
+                            <ListItem>
+                                <ListItemText primary={<Typography variant='h6'>Dùng mã giảm giá</Typography>} />
+                                <Switch checked={open} onChange={setOpen} />
                             </ListItem>
                             <Collapse in={open} timeout='auto' unmountOnExit>
                                 <Box component='form' minHeight={40} p={1}>

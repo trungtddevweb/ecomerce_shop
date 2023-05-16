@@ -36,9 +36,17 @@ const ProductSchema = new Schema(
             required: true,
             default: 0
         },
+        regularPrice: {
+            type: Number
+        },
+        flashSaleStart: {
+            type: Date
+        },
+        flashSaleEnd: {
+            type: Date
+        },
         salePrice: {
-            type: Number,
-            default: 0
+            type: Number
         },
         category: {
             type: String,

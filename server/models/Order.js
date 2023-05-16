@@ -30,6 +30,9 @@ const OrderSchema = new Schema(
             type: Number,
             default: 0
         },
+        voucherCode: {
+            type: String
+        },
         status: {
             type: String,
             enum: ['prepare', 'pending', 'delivering', 'delivered'],

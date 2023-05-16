@@ -85,29 +85,18 @@ const ProductComponent = ({ isMatch }) => {
         <Box>
             <Box component='form' onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
-                    <Grid xs={12} item>
+                    <Grid xs={12} md={6} item>
                         <TextField
                             size={isMatch ? 'small' : 'medium'}
                             label='Tên sản phẩm'
                             variant='outlined'
                             fullWidth
+                            autoFocus
                             {...register('name', { required: true })}
                         />
                         <ErrorMessages errors={errors} fieldName='name' />
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            size={isMatch ? 'small' : 'medium'}
-                            label='Chi tiết sản phẩm'
-                            multiline
-                            rows={4}
-                            variant='outlined'
-                            fullWidth
-                            {...register('desc', { required: true })}
-                        />
-                        <ErrorMessages errors={errors} fieldName='desc' />
-                    </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} md={6}>
                         <TextField
                             size={isMatch ? 'small' : 'medium'}
                             type='text'
@@ -118,64 +107,76 @@ const ProductComponent = ({ isMatch }) => {
                         />
                         <ErrorMessages errors={errors} fieldName='brand' />
                     </Grid>
-
-                    <Grid container item xs={12} spacing={1}>
-                        <Grid item xs={6}>
+                    <Grid container item xs={12} spacing={2}>
+                        <Grid item xs={12} md={7}>
                             <TextField
                                 size={isMatch ? 'small' : 'medium'}
-                                type='number'
-                                fullWidth
-                                label='Giá'
+                                label='Chi tiết sản phẩm'
+                                multiline
+                                rows={isMatch ? 3 : 7}
                                 variant='outlined'
-                                InputProps={{
-                                    endAdornment: <InputAdornment position='end'>đ</InputAdornment>
-                                }}
-                                required
-                                defaultValue={1}
-                                {...register('price', {
-                                    validate: {
-                                        lessThanZero: value => {
-                                            return value >= 0 || 'Giá phải là 1 giá trị lớn hơn hoặc bằng 0'
+                                fullWidth
+                                {...register('desc', { required: true })}
+                            />
+                            <ErrorMessages errors={errors} fieldName='desc' />
+                        </Grid>
+                        <Grid container item xs={12} md={5} spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    size={isMatch ? 'small' : 'medium'}
+                                    type='number'
+                                    fullWidth
+                                    label='Giá'
+                                    variant='outlined'
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position='end'>đ</InputAdornment>
+                                    }}
+                                    required
+                                    defaultValue={1}
+                                    {...register('price', {
+                                        validate: {
+                                            lessThanZero: value => {
+                                                return value >= 0 || 'Giá phải là 1 giá trị lớn hơn hoặc bằng 0'
+                                            }
                                         }
-                                    }
-                                })}
-                            />
-                            {errors.price && errors.price.type === 'lessThanZero' && (
-                                <Typography className='text-danger'>{errors.price.message}</Typography>
-                            )}
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                size={isMatch ? 'small' : 'medium'}
-                                fullWidth
-                                label='Màu sắc'
-                                variant='outlined'
-                                {...register('colors')}
-                            />
+                                    })}
+                                />
+                                {errors.price && errors.price.type === 'lessThanZero' && (
+                                    <Typography className='text-danger'>{errors.price.message}</Typography>
+                                )}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    size={isMatch ? 'small' : 'medium'}
+                                    fullWidth
+                                    label='Màu sắc'
+                                    variant='outlined'
+                                    {...register('colors')}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    size={isMatch ? 'small' : 'medium'}
+                                    type='number'
+                                    label='Số lượng'
+                                    variant='outlined'
+                                    fullWidth
+                                    required
+                                    defaultValue={1}
+                                    {...register('quantity', {
+                                        validate: {
+                                            positive: value => {
+                                                return value >= 1 || 'Số lượng phải là số lớn hoặc bằng 1'
+                                            }
+                                        }
+                                    })}
+                                />
+                                {errors.quantity && errors.quantity.type === 'positive' && (
+                                    <Typography className='text-danger'>{errors.quantity.message}</Typography>
+                                )}
+                            </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            size={isMatch ? 'small' : 'medium'}
-                            type='number'
-                            label='Số lượng'
-                            variant='outlined'
-                            fullWidth
-                            required
-                            defaultValue={1}
-                            {...register('quantity', {
-                                validate: {
-                                    positive: value => {
-                                        return value >= 1 || 'Số lượng phải là số lớn hoặc bằng 1'
-                                    }
-                                }
-                            })}
-                        />
-                        {errors.quantity && errors.quantity.type === 'positive' && (
-                            <Typography className='text-danger'>{errors.quantity.message}</Typography>
-                        )}
-                    </Grid>
-
                     <Grid item container spacing={1}>
                         <Grid item xs={4}>
                             <FormControl fullWidth>

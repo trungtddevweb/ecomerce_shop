@@ -22,14 +22,15 @@ const CartPage = () => {
     const isMatchLg = useMediaQuery(theme.breakpoints.down('lg'))
     const classes = useStyles()
     const [orderCode, setOrderCode] = useState('')
-    const [voucher, setVoucher] = useState(null)
+    const [voucherCode, setVoucherCode] = useState('')
+    const [voucher, setVoucher] = useState(0)
     const [order, setOrder] = useState({
         products: [],
         address: {},
         paymentMethod: {}
     })
     const [activeStep, setActiveStep] = useState(0)
-    console.log('voucher====🚀', voucher)
+    // console.log('voucher====🚀', voucherCode)
 
     const previousAddress = usePrevious(order.address)
     const previousPaymentMethod = usePrevious(order.paymentMethod)
@@ -83,7 +84,15 @@ const CartPage = () => {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <CartItems isMatch={isMatch} setVoucher={setVoucher} onNext={handleProductSelect} />
+                return (
+                    <CartItems
+                        isMatch={isMatch}
+                        setVoucher={setVoucher}
+                        onNext={handleProductSelect}
+                        setVoucherCode={setVoucherCode}
+                        voucherCode={voucherCode}
+                    />
+                )
             case 1:
                 return <AddressForm isMatch={isMatch} onNext={handleAddressSelect} onBack={handleBack} />
             case 2:
@@ -103,6 +112,7 @@ const CartPage = () => {
                         onBack={handleBack}
                         onNext={handleNext}
                         order={order}
+                        voucherCode={voucherCode}
                         setOrderCode={setOrderCode}
                     />
                 )
@@ -130,7 +140,7 @@ const CartPage = () => {
                         </Stepper>
                     </Paper>
                 )}
-                {!activeStep === stepsCart.length ? (
+                {activeStep === stepsCart.length ? (
                     <Box
                         className={classes.flexBox}
                         sx={{

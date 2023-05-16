@@ -42,6 +42,7 @@ const BlogComponent = ({ isMatch }) => {
             <Grid container spacing={2}>
                 <Grid xs={12} item>
                     <TextField
+                        autoFocus
                         size={isMatch ? 'small' : 'medium'}
                         type='text'
                         label='Tiêu đề'
