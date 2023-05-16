@@ -194,3 +194,12 @@ export const createVoucherAPI = async (data, token) => {
 export const getAVoucher = async (voucherCode, token) => {
     return await mainAPI.post('/vouchers/find', { voucherCode }, { headers: { Authorization: `Bearer ${token}` } })
 }
+
+//flashSale
+export const createFlashSaleAPI = async (data, token) => {
+    return await mainAPI.post('/products/flash-sale/create', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
