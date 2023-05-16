@@ -14,11 +14,10 @@ export const createOrder = async (req, res) => {
 
         for (const productId of products) {
             const product = await Product.findById(productId.productId._id)
-            console.log(productId.productId)
             if (!product || product.quantity <= 0) {
                 return res.status(400).json({ message: 'Sản phẩm không có sẵn trong cửa hàng' })
             }
-            await Product.findByIdAndUpdate(productId.productId._id, { $inc: { quantity: -1 } })
+            await Product.findByIdAndUpdate(productId.productId._id, { $inc: { quantity: -productId.quantity } })
         }
 
         if (voucherCode) {
