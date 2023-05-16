@@ -11,7 +11,6 @@ import {
     Divider,
     Stack
 } from '@mui/material'
-import axios from 'axios'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
