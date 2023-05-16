@@ -67,12 +67,7 @@ const UserSchema = new Schema(
         },
         voucher: [Voucher],
         ordersCount: {
-            type: [
-                {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Order'
-                }
-            ]
+            type: [String]
         },
         products: [ProductItem],
         totalItems: { type: Number, default: 0 },
