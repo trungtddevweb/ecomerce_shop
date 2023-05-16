@@ -1,18 +1,32 @@
 import responseHandler from '../handler/responseHandler.js'
 import Order from '../models/Order.js'
+import Product from '../models/Product.js'
 import User from '../models/User.js'
 import { nanoid } from 'nanoid'
+import Voucher from '../models/Voucher.js'
 
 export const createOrder = async (req, res) => {
     try {
+        const { productId, voucherCode } = req.body
         const { _id: userId } = req.user
         let orderCode = nanoid(10)
         let existOrderId = await Order.findOne({ orderCode })
+
+        const product = await Product.findById(productId)
+        if (!product || product.quantity <= 0) {
+            return res.status(400).json({ message: 'Sản phẩm không có sẵn trong cửa hàng' })
+        }
 
         while (existOrderId) {
             orderCode = nanoid(10)
             existOrderId = await Order.findOne({ orderCode })
         }
+        await Product.findOneAndUpdate({ _id: productId }, { $inc: { quantity: -1 } })
+
+        if (voucherCode) {
+            await Voucher.findOneAndUpdate({ voucherCode, used: { $lt: { $total: 1 } } }, { $inc: { used: 1 } })
+        }
+
         const newOrder = Order({
             ...req.body,
             orderCode,

@@ -6,3 +6,10 @@ export const addProductSchema = Joi.object({
     size: Joi.string().required(),
     quantity: Joi.number().required()
 })
+
+export const flashSaleProduct = Joi.object({
+    productId: Joi.string().required(),
+    salePrice: Joi.number().required(),
+    flashSaleStart: Joi.date().required(),
+    flashSaleEnd: Joi.date().required()
+})
