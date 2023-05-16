@@ -56,7 +56,6 @@ export const getAllProduct = async (req, res) => {
                 })())
         }
     }
-
     try {
         const products = await Product.paginate(options.query, options)
         responseHandler.getData(res, products)

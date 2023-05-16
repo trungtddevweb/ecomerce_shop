@@ -6,19 +6,22 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
-import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { Avatar, Stack, TablePagination, TableRow, Typography } from '@mui/material'
+import { getAllOrdersAPI } from '~/api/main'
+import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
+import { Chip, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { getAllUsers } from '~/api/main'
-import { useSelector } from 'react-redux'
-import Image from '~/components/Image/Image'
+import Image from '~/components/Image'
 import images from '~/assets/imgs'
+import EditModal from '~/components/EditModal/EditModal'
 import { formatDate } from 'src/utils/format'
+import { useSelector } from 'react-redux'
 
-const UsersDashBoard = () => {
+const OrdersDashboard = ({ dataModal, onEdit }) => {
+    const [data, setData] = useState(null)
+    const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [isDeleting, setIsDeleting] = useState(true)
     const [order, setOrder] = useState('asc')
@@ -27,17 +30,47 @@ const UsersDashBoard = () => {
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [data, setData] = useState(null)
-    const [users, setUsers] = useState([])
+    // Modal
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalData, setModalData] = useState(null)
+    const token = useSelector(state => state.auth.user.token)
 
-    const token = useSelector(state => state.auth.user?.token)
+    const handleModalOpen = data => {
+        setModalData(data)
+        setModalOpen(true)
+    }
 
+    const handleModalClose = () => {
+        setModalOpen(false)
+        setModalData(null)
+    }
+
+    const handleModalSave = value => {
+        onEdit(modalData.id, value)
+    }
+
+    function convertStatus(status) {
+        switch (status) {
+            case 'prepare':
+                return 'Chuẩn bị'
+            case 'pending':
+                return 'Đang xử lý'
+            case 'delivering':
+                return 'Đang giao'
+            case 'delivered':
+                return 'Đã giao'
+            default:
+                return 'Chuẩn bị'
+        }
+    }
+
+    // End modal
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getAllUsers(token, rowsPerPage, page + 1)
+                const response = await getAllOrdersAPI(rowsPerPage, page + 1, token)
                 setData(response)
-                setUsers(response.docs)
+                setProducts(response.docs)
                 setIsLoading(false)
             } catch (error) {
                 setIsLoading(false)
@@ -45,8 +78,7 @@ const UsersDashBoard = () => {
             }
         }
         fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rowsPerPage, page, isDeleting])
+    }, [rowsPerPage, page, isDeleting, token])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -78,34 +110,48 @@ const UsersDashBoard = () => {
 
     const headCells = [
         {
-            id: 'name',
+            id: 'orderCode',
             numeric: false,
             disablePadding: true,
-            label: 'Tên người dùng'
+            label: 'Mã đơn hàng'
         },
         {
-            id: 'email',
+            id: 'userId',
             numeric: false,
             disablePadding: false,
-            label: 'Email'
+            label: 'UserId'
         },
         {
-            id: 'phone',
+            id: 'price',
             numeric: false,
             disablePadding: false,
-            label: 'Số điện thoại'
+            label: 'Giá trị'
         },
         {
-            id: 'orderCount',
+            id: 'voucherCode',
             numeric: false,
             disablePadding: false,
-            label: 'Đơn hàng'
+            label: 'Voucher'
+        },
+
+        {
+            id: 'status',
+            numeric: false,
+            disablePadding: false,
+            label: 'Trạng thái'
+        },
+
+        {
+            id: 'orderedDate',
+            numeric: false,
+            disablePadding: false,
+            label: 'Ngày dặt'
         },
         {
-            id: 'date',
+            id: 'isPaid',
             numeric: false,
             disablePadding: false,
-            label: 'Ngày tạo'
+            label: 'Thanh toán'
         }
     ]
 
@@ -117,7 +163,7 @@ const UsersDashBoard = () => {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelected = users?.map(n => n._id)
+            const newSelected = products?.map(n => n._id)
             setSelected(newSelected)
             return
         }
@@ -140,7 +186,6 @@ const UsersDashBoard = () => {
 
         setSelected(newSelected)
     }
-
     const handleChangePage = (event, newPage) => {
         setIsLoading(true)
         setPage(newPage)
@@ -155,7 +200,7 @@ const UsersDashBoard = () => {
     //     setDense(event.target.checked);
     // };
 
-    const isSelected = id => selected.includes(id)
+    const isSelected = name => selected.includes(name)
     const count = data?.totalDocs || 0
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - count) : 0
@@ -164,10 +209,10 @@ const UsersDashBoard = () => {
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 <EnhancedTableToolbar
-                    setSelected={setSelected}
                     numSelected={selected.length}
                     selectedItem={selected}
                     setDeleting={setIsDeleting}
+                    setSelected={setSelected}
                 />
                 {isLoading ? (
                     <LinearIndeterminate />
@@ -175,23 +220,22 @@ const UsersDashBoard = () => {
                     <TableContainer>
                         <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
                             <EnhancedTableHead
+                                page={page}
                                 headCells={headCells}
                                 numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
                                 onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
-                                rowCount={count}
+                                rowCount={products?.length}
                             />
                             <TableBody>
-                                {stableSort(users, getComparator(order, orderBy)).map((row, index) => {
+                                {stableSort(products, getComparator(order, orderBy)).map((row, index) => {
                                     const isItemSelected = isSelected(row._id)
                                     const labelId = `enhanced-table-checkbox-${index}`
-
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -201,6 +245,7 @@ const UsersDashBoard = () => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -210,46 +255,82 @@ const UsersDashBoard = () => {
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '150px',
-                                                    overflow: 'hidden',
-                                                    whiteSpace: 'nowrap',
-                                                    textOverflow: 'ellipsis'
+                                                    minWidth: '115px'
                                                 }}
                                                 component='th'
                                                 id={labelId}
                                                 scope='row'
                                                 padding='none'
                                             >
-                                                <Stack direction='row' alignItems='center' spacing={1}>
-                                                    <Avatar src={row.picture} sx={{ width: 24, height: 24 }} />
-                                                    <Typography variant='body2'>{row.name}</Typography>
-                                                </Stack>
+                                                {row.orderCode}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '150px',
+                                                    minWidth: '130px',
+                                                    maxWidth: '130px',
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',
                                                     textOverflow: 'ellipsis'
                                                 }}
                                             >
-                                                {row.email}
+                                                {row.userId}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '150px'
+                                                    minWidth: '100px'
                                                 }}
                                             >
-                                                {row.phone ? row.phone : 'Chưa cập nhập'}
+                                                {(row.totalPrice - row.discount).toLocaleString('vi-VN')}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '120px'
+                                                    maxWidth: '120px',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis'
                                                 }}
                                             >
-                                                {row.ordersCount?.length || 0}
+                                                {row.voucherCode}
                                             </TableCell>
-                                            <TableCell>{formatDate(row.createdAt)}</TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '130px'
+                                                }}
+                                            >
+                                                <Chip
+                                                    size='small'
+                                                    label={convertStatus(row.status)}
+                                                    color={
+                                                        row.status === 'prepare'
+                                                            ? 'default'
+                                                            : row.status === 'pending'
+                                                            ? 'warning'
+                                                            : row.status === 'delivering'
+                                                            ? 'info'
+                                                            : row.status === 'delivered'
+                                                            ? 'success'
+                                                            : undefined
+                                                    }
+                                                />
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '120px'
+                                                }}
+                                            >
+                                                {formatDate(row.createdAt)}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '110px'
+                                                }}
+                                            >
+                                                <Chip
+                                                    size='small'
+                                                    label={row.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                                    color={row.isPaid ? 'success' : 'warning'}
+                                                />
+                                            </TableCell>
                                         </TableRow>
                                     )
                                 })}
@@ -259,12 +340,12 @@ const UsersDashBoard = () => {
                                             height: (dense ? 33 : 53) * emptyRows
                                         }}
                                     >
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={7} />
                                     </TableRow>
                                 )}
                             </TableBody>
                         </Table>
-                        {users.length === 0 && (
+                        {products.length === 0 && (
                             <Box
                                 margin='auto'
                                 display='flex'
@@ -279,8 +360,16 @@ const UsersDashBoard = () => {
                         )}
                     </TableContainer>
                 )}
+                {modalData && (
+                    <EditModal
+                        open={modalOpen}
+                        handleClose={handleModalClose}
+                        handleSave={handleModalSave}
+                        value={modalData.name}
+                    />
+                )}
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[5, 10]}
                     component='div'
                     count={count}
                     rowsPerPage={rowsPerPage}
@@ -293,4 +382,4 @@ const UsersDashBoard = () => {
     )
 }
 
-export default withFallback(UsersDashBoard, ErrorFallback, LinearIndeterminate)
+export default withFallback(OrdersDashboard, ErrorFallback, LinearIndeterminate)

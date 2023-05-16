@@ -24,6 +24,10 @@ function EnhancedTableToolbar(props) {
                 return 'Sản phẩm'
             case 'vouchers':
                 return 'Mã khuyến mãi'
+            case 'orders':
+                return 'Đơn hàng'
+            case 'products-sale':
+                return 'Sản phẩm sale'
             default:
                 return 'Bài viết'
         }

@@ -60,6 +60,10 @@ const ProductSchema = new Schema(
         isHot: {
             type: Boolean,
             default: true
+        },
+        countPurchased: {
+            type: Number,
+            default: 0
         }
     },
     { timestamps: true }

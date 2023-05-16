@@ -51,7 +51,7 @@ router.get('/search/hots', getProductsByHot)
 router.post('/flash-sale/create', verifyAdmin, validateFlashSaleProduct, flashSaleProduct)
 
 // GET ALL PRODUCT IN FLASH SALE
-router.get('/flash-sale/products', verifyAdmin, getALlProductsInflashSale)
+router.get('/flash-sale/products', getALlProductsInflashSale)
 
 // UPDATE PRODUCT IN FLASH SALE
 router.put('/flash-sale/products', verifyAdmin, updateFlashSaleTime)

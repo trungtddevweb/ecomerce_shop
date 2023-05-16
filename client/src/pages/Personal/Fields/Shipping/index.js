@@ -120,8 +120,6 @@ export default function CustomPaginationActionsTable() {
         fetchOrder()
     }, [token, page, rowsPerPage])
 
-    console.log('orders', orders)
-
     function getStatusShipping(status) {
         switch (status) {
             case statusShipping[0]:
