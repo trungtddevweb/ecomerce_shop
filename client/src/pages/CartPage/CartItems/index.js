@@ -159,10 +159,15 @@ const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode })
     const handleGetVoucher = async () => {
         try {
             const res = await getAVoucher(voucherCode, token)
+            const { total, used } = res.data
             if (res.status === 200) {
-                setDiscount(res.data.discount)
-                setIsEditAble(false)
-                dispatch(showToast({ type: 'success', message: 'Áp dụng mã thành công!' }))
+                if (total !== used) {
+                    setDiscount(res.data.discount)
+                    setIsEditAble(false)
+                    dispatch(showToast({ type: 'success', message: 'Áp dụng mã thành công!' }))
+                } else {
+                    setError('Voucher đã hết lượt sử dụng')
+                }
             }
         } catch (error) {
             console.log(error)
