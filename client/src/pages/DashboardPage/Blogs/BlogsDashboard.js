@@ -16,6 +16,7 @@ import { getAllBlogs } from '~/api/main'
 import { Edit } from '@mui/icons-material'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
+import { formatDate } from 'src/utils/format'
 
 const BlogsDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -242,7 +243,7 @@ const BlogsDashboard = () => {
                                                 }}
                                                 align='right'
                                             >
-                                                {row.createdAt?.split('T')[0]}
+                                                {formatDate(row.createdAt)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{

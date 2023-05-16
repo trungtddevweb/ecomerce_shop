@@ -1,1 +1,1 @@
-export { default } from './Vouchers'
+export { default } from './VouchersDashboard'

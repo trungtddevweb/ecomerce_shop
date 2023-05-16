@@ -16,7 +16,11 @@ const VoucherSchema = new Schema(
             type: Number,
             required: true
         },
-        expirationDate: {
+        startTime: {
+            type: Date,
+            required: true
+        },
+        endTime: {
             type: Date,
             required: true
         },
