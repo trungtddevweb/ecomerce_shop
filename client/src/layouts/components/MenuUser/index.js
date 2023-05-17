@@ -70,7 +70,11 @@ const MenuUser = ({ onClose, onLoading }) => {
         <Link to={routes.login.path}>
             <Button
                 sx={{
-                    ml: 2
+                    ml: 2,
+                    width: isMatch ? '80px' : 'auto',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
                 }}
                 variant='contained'
             >

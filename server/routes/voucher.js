@@ -1,10 +1,11 @@
 import express from 'express'
 import { createVoucher, deletedVoucher, getAVoucher, getAllVoucher, updatedVoucher } from '../controllers/voucher.js'
+import { verifyAdmin } from '../middleware/verify.js'
 
 const router = express.Router()
 
 // Create a voucher
-router.post('/', createVoucher)
+router.post('/', verifyAdmin, createVoucher)
 
 // Get a voucher
 router.post('/find', getAVoucher)
@@ -13,9 +14,9 @@ router.post('/find', getAVoucher)
 router.get('/all-vouchers', getAllVoucher)
 
 // Update voucher
-router.patch('/', updatedVoucher)
+router.patch('/', verifyAdmin, updatedVoucher)
 
 // Delete voucher
-router.delete('/', deletedVoucher)
+router.delete('/', verifyAdmin, deletedVoucher)
 
 export default router

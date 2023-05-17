@@ -130,7 +130,7 @@ const ProductsSaleDashboard = ({ dataModal, onEdit }) => {
             label: 'Kết thúc'
         },
         {
-            id: 'countPuchased',
+            id: 'countPurchased',
             numeric: false,
             disablePadding: false,
             label: 'Đã bán'
