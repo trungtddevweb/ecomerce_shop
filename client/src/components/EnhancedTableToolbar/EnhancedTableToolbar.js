@@ -39,7 +39,7 @@ function EnhancedTableToolbar(props) {
             const res =
                 managerId !== 'products-sale'
                     ? await deleteItemByParams(managerId, token, selectedItem)
-                    : await removeProductFromSaleAPI(managerId, token, selectedItem)
+                    : await removeProductFromSaleAPI(token, selectedItem)
             if (res.status === 200) {
                 setSelected([])
                 dispatch(showToast({ type: 'success', message: 'Xóa thành công!' }))
