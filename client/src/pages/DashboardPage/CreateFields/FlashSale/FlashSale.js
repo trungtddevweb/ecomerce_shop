@@ -1,6 +1,8 @@
-import React from 'react'
-import { Box, TextField, Grid, Button } from '@mui/material'
+import React, { useState } from 'react'
+import dayjs from 'dayjs'
+import { Box, TextField, Grid, Typography, Stack } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
+import { LoadingButton } from '@mui/lab'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { useForm, Controller } from 'react-hook-form'
@@ -9,24 +11,37 @@ import { createFlashSaleAPI } from '~/api/main'
 const FlashSale = () => {
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = useState(false)
+    const flashSaleStart = dayjs()
+    const flashSaleEnd = dayjs()
     const {
         control,
         reset,
         handleSubmit,
         formState: { errors }
-    } = useForm()
+    } = useForm({
+        defaultValues: {
+            productId: '',
+            salePrice: '',
+            flashSaleStart: flashSaleStart,
+            flashSaleEnd: flashSaleEnd
+        }
+    })
 
     const flashSale = async data => {
         console.log(data)
         try {
-            const res = await createFlashSaleAPI(data, token)
-            if (res.status === 201) {
-                dispatch(showToast({ type: 'success', message: 'Tạo thành công!' }))
-                reset()
-            }
+            setIsLoading(true)
+            await createFlashSaleAPI(data, token)
+            dispatch(showToast({ type: 'success', message: 'Tạo thành công!' }))
+            setIsLoading(false)
+            reset()
+
+            setIsLoading(false)
         } catch (err) {
             console.log(err)
-            dispatch(showToast({ type: 'error', message: 'Tạo thất bại!' }))
+            setIsLoading(false)
+            dispatch(showToast({ type: 'error', message: 'Sản phẩm đã đang trong khuyến mãi' }))
         }
     }
 
@@ -39,45 +54,61 @@ const FlashSale = () => {
                         control={control}
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <TextField label='productId' variant='outlined' type='text' fullWidth {...field} />
+                            <Stack>
+                                <TextField {...field} label='Mã sản phẩm' variant='outlined' type='text' fullWidth />
+                                {errors.productId && (
+                                    <Typography sx={{ color: 'red' }}>Mã sản phẩm không được để trống</Typography>
+                                )}
+                            </Stack>
                         )}
                     />
-                    {errors.productId && <p>Message</p>}
                 </Grid>
                 <Grid item xs={12}>
                     <Controller
-                        name='price'
+                        name='salePrice'
                         control={control}
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <TextField label='price' variant='outlined' type='number' fullWidth {...field} />
+                            <Stack>
+                                <TextField {...field} label='Giá sale' variant='outlined' type='number' fullWidth />
+                                {errors.salePrice && (
+                                    <Typography sx={{ color: 'red' }}>Giá sale không được để trống</Typography>
+                                )}
+                            </Stack>
                         )}
                     />
-                    {errors.price && <p>Message</p>}
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={6} sm={12} md={6}>
                     <Controller
                         name='flashSaleStart'
                         control={control}
                         rules={{ required: true }}
-                        render={({ field }) => <DatePicker label='flashSaleStart' sx={{ width: '100%' }} {...field} />}
+                        render={({ field }) => (
+                            <DatePicker {...field} label='Ngày bắt đầu FlashSale' sx={{ width: '100%' }} />
+                        )}
                     />
-                    {errors.flashSaleStart && <p>Message</p>}
+                    {errors.flashSaleStart && (
+                        <Typography sx={{ color: 'red' }}>Ngày bắt đầu FlashSale không được để trống</Typography>
+                    )}
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} sm={12} md={6}>
                     <Controller
                         name='flashSaleEnd'
                         control={control}
                         rules={{ required: true }}
-                        render={({ field }) => <DatePicker label='flashSaleEnd' sx={{ width: '100%' }} {...field} />}
+                        render={({ field }) => (
+                            <DatePicker {...field} label='Ngày kết thúc FlashSale' sx={{ width: '100%' }} />
+                        )}
                     />
-                    {errors.flashSaleEnd && <p>Message</p>}
+                    {errors.flashSaleEnd && (
+                        <Typography sx={{ color: 'red' }}>Ngày kết thúc FlashSale không được để trống</Typography>
+                    )}
                 </Grid>
                 <Grid item>
-                    <Button type='submit' variant='contained'>
+                    <LoadingButton loading={isLoading} type='submit' variant='contained'>
                         Tạo
-                    </Button>
+                    </LoadingButton>
                 </Grid>
             </Grid>
         </Box>
