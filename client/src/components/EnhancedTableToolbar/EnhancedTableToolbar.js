@@ -14,6 +14,25 @@ function EnhancedTableToolbar(props) {
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user?.token)
 
+    const getTitleToolbar = title => {
+        switch (title) {
+            case 'users':
+                return 'Nguời dùng'
+            case 'blogs':
+                return 'Bài viết'
+            case 'products':
+                return 'Sản phẩm'
+            case 'vouchers':
+                return 'Mã khuyến mãi'
+            case 'orders':
+                return 'Đơn hàng'
+            case 'products-sale':
+                return 'Sản phẩm sale'
+            default:
+                return 'Bài viết'
+        }
+    }
+
     const handleDelete = async () => {
         try {
             setDeleting(true)
@@ -55,7 +74,7 @@ function EnhancedTableToolbar(props) {
                 </Typography>
             ) : (
                 <Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
-                    {managerId === 'products' ? 'Sản phẩm' : managerId === 'users' ? 'Người dùng' : 'Bài viết'}
+                    {getTitleToolbar(managerId)}
                 </Typography>
             )}
 

@@ -6,19 +6,22 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
-import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { IconButton, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { getAllProductsInFlashSaleAPI } from '~/api/main'
+import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
+import { TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { getAllBlogs } from '~/api/main'
-import { Edit } from '@mui/icons-material'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
+import EditModal from '~/components/EditModal/EditModal'
 import { formatDate } from 'src/utils/format'
+import { useSelector } from 'react-redux'
 
-const BlogsDashboard = () => {
+const ProductsSaleDashboard = ({ dataModal, onEdit }) => {
+    const [data, setData] = useState(null)
+    const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [isDeleting, setIsDeleting] = useState(true)
     const [order, setOrder] = useState('asc')
@@ -27,15 +30,31 @@ const BlogsDashboard = () => {
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [blogs, setBlogs] = useState([])
-    const [data, setData] = useState(null)
+    // Modal
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalData, setModalData] = useState(null)
+    const token = useSelector(state => state.auth.user.token)
 
+    const handleModalOpen = data => {
+        setModalData(data)
+        setModalOpen(true)
+    }
+
+    const handleModalClose = () => {
+        setModalOpen(false)
+        setModalData(null)
+    }
+
+    const handleModalSave = value => {
+        onEdit(modalData.id, value)
+    }
+    // End modal
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getAllBlogs(rowsPerPage, page + 1)
-                setBlogs(response.docs)
+                const response = await getAllProductsInFlashSaleAPI(rowsPerPage, page + 1, token)
                 setData(response)
+                setProducts(response.docs)
                 setIsLoading(false)
             } catch (error) {
                 setIsLoading(false)
@@ -43,7 +62,7 @@ const BlogsDashboard = () => {
             }
         }
         fetchData()
-    }, [rowsPerPage, page, isDeleting])
+    }, [rowsPerPage, page, isDeleting, token])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -72,36 +91,49 @@ const BlogsDashboard = () => {
         })
         return stabilizedThis.map(el => el[0])
     }
+
     const headCells = [
         {
-            id: 'id',
+            id: 'name',
             numeric: false,
             disablePadding: true,
-            label: 'ID bài viết'
+            label: 'Tên sản phẩm'
         },
         {
-            id: 'name',
-            numeric: true,
+            id: 'quantity',
+            numeric: false,
             disablePadding: false,
-            label: 'Tên bài viết'
+            label: 'Số lượng'
         },
         {
-            id: 'author',
-            numeric: true,
+            id: 'price',
+            numeric: false,
             disablePadding: false,
-            label: 'Tác giả'
+            label: 'Giá gốc'
         },
         {
-            id: 'date',
-            numeric: true,
+            id: 'salePrice',
+            numeric: false,
             disablePadding: false,
-            label: 'Ngày tạo'
+            label: 'Giá KM'
         },
         {
-            id: 'settings',
-            numeric: true,
+            id: 'flashSaleStart',
+            numeric: false,
             disablePadding: false,
-            label: 'Chỉnh sửa'
+            label: 'Bắt đầu'
+        },
+        {
+            id: 'flashSaleEnd',
+            numeric: false,
+            disablePadding: false,
+            label: 'Kết thúc'
+        },
+        {
+            id: 'countPurchased',
+            numeric: false,
+            disablePadding: false,
+            label: 'Đã bán'
         }
     ]
 
@@ -113,7 +145,7 @@ const BlogsDashboard = () => {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelected = blogs?.map(n => n._id)
+            const newSelected = products?.map(n => n._id)
             setSelected(newSelected)
             return
         }
@@ -136,7 +168,6 @@ const BlogsDashboard = () => {
 
         setSelected(newSelected)
     }
-
     const handleChangePage = (event, newPage) => {
         setIsLoading(true)
         setPage(newPage)
@@ -147,11 +178,11 @@ const BlogsDashboard = () => {
         setPage(0)
     }
 
-    const handleChangeDense = event => {
-        setDense(event.target.checked)
-    }
+    // const handleChangeDense = (event) => {
+    //     setDense(event.target.checked);
+    // };
 
-    const isSelected = id => selected.includes(id)
+    const isSelected = name => selected.includes(name)
     const count = data?.totalDocs || 0
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - count) : 0
@@ -171,24 +202,22 @@ const BlogsDashboard = () => {
                     <TableContainer>
                         <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
                             <EnhancedTableHead
+                                page={page}
                                 headCells={headCells}
                                 numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
                                 onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
-                                rowCount={count}
+                                rowCount={products?.length}
                             />
-
                             <TableBody>
-                                {stableSort(blogs, getComparator(order, orderBy)).map((row, index) => {
+                                {stableSort(products, getComparator(order, orderBy)).map((row, index) => {
                                     const isItemSelected = isSelected(row._id)
                                     const labelId = `enhanced-table-checkbox-${index}`
-
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -198,6 +227,7 @@ const BlogsDashboard = () => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -207,7 +237,7 @@ const BlogsDashboard = () => {
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '170px',
+                                                    maxWidth: '190px',
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',
                                                     textOverflow: 'ellipsis'
@@ -217,45 +247,40 @@ const BlogsDashboard = () => {
                                                 scope='row'
                                                 padding='none'
                                             >
-                                                {row._id}
+                                                {row.name}
+                                            </TableCell>
+                                            <TableCell sx={{ maxWidth: '100px' }}>
+                                                {row.quantity?.toLocaleString('vi-VN')}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    overflow: 'hidden',
-                                                    whiteSpace: 'nowrap',
-                                                    textOverflow: 'ellipsis'
+                                                    minWidth: '100px'
                                                 }}
-                                                align='right'
                                             >
-                                                {row.title}
+                                                {row.price?.toLocaleString('vi-VN')}
                                             </TableCell>
+                                            <TableCell>{row.salePrice.toLocaleString('vi-VN')}</TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '160px'
+                                                    minWidth: '120px'
                                                 }}
-                                                align='right'
                                             >
-                                                {row.author}
+                                                {formatDate(row.flashSaleStart)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
                                                     minWidth: '120px'
                                                 }}
-                                                align='right'
                                             >
-                                                {formatDate(row.createdAt)}
+                                                {formatDate(row.flashSaleEnd)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    minWidth: '125px'
+                                                    maxWidth: '80px'
                                                 }}
-                                                align='right'
+                                                align='center'
                                             >
-                                                <Tooltip title='Sửa'>
-                                                    <IconButton>
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
+                                                {row.countPuchased || 0}
                                             </TableCell>
                                         </TableRow>
                                     )
@@ -266,12 +291,12 @@ const BlogsDashboard = () => {
                                             height: (dense ? 33 : 53) * emptyRows
                                         }}
                                     >
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={7} />
                                     </TableRow>
                                 )}
                             </TableBody>
                         </Table>
-                        {blogs.length === 0 && (
+                        {products.length === 0 && (
                             <Box
                                 margin='auto'
                                 display='flex'
@@ -286,8 +311,16 @@ const BlogsDashboard = () => {
                         )}
                     </TableContainer>
                 )}
+                {modalData && (
+                    <EditModal
+                        open={modalOpen}
+                        handleClose={handleModalClose}
+                        handleSave={handleModalSave}
+                        value={modalData.name}
+                    />
+                )}
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[5, 10]}
                     component='div'
                     count={count}
                     rowsPerPage={rowsPerPage}
@@ -300,4 +333,4 @@ const BlogsDashboard = () => {
     )
 }
 
-export default withFallback(BlogsDashboard, ErrorFallback, LinearIndeterminate)
+export default withFallback(ProductsSaleDashboard, ErrorFallback, LinearIndeterminate)

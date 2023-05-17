@@ -191,15 +191,33 @@ export const createVoucherAPI = async (data, token) => {
     return response.data
 }
 
-export const getAVoucher = async (voucherCode, token) => {
+export const getAVoucherAPI = async (voucherCode, token) => {
     return await mainAPI.post('/vouchers/find', { voucherCode }, { headers: { Authorization: `Bearer ${token}` } })
 }
 
-//flashSale
-export const createFlashSaleAPI = async (data, token) => {
-    return await mainAPI.post('/products/flash-sale/create', data, {
+export const getAllVouchersAPI = async (limit, pageSize, token) => {
+    const response = await mainAPI.get(`/vouchers/all-vouchers?limit=${limit}&page=${pageSize}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     })
+    return response.data
+}
+
+export const getAllOrdersAPI = async (limit, page, token) => {
+    const response = await mainAPI.get(`/orders/all-order?limit=${limit}&page=${page}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data
+}
+
+export const getAllProductsInFlashSaleAPI = async (limit, page, token) => {
+    const response = await mainAPI.get(`/products/flash-sale/products?limit=${limit}&page=${page}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data
 }

@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { TablePagination, TableRow, Typography } from '@mui/material'
+import { Avatar, Stack, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
@@ -16,6 +16,7 @@ import { getAllUsers } from '~/api/main'
 import { useSelector } from 'react-redux'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
+import { formatDate } from 'src/utils/format'
 
 const UsersDashBoard = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -77,26 +78,32 @@ const UsersDashBoard = () => {
 
     const headCells = [
         {
-            id: 'id',
+            id: 'name',
             numeric: false,
             disablePadding: true,
-            label: 'STT'
-        },
-        {
-            id: 'name',
-            numeric: true,
-            disablePadding: false,
             label: 'Tên người dùng'
         },
         {
             id: 'email',
-            numeric: true,
+            numeric: false,
             disablePadding: false,
             label: 'Email'
         },
         {
+            id: 'phone',
+            numeric: false,
+            disablePadding: false,
+            label: 'Số điện thoại'
+        },
+        {
+            id: 'orderCount',
+            numeric: false,
+            disablePadding: false,
+            label: 'Đơn hàng'
+        },
+        {
             id: 'date',
-            numeric: true,
+            numeric: false,
             disablePadding: false,
             label: 'Ngày tạo'
         }
@@ -201,12 +208,48 @@ const UsersDashBoard = () => {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell component='th' id={labelId} scope='row' padding='none'>
-                                                {row._id}
+                                            <TableCell
+                                                sx={{
+                                                    maxWidth: '150px',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis'
+                                                }}
+                                                component='th'
+                                                id={labelId}
+                                                scope='row'
+                                                padding='none'
+                                            >
+                                                <Stack direction='row' alignItems='center' spacing={1}>
+                                                    <Avatar src={row.picture} sx={{ width: 24, height: 24 }} />
+                                                    <Typography variant='body2'>{row.name}</Typography>
+                                                </Stack>
                                             </TableCell>
-                                            <TableCell align='right'>{row.name}</TableCell>
-                                            <TableCell align='right'>{row.email}</TableCell>
-                                            <TableCell align='right'>{row.createdAt?.split('T')[0]}</TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    maxWidth: '150px',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis'
+                                                }}
+                                            >
+                                                {row.email}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    maxWidth: '150px'
+                                                }}
+                                            >
+                                                {row.phone ? row.phone : 'Chưa cập nhập'}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    maxWidth: '120px'
+                                                }}
+                                            >
+                                                {row.ordersCount?.length || 0}
+                                            </TableCell>
+                                            <TableCell>{formatDate(row.createdAt)}</TableCell>
                                         </TableRow>
                                     )
                                 })}

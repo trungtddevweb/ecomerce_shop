@@ -66,6 +66,9 @@ const UserSchema = new Schema(
             default: false
         },
         voucher: [Voucher],
+        ordersCount: {
+            type: [String]
+        },
         products: [ProductItem],
         totalItems: { type: Number, default: 0 },
         tokens: [{ type: Object }]

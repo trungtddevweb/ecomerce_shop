@@ -6,19 +6,22 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
-import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { IconButton, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { getAllOrdersAPI } from '~/api/main'
+import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
+import { Chip, Menu, MenuItem, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { getAllBlogs } from '~/api/main'
-import { Edit } from '@mui/icons-material'
-import Image from '~/components/Image/Image'
+import Image from '~/components/Image'
 import images from '~/assets/imgs'
 import { formatDate } from 'src/utils/format'
+import { useSelector } from 'react-redux'
+import { usePopupState, bindTrigger, bindMenu } from 'material-ui-popup-state/hooks'
 
-const BlogsDashboard = () => {
+const OrdersDashboard = ({ dataModal, onEdit }) => {
+    const [data, setData] = useState(null)
+    const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [isDeleting, setIsDeleting] = useState(true)
     const [order, setOrder] = useState('asc')
@@ -27,15 +30,42 @@ const BlogsDashboard = () => {
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [blogs, setBlogs] = useState([])
-    const [data, setData] = useState(null)
+    const token = useSelector(state => state.auth.user.token)
 
+    // const [anchorEl, setAnchorEl] = useState(null)
+
+    // const handleClickRow = event => {
+    //     setAnchorEl(event.currentTarget)
+    // }
+
+    // const handleClose = () => {
+    //     setAnchorEl(null)
+    // }
+
+    const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
+
+    function convertStatus(status) {
+        switch (status) {
+            case 'prepare':
+                return 'Chuẩn bị'
+            case 'pending':
+                return 'Đang xử lý'
+            case 'delivering':
+                return 'Đang giao'
+            case 'delivered':
+                return 'Đã giao'
+            default:
+                return 'Chuẩn bị'
+        }
+    }
+
+    // End modal
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getAllBlogs(rowsPerPage, page + 1)
-                setBlogs(response.docs)
+                const response = await getAllOrdersAPI(rowsPerPage, page + 1, token)
                 setData(response)
+                setProducts(response.docs)
                 setIsLoading(false)
             } catch (error) {
                 setIsLoading(false)
@@ -43,7 +73,7 @@ const BlogsDashboard = () => {
             }
         }
         fetchData()
-    }, [rowsPerPage, page, isDeleting])
+    }, [rowsPerPage, page, isDeleting, token])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -72,36 +102,51 @@ const BlogsDashboard = () => {
         })
         return stabilizedThis.map(el => el[0])
     }
+
     const headCells = [
         {
-            id: 'id',
+            id: 'orderCode',
             numeric: false,
             disablePadding: true,
-            label: 'ID bài viết'
+            label: 'Mã đơn hàng'
         },
         {
-            id: 'name',
-            numeric: true,
+            id: 'userId',
+            numeric: false,
             disablePadding: false,
-            label: 'Tên bài viết'
+            label: 'UserId'
         },
         {
-            id: 'author',
-            numeric: true,
+            id: 'price',
+            numeric: false,
             disablePadding: false,
-            label: 'Tác giả'
+            label: 'Giá trị'
         },
         {
-            id: 'date',
-            numeric: true,
+            id: 'voucherCode',
+            numeric: false,
             disablePadding: false,
-            label: 'Ngày tạo'
+            label: 'Voucher'
+        },
+
+        {
+            id: 'status',
+            numeric: false,
+            disablePadding: false,
+            label: 'Trạng thái'
+        },
+
+        {
+            id: 'orderedDate',
+            numeric: false,
+            disablePadding: false,
+            label: 'Ngày dặt'
         },
         {
-            id: 'settings',
-            numeric: true,
+            id: 'isPaid',
+            numeric: false,
             disablePadding: false,
-            label: 'Chỉnh sửa'
+            label: 'Thanh toán'
         }
     ]
 
@@ -113,7 +158,7 @@ const BlogsDashboard = () => {
 
     const handleSelectAllClick = event => {
         if (event.target.checked) {
-            const newSelected = blogs?.map(n => n._id)
+            const newSelected = products?.map(n => n._id)
             setSelected(newSelected)
             return
         }
@@ -136,7 +181,6 @@ const BlogsDashboard = () => {
 
         setSelected(newSelected)
     }
-
     const handleChangePage = (event, newPage) => {
         setIsLoading(true)
         setPage(newPage)
@@ -147,11 +191,11 @@ const BlogsDashboard = () => {
         setPage(0)
     }
 
-    const handleChangeDense = event => {
-        setDense(event.target.checked)
-    }
+    // const handleChangeDense = (event) => {
+    //     setDense(event.target.checked);
+    // };
 
-    const isSelected = id => selected.includes(id)
+    const isSelected = name => selected.includes(name)
     const count = data?.totalDocs || 0
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - count) : 0
@@ -169,26 +213,31 @@ const BlogsDashboard = () => {
                     <LinearIndeterminate />
                 ) : (
                     <TableContainer>
-                        <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
+                        <Table
+                            style={{ cursor: 'context-menu' }}
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby='tableTitle'
+                            size={dense ? 'small' : 'medium'}
+                        >
                             <EnhancedTableHead
+                                page={page}
                                 headCells={headCells}
                                 numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
                                 onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
-                                rowCount={count}
+                                rowCount={products?.length}
                             />
-
                             <TableBody>
-                                {stableSort(blogs, getComparator(order, orderBy)).map((row, index) => {
+                                {stableSort(products, getComparator(order, orderBy)).map((row, index) => {
                                     const isItemSelected = isSelected(row._id)
                                     const labelId = `enhanced-table-checkbox-${index}`
-
                                     return (
                                         <TableRow
+                                            // onClick={handleClickRow}
+                                            {...bindTrigger(popupState)}
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -198,6 +247,7 @@ const BlogsDashboard = () => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -207,55 +257,83 @@ const BlogsDashboard = () => {
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '170px',
-                                                    overflow: 'hidden',
-                                                    whiteSpace: 'nowrap',
-                                                    textOverflow: 'ellipsis'
+                                                    minWidth: '115px'
                                                 }}
                                                 component='th'
                                                 id={labelId}
                                                 scope='row'
                                                 padding='none'
                                             >
-                                                {row._id}
+                                                {row.orderCode}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
+                                                    minWidth: '130px',
+                                                    maxWidth: '130px',
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',
                                                     textOverflow: 'ellipsis'
                                                 }}
-                                                align='right'
                                             >
-                                                {row.title}
+                                                {row.userId}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '160px'
+                                                    minWidth: '100px'
                                                 }}
-                                                align='right'
                                             >
-                                                {row.author}
+                                                {row.totalPrice - row.discount < 0
+                                                    ? '0'
+                                                    : (row.totalPrice - row.discount).toLocaleString('vi-VN')}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    maxWidth: '120px',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis'
+                                                }}
+                                            >
+                                                {row.voucherCode}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '130px'
+                                                }}
+                                            >
+                                                <Chip
+                                                    size='small'
+                                                    label={convertStatus(row.status)}
+                                                    color={
+                                                        row.status === 'prepare'
+                                                            ? 'default'
+                                                            : row.status === 'pending'
+                                                            ? 'warning'
+                                                            : row.status === 'delivering'
+                                                            ? 'info'
+                                                            : row.status === 'delivered'
+                                                            ? 'success'
+                                                            : undefined
+                                                    }
+                                                />
                                             </TableCell>
                                             <TableCell
                                                 sx={{
                                                     minWidth: '120px'
                                                 }}
-                                                align='right'
                                             >
                                                 {formatDate(row.createdAt)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    minWidth: '125px'
+                                                    minWidth: '110px'
                                                 }}
-                                                align='right'
                                             >
-                                                <Tooltip title='Sửa'>
-                                                    <IconButton>
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
+                                                <Chip
+                                                    size='small'
+                                                    label={row.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                                    color={row.isPaid ? 'success' : 'warning'}
+                                                />
                                             </TableCell>
                                         </TableRow>
                                     )
@@ -266,12 +344,21 @@ const BlogsDashboard = () => {
                                             height: (dense ? 33 : 53) * emptyRows
                                         }}
                                     >
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={7} />
                                     </TableRow>
                                 )}
                             </TableBody>
                         </Table>
-                        {blogs.length === 0 && (
+                        {/* <Menu keepMounted open={Boolean(anchorEl)} onClose={handleClose} anchorEl={anchorEl}>
+                            <MenuItem onClick={handleClose}>Option 1</MenuItem>
+                            <MenuItem onClick={handleClose}>Option 2</MenuItem>
+                            <MenuItem onClick={handleClose}>Option 3</MenuItem>
+                        </Menu> */}
+                        <Menu {...bindMenu(popupState)}>
+                            <MenuItem onClick={popupState.close}>Cake</MenuItem>
+                            <MenuItem onClick={popupState.close}>Death</MenuItem>
+                        </Menu>
+                        {products.length === 0 && (
                             <Box
                                 margin='auto'
                                 display='flex'
@@ -286,8 +373,9 @@ const BlogsDashboard = () => {
                         )}
                     </TableContainer>
                 )}
+
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[5, 10]}
                     component='div'
                     count={count}
                     rowsPerPage={rowsPerPage}
@@ -300,4 +388,4 @@ const BlogsDashboard = () => {
     )
 }
 
-export default withFallback(BlogsDashboard, ErrorFallback, LinearIndeterminate)
+export default withFallback(OrdersDashboard, ErrorFallback, LinearIndeterminate)

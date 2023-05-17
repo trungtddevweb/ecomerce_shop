@@ -29,7 +29,7 @@ import { Link } from 'react-router-dom'
 import LinearIndeterminate from 'src/fallback/LinearProgress/LinearProgress'
 import { showToast } from 'src/redux/slice/toastSlice'
 import { removeProductFromCart } from 'src/redux/slice/usersSlice'
-import { getAUserAPI, getAVoucher, removeProductIdFromCartAPI } from '~/api/main'
+import { getAUserAPI, getAVoucherAPI, removeProductIdFromCartAPI } from '~/api/main'
 import images from '~/assets/imgs'
 import useStyles from '~/assets/styles/useStyles'
 import paymentMethod from '~/assets/imgs/payment.png'
@@ -37,7 +37,7 @@ import { showDialog } from 'src/redux/slice/dialogSlice'
 import useScrollToTop from '~/hooks/useScrollToTop'
 import useToggle from '~/hooks/useToggle'
 
-const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode }) => {
+const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode, sumPrice, setSumPrice }) => {
     useScrollToTop()
     const classes = useStyles()
     const token = useSelector(state => state.auth.user?.token)
@@ -61,12 +61,22 @@ const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode })
         [checked]
     )
 
-    let sumPrice = totalPrice - discount
     useEffect(() => {
-        if (discount !== 0 && checked === []) {
+        // Khi totalPrice hoặc discount thay đổi, tính toán lại sumPrice
+        const newSumPrice = totalPrice - discount
+        if (newSumPrice < 0) {
+            setSumPrice(0)
+        } else {
+            setSumPrice(newSumPrice)
+        }
+    }, [totalPrice, discount])
+
+    useEffect(() => {
+        // Xử lý khi discount không hợp lệ và checked rỗng
+        if (discount !== 0 && checked.length === 0) {
             setDiscount(0)
         }
-    }, [checked, discount])
+    }, [discount, checked])
 
     useEffect(() => {
         const fetchCartOfUser = async () => {
@@ -158,7 +168,7 @@ const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode })
 
     const handleGetVoucher = async () => {
         try {
-            const res = await getAVoucher(voucherCode, token)
+            const res = await getAVoucherAPI(voucherCode, token)
             const { total, used } = res.data
             if (res.status === 200) {
                 if (total !== used) {

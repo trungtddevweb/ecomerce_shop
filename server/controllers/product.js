@@ -57,6 +57,9 @@ export const getAllProduct = async (req, res) => {
         }
     }
 
+    const localTime = new Date()
+    const currentUTCTime = new Date(localTime.getTime() + localTime.getTimezoneOffset() * 60000)
+    console.log(currentUTCTime)
     try {
         const products = await Product.paginate(options.query, options)
         responseHandler.getData(res, products)
@@ -174,14 +177,13 @@ export const flashSaleProduct = async (req, res) => {
         if (product.flashSaleStart && product.flashSaleEnd) {
             return res.status(400).json({ message: 'Sản phẩm đã đang trong khuyến mãi' })
         }
-
-        // Cập nhật thông tin khuyến mãi cho sản phẩm
-        product.salePrice = salePrice
-        product.flashSaleStart = flashSaleStart
-        product.flashSaleEnd = flashSaleEnd
-
         // Lưu giá chính vào trường regularPrice
         product.regularPrice = product.price
+
+        // Cập nhật thông tin khuyến mãi cho sản phẩm
+        product.price = salePrice
+        product.flashSaleStart = flashSaleStart
+        product.flashSaleEnd = flashSaleEnd
 
         await product.save()
 

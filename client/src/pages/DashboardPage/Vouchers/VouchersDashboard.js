@@ -7,34 +7,35 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { IconButton, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { Chip, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { getAllBlogs } from '~/api/main'
-import { Edit } from '@mui/icons-material'
+import { getAllVouchersAPI } from '~/api/main'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
+import { useSelector } from 'react-redux'
 import { formatDate } from 'src/utils/format'
 
-const BlogsDashboard = () => {
+const VouchersDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [isDeleting, setIsDeleting] = useState(true)
     const [order, setOrder] = useState('asc')
-    const [orderBy, setOrderBy] = useState('calories')
+    const [orderBy, setOrderBy] = useState('total')
     const [selected, setSelected] = useState([])
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    const [blogs, setBlogs] = useState([])
+    const [vouchers, setVouchers] = useState([])
     const [data, setData] = useState(null)
+    const token = useSelector(state => state.auth.user?.token)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getAllBlogs(rowsPerPage, page + 1)
-                setBlogs(response.docs)
+                const response = await getAllVouchersAPI(rowsPerPage, page + 1, token)
+                setVouchers(response.docs)
                 setData(response)
                 setIsLoading(false)
             } catch (error) {
@@ -43,7 +44,7 @@ const BlogsDashboard = () => {
             }
         }
         fetchData()
-    }, [rowsPerPage, page, isDeleting])
+    }, [rowsPerPage, page, isDeleting, token])
 
     function descendingComparator(a, b, orderBy) {
         if (b[orderBy] < a[orderBy]) {
@@ -74,34 +75,46 @@ const BlogsDashboard = () => {
     }
     const headCells = [
         {
-            id: 'id',
+            id: 'voucherCode',
             numeric: false,
             disablePadding: true,
-            label: 'ID bài viết'
+            label: 'Mã voucher'
         },
         {
-            id: 'name',
+            id: 'discount',
             numeric: true,
             disablePadding: false,
-            label: 'Tên bài viết'
+            label: 'Giá giảm'
         },
         {
-            id: 'author',
+            id: 'startTime',
             numeric: true,
             disablePadding: false,
-            label: 'Tác giả'
+            label: 'Bắt đầu'
         },
         {
-            id: 'date',
+            id: 'endTime',
             numeric: true,
             disablePadding: false,
-            label: 'Ngày tạo'
+            label: 'Kết thúc'
         },
         {
-            id: 'settings',
+            id: 'total',
             numeric: true,
             disablePadding: false,
-            label: 'Chỉnh sửa'
+            label: 'Số lượng'
+        },
+        {
+            id: 'used',
+            numeric: true,
+            disablePadding: false,
+            label: 'Đã dùng'
+        },
+        {
+            id: 'status',
+            numeric: true,
+            disablePadding: false,
+            label: 'Trạng thái'
         }
     ]
 
@@ -111,10 +124,10 @@ const BlogsDashboard = () => {
         setOrderBy(property)
     }
 
-    const handleSelectAllClick = event => {
-        if (event.target.checked) {
-            const newSelected = blogs?.map(n => n._id)
-            setSelected(newSelected)
+    const handleSelectAllClick = e => {
+        if (e.target.checked) {
+            const checkedList = vouchers?.map(voucher => voucher._id)
+            setSelected(checkedList)
             return
         }
         setSelected([])
@@ -171,24 +184,24 @@ const BlogsDashboard = () => {
                     <TableContainer>
                         <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
                             <EnhancedTableHead
+                                page={page}
                                 headCells={headCells}
                                 numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
                                 onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
-                                rowCount={count}
+                                rowCount={vouchers?.length}
                             />
 
                             <TableBody>
-                                {stableSort(blogs, getComparator(order, orderBy)).map((row, index) => {
+                                {stableSort(vouchers, getComparator(order, orderBy)).map((row, index) => {
                                     const isItemSelected = isSelected(row._id)
                                     const labelId = `enhanced-table-checkbox-${index}`
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -198,6 +211,7 @@ const BlogsDashboard = () => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -207,7 +221,7 @@ const BlogsDashboard = () => {
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '170px',
+                                                    maxWidth: '120px',
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',
                                                     textOverflow: 'ellipsis'
@@ -217,7 +231,7 @@ const BlogsDashboard = () => {
                                                 scope='row'
                                                 padding='none'
                                             >
-                                                {row._id}
+                                                {row.voucherCode}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
@@ -227,7 +241,7 @@ const BlogsDashboard = () => {
                                                 }}
                                                 align='right'
                                             >
-                                                {row.title}
+                                                {row.discount.toLocaleString('vi-VN')}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
@@ -235,7 +249,7 @@ const BlogsDashboard = () => {
                                                 }}
                                                 align='right'
                                             >
-                                                {row.author}
+                                                {formatDate(row.startTime)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
@@ -243,7 +257,23 @@ const BlogsDashboard = () => {
                                                 }}
                                                 align='right'
                                             >
-                                                {formatDate(row.createdAt)}
+                                                {formatDate(row.endTime)}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '120px'
+                                                }}
+                                                align='right'
+                                            >
+                                                {row.total}
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    minWidth: '120px'
+                                                }}
+                                                align='right'
+                                            >
+                                                {row.used}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
@@ -251,11 +281,15 @@ const BlogsDashboard = () => {
                                                 }}
                                                 align='right'
                                             >
-                                                <Tooltip title='Sửa'>
-                                                    <IconButton>
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
+                                                <Chip
+                                                    size='small'
+                                                    label={
+                                                        row.used !== row.total || row.expired ? 'Khả dụng' : 'Hết mã'
+                                                    }
+                                                    color={
+                                                        row.used !== row.total || row.expired ? 'success' : 'default'
+                                                    }
+                                                />
                                             </TableCell>
                                         </TableRow>
                                     )
@@ -271,7 +305,7 @@ const BlogsDashboard = () => {
                                 )}
                             </TableBody>
                         </Table>
-                        {blogs.length === 0 && (
+                        {vouchers.length === 0 && (
                             <Box
                                 margin='auto'
                                 display='flex'
@@ -300,4 +334,4 @@ const BlogsDashboard = () => {
     )
 }
 
-export default withFallback(BlogsDashboard, ErrorFallback, LinearIndeterminate)
+export default withFallback(VouchersDashboard, ErrorFallback, LinearIndeterminate)

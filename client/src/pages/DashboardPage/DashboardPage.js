@@ -20,12 +20,16 @@ import {
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { Create, HistoryEduOutlined, Inventory, ManageAccounts } from '@mui/icons-material'
+import { Create, HistoryEduOutlined, Inventory, LocalShipping, Loyalty, ManageAccounts } from '@mui/icons-material'
+import DiscountIcon from '@mui/icons-material/Discount'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
-import BlogsDashboard from './Blogs/BlogsDashboard'
-import ProductsDashboard from './Products/ProductsDashboard'
+import BlogsDashboard from './Blogs'
+import ProductsDashboard from './Products'
 import CreateFields from './CreateFields'
-import UsersDashBoard from './Users/UsersDashBoard'
+import VouchersDashboard from './Vouchers'
+import UsersDashBoard from './Users'
+import OrdersDashboard from './Orders/'
+import ProductsSaleDashboard from './ProductsSale'
 import useScrollToTop from '~/hooks/useScrollToTop'
 
 const DashboardPage = () => {
@@ -60,6 +64,12 @@ const DashboardPage = () => {
                 return <BlogsDashboard />
             case 'create':
                 return <CreateFields isMatch={isMatch} />
+            case 'vouchers':
+                return <VouchersDashboard />
+            case 'orders':
+                return <OrdersDashboard />
+            case 'products-sale':
+                return <ProductsSaleDashboard />
             default:
                 return <ProductsDashboard />
         }
@@ -96,7 +106,14 @@ const DashboardPage = () => {
                 <Grid item xs={12} md={3} xl={4}>
                     <Paper elevation={6}>
                         {isMatch ? (
-                            <Tabs value={value} onChange={handleChange} aria-label='icon tabs example'>
+                            <Tabs
+                                variant='scrollable'
+                                scrollButtons={false}
+                                allowScrollButtonsMobile
+                                value={value}
+                                onChange={handleChange}
+                                aria-label='icon tabs example'
+                            >
                                 <Tab
                                     icon={<HistoryEduOutlined />}
                                     value='blogs'
@@ -105,15 +122,33 @@ const DashboardPage = () => {
                                 />
                                 <Tab
                                     icon={<Inventory />}
-                                    aria-label='inventory'
+                                    aria-label='products'
                                     value='products'
                                     onClick={event => handleListItemClick(event, 'products')}
                                 />
                                 <Tab
                                     icon={<ManageAccounts />}
-                                    aria-label='person'
+                                    aria-label='users'
                                     value='users'
                                     onClick={event => handleListItemClick(event, 'users')}
+                                />
+                                <Tab
+                                    icon={<DiscountIcon />}
+                                    aria-label='voucher'
+                                    value='voucher'
+                                    onClick={event => handleListItemClick(event, 'vouchers')}
+                                />
+                                <Tab
+                                    icon={<Loyalty />}
+                                    aria-label='products-sale'
+                                    value='products-sale'
+                                    onClick={event => handleListItemClick(event, 'products-sale')}
+                                />
+                                <Tab
+                                    icon={<LocalShipping />}
+                                    aria-label='orders'
+                                    value='orders'
+                                    onClick={event => handleListItemClick(event, 'orders')}
                                 />
                                 <Tab
                                     icon={<Create />}
@@ -163,6 +198,33 @@ const DashboardPage = () => {
                                         <ListItemText primary='Người dùng' />
                                     </ListItemButton>
                                     {/* <Divider variant='fullWidth' component='div' /> */}
+                                    <ListItemButton
+                                        selected={selectedParam === 'orders'}
+                                        onClick={event => handleListItemClick(event, 'orders')}
+                                    >
+                                        <ListItemIcon>
+                                            <LocalShipping />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Đơn hàng' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'vouchers'}
+                                        onClick={event => handleListItemClick(event, 'vouchers')}
+                                    >
+                                        <ListItemIcon>
+                                            <DiscountIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Mã giảm giá' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'products-sale'}
+                                        onClick={event => handleListItemClick(event, 'products-sale')}
+                                    >
+                                        <ListItemIcon>
+                                            <Loyalty />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Sản phẩm sale' />
+                                    </ListItemButton>
                                     <ListItemButton
                                         selected={selectedParam === 'create'}
                                         onClick={event => handleListItemClick(event, 'create')}

@@ -2,11 +2,20 @@ import Voucher from '../models/Voucher.js'
 
 export const createVoucher = async (req, res) => {
     try {
-        const { voucherCode } = req.body
+        const { voucherCode, total, startTime, endTime, discount } = req.body
         const existVoucher = await Voucher.findOne({ voucherCode })
         if (existVoucher) return res.status(400).json('Voucher đã tồn tại')
+
+        if (endTime <= startTime) {
+            return res.status(400).json('Thời gian kết thúc phải lớn hơn thời gian bắt đầu')
+        }
+
         const newVoucher = await Voucher({
-            ...req.body
+            voucherCode,
+            total,
+            startTime,
+            endTime,
+            discount
         })
         await newVoucher.save()
         res.status(201).json(newVoucher)
@@ -35,6 +44,9 @@ export const getAVoucher = async (req, res) => {
     try {
         const voucher = await Voucher.findOne({ voucherCode })
         if (!voucher) return res.status(404).json('Không tìm thấy voucher!')
+        if (voucher.expired) {
+            return res.status(400).json('Voucher đã hết hạn!')
+        }
         res.status(200).json(voucher)
     } catch (error) {
         res.status(500).json({ success: false, error: error.message })

@@ -17,7 +17,7 @@ import { showToast } from 'src/redux/slice/toastSlice'
 import { orderProductAPI } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
-export default function Review({ order, onBack, onNext, setOrderCode, voucher, voucherCode }) {
+export default function Review({ order, onBack, onNext, setOrderCode, voucher, voucherCode, sumPrice }) {
     const { products, address, paymentMethod } = order
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user?.token)
@@ -28,7 +28,6 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
         () => products.reduce((accumulator, currentValue) => accumulator + currentValue.sumPrice, 0),
         [products]
     )
-    const sumPrice = totalPrice - voucher
 
     const newProducts = products.map(product => ({
         productId: product.productId,

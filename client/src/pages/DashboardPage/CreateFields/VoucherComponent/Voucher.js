@@ -22,6 +22,7 @@ const schema = yup.object().shape({
 
 const Voucher = () => {
     const today = dayjs()
+    const nextDay = today.add(1, 'day')
     const [isLoading, setIsLoading] = useState(false)
     const token = useSelector(state => state.auth.user?.token)
     const dispatch = useDispatch()
@@ -30,7 +31,8 @@ const Voucher = () => {
         voucherCode: '',
         total: 1,
         discount: 10000,
-        expirationDate: today
+        startTime: today,
+        endTime: nextDay
     }
     const {
         handleSubmit,
@@ -59,52 +61,55 @@ const Voucher = () => {
     return (
         <Box component='form' onSubmit={handleSubmit(Voucher)}>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Controller
-                        control={control}
-                        rules={{ minLength: 10, maxLength: 20, required: true }}
-                        name='voucherCode'
-                        render={({ field }) => (
-                            <Stack>
-                                <TextField
-                                    {...field}
-                                    error={!!errors.voucherCode}
-                                    label='Tên mã'
-                                    autoFocus
-                                    type='text'
-                                    fullWidth
-                                />
-                                <Typography variant='body2' color='error'>
-                                    {errors.voucherCode?.message}
-                                </Typography>
-                            </Stack>
-                        )}
-                    />
+                <Grid container item xs={12} spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <Controller
+                            control={control}
+                            rules={{ minLength: 10, maxLength: 20, required: true }}
+                            name='voucherCode'
+                            render={({ field }) => (
+                                <Stack>
+                                    <TextField
+                                        {...field}
+                                        error={!!errors.voucherCode}
+                                        label='Tên mã'
+                                        autoFocus
+                                        type='text'
+                                        fullWidth
+                                    />
+                                    <Typography variant='body2' color='error'>
+                                        {errors.voucherCode?.message}
+                                    </Typography>
+                                </Stack>
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Controller
+                            control={control}
+                            name='discount'
+                            rules={{ min: 1, required: true }}
+                            render={({ field }) => (
+                                <Stack>
+                                    <TextField
+                                        {...field}
+                                        type='number'
+                                        label='Giá giảm'
+                                        error={!!errors.discount}
+                                        fullWidth
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position='end'>đ</InputAdornment>
+                                        }}
+                                    />
+                                    <Typography variant='body2' color='error'>
+                                        {errors.discount?.message}
+                                    </Typography>
+                                </Stack>
+                            )}
+                        />
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                    <Controller
-                        control={control}
-                        name='discount'
-                        rules={{ min: 1, required: true }}
-                        render={({ field }) => (
-                            <Stack>
-                                <TextField
-                                    {...field}
-                                    type='number'
-                                    label='Giá giảm'
-                                    error={!!errors.discount}
-                                    fullWidth
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position='end'>đ</InputAdornment>
-                                    }}
-                                />
-                                <Typography variant='body2' color='error'>
-                                    {errors.discount?.message}
-                                </Typography>
-                            </Stack>
-                        )}
-                    />
-                </Grid>
+
                 <Grid item xs={12} md={4}>
                     <Controller
                         control={control}
@@ -129,8 +134,31 @@ const Voucher = () => {
                 <Grid item xs={12} md={4}>
                     <Controller
                         control={control}
-                        name='expirationDate'
-                        render={({ field }) => <DatePicker label='Ngày hết hạn' sx={{ width: '100%' }} {...field} />}
+                        name='startTime'
+                        render={({ field }) => (
+                            <DatePicker
+                                format='DD/MM/YYYY'
+                                disablePast
+                                label='Bắt đầu'
+                                sx={{ width: '100%' }}
+                                {...field}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Controller
+                        control={control}
+                        name='endTime'
+                        render={({ field }) => (
+                            <DatePicker
+                                disablePast
+                                format='DD/MM/YYYY'
+                                label='Kết thúc'
+                                sx={{ width: '100%' }}
+                                {...field}
+                            />
+                        )}
                     />
                 </Grid>
                 <Grid item xs={12}>

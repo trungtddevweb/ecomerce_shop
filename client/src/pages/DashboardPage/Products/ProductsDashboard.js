@@ -17,6 +17,7 @@ import { Edit } from '@mui/icons-material'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
 import EditModal from '~/components/EditModal/EditModal'
+import { formatDate } from 'src/utils/format'
 
 const ProductsDashboard = ({ dataModal, onEdit }) => {
     const [data, setData] = useState(null)
@@ -259,7 +260,7 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
                                                 }}
                                                 align='right'
                                             >
-                                                {row.createdAt?.split('T')[0]}
+                                                {formatDate(row.createdAt)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
