@@ -5,7 +5,7 @@ import { alpha } from '@mui/material/styles'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
-import { deleteItemByParams } from '~/api/main'
+import { deleteItemByParams, removeProductFromSaleAPI } from '~/api/main'
 import { showDialog } from 'src/redux/slice/dialogSlice'
 
 function EnhancedTableToolbar(props) {
@@ -36,7 +36,10 @@ function EnhancedTableToolbar(props) {
     const handleDelete = async () => {
         try {
             setDeleting(true)
-            const res = await deleteItemByParams(managerId, token, selectedItem)
+            const res =
+                managerId === 'products-sale'
+                    ? await deleteItemByParams(managerId, token, selectedItem)
+                    : await removeProductFromSaleAPI(managerId, token, selectedItem)
             if (res.status === 200) {
                 setSelected([])
                 dispatch(showToast({ type: 'success', message: 'Xóa thành công!' }))

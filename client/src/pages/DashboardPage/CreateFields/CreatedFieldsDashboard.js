@@ -4,6 +4,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab'
 import ProductComponent from './ProductComponent'
 import BlogComponent from './BlogComponent'
 import VoucherComponent from './VoucherComponent/Voucher'
+import FlashSale from './FlashSale'
 
 const CreateFields = ({ isMatch }) => {
     const [value, setValue] = useState('product')
@@ -11,13 +12,18 @@ const CreateFields = ({ isMatch }) => {
     const handleChange = (event, newValue) => {
         setValue(newValue)
     }
-    function getComponent(value) {
-        if (value === 'product') {
-            return <ProductComponent isMatch={isMatch} />
-        } else if (value === 'blog') {
-            return <BlogComponent isMatch={isMatch} />
-        } else {
-            return <VoucherComponent isMatch={isMatch} />
+    function getComponent(typeValue) {
+        switch (typeValue) {
+            case 'product':
+                return <ProductComponent isMatch={isMatch} />
+            case 'blog':
+                return <BlogComponent isMatch={isMatch} />
+            case 'voucher':
+                return <VoucherComponent isMatch={isMatch} />
+            case 'products-sale':
+                return <FlashSale isMatch={isMatch} />
+            default:
+                return <ProductComponent isMatch={isMatch} />
         }
     }
 
@@ -29,6 +35,7 @@ const CreateFields = ({ isMatch }) => {
                         <Tab label='Sản phẩm' value='product' />
                         <Tab label='Bài viết' value='blog' />
                         <Tab label='Mã giảm giá' value='voucher' />
+                        <Tab label='Sản phẩm sale' value='products-sale' />
                     </TabList>
                 </Box>
                 <TabPanel value={value}>{getComponent(value)}</TabPanel>

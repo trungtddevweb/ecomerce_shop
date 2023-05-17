@@ -221,3 +221,24 @@ export const getAllProductsInFlashSaleAPI = async (limit, page, token) => {
     })
     return response.data
 }
+
+export const createFlashSaleAPI = async (data, token) => {
+    const response = await mainAPI.post('/products/flash-sale/create', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data
+}
+
+export const removeProductFromSaleAPI = async (token, selectedItem) => {
+    const response = await mainAPI.delete('products/flash-sale/products', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        data: {
+            selectedIds: selectedItem
+        }
+    })
+    return response.data
+}
