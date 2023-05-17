@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import dayjs from 'dayjs'
-import { Box, TextField, Grid, Typography, Stack } from '@mui/material'
+import { Box, TextField, Grid, Typography, Stack, InputAdornment } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import { LoadingButton } from '@mui/lab'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,8 +12,9 @@ const FlashSale = () => {
     const token = useSelector(state => state.auth.user.token)
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(false)
-    const flashSaleStart = dayjs()
-    const flashSaleEnd = dayjs()
+    const today = dayjs()
+    const nextDay = today.add(1, 'day')
+
     const {
         control,
         reset,
@@ -22,26 +23,25 @@ const FlashSale = () => {
     } = useForm({
         defaultValues: {
             productId: '',
-            salePrice: '',
-            flashSaleStart: flashSaleStart,
-            flashSaleEnd: flashSaleEnd
+            salePrice: 10000,
+            flashSaleStart: today,
+            flashSaleEnd: nextDay
         }
     })
 
     const flashSale = async data => {
-        console.log(data)
         try {
             setIsLoading(true)
-            await createFlashSaleAPI(data, token)
-            dispatch(showToast({ type: 'success', message: 'Tạo thành công!' }))
-            setIsLoading(false)
-            reset()
-
-            setIsLoading(false)
+            const res = await createFlashSaleAPI(data, token)
+            if (res.status === 200) {
+                dispatch(showToast({ type: 'success', message: 'Tạo khuyến mãi thành công!' }))
+                setIsLoading(false)
+                reset()
+            }
         } catch (err) {
             console.log(err)
             setIsLoading(false)
-            dispatch(showToast({ type: 'error', message: 'Sản phẩm đã đang trong khuyến mãi' }))
+            dispatch(showToast({ type: 'error', message: err.response.data.message }))
         }
     }
 
@@ -55,9 +55,17 @@ const FlashSale = () => {
                         rules={{ required: true }}
                         render={({ field }) => (
                             <Stack>
-                                <TextField {...field} label='Mã sản phẩm' variant='outlined' type='text' fullWidth />
+                                <TextField
+                                    {...field}
+                                    autoFocus
+                                    label='Mã sản phẩm'
+                                    variant='outlined'
+                                    type='text'
+                                    fullWidth
+                                    error={!!errors.productId}
+                                />
                                 {errors.productId && (
-                                    <Typography sx={{ color: 'red' }}>Mã sản phẩm không được để trống</Typography>
+                                    <Typography color='error'>Mã sản phẩm không được để trống</Typography>
                                 )}
                             </Stack>
                         )}
@@ -70,9 +78,18 @@ const FlashSale = () => {
                         rules={{ required: true }}
                         render={({ field }) => (
                             <Stack>
-                                <TextField {...field} label='Giá sale' variant='outlined' type='number' fullWidth />
+                                <TextField
+                                    {...field}
+                                    label='Giá sale'
+                                    variant='outlined'
+                                    type='number'
+                                    fullWidth
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position='end'>đ</InputAdornment>
+                                    }}
+                                />
                                 {errors.salePrice && (
-                                    <Typography sx={{ color: 'red' }}>Giá sale không được để trống</Typography>
+                                    <Typography color='error'>Giá sale không được để trống</Typography>
                                 )}
                             </Stack>
                         )}
@@ -85,12 +102,15 @@ const FlashSale = () => {
                         control={control}
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <DatePicker {...field} label='Ngày bắt đầu FlashSale' sx={{ width: '100%' }} />
+                            <DatePicker
+                                disablePast
+                                format='DD/MM/YYYY'
+                                {...field}
+                                label='Bắt đầu'
+                                sx={{ width: '100%' }}
+                            />
                         )}
                     />
-                    {errors.flashSaleStart && (
-                        <Typography sx={{ color: 'red' }}>Ngày bắt đầu FlashSale không được để trống</Typography>
-                    )}
                 </Grid>
                 <Grid item xs={6} sm={12} md={6}>
                     <Controller
@@ -98,14 +118,17 @@ const FlashSale = () => {
                         control={control}
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <DatePicker {...field} label='Ngày kết thúc FlashSale' sx={{ width: '100%' }} />
+                            <DatePicker
+                                disablePast
+                                format='DD/MM/YYYY'
+                                {...field}
+                                label='Kết thúc '
+                                sx={{ width: '100%' }}
+                            />
                         )}
                     />
-                    {errors.flashSaleEnd && (
-                        <Typography sx={{ color: 'red' }}>Ngày kết thúc FlashSale không được để trống</Typography>
-                    )}
                 </Grid>
-                <Grid item>
+                <Grid item sx={12}>
                     <LoadingButton loading={isLoading} type='submit' variant='contained'>
                         Tạo
                     </LoadingButton>

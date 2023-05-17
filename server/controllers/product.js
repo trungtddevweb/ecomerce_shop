@@ -56,10 +56,6 @@ export const getAllProduct = async (req, res) => {
                 })())
         }
     }
-
-    const localTime = new Date()
-    const currentUTCTime = new Date(localTime.getTime() + localTime.getTimezoneOffset() * 60000)
-    console.log(currentUTCTime)
     try {
         const products = await Product.paginate(options.query, options)
         responseHandler.getData(res, products)
@@ -220,28 +216,34 @@ export const getALlProductsInflashSale = async (req, res) => {
 
 export const deleteFlashSaleProduct = async (req, res) => {
     try {
-        const { productId } = req.body
+        const { selectedIds } = req.body
 
-        // Kiểm tra xem sản phẩm có tồn tại không
-        const product = await Product.findById(productId)
-        if (!product) {
-            return res.status(404).json({ message: 'Sản phẩm không tồn tại' })
+        if (!selectedIds) {
+            return res.status(400).json({ status: false, message: 'SelectedIds is not specified' })
         }
 
-        // Kiểm tra xem sản phẩm có đang trong khuyến mãi hay không
-        if (!product.flashSaleStart || !product.flashSaleEnd) {
-            return res.status(400).json({ message: 'Sản phẩm không đang trong khuyến mãi' })
+        // Lặp qua danh sách selectedIds
+        for (const productId of selectedIds) {
+            const product = await Product.findById(productId)
+
+            if (!product) {
+                return res.status(404).json({ message: 'Sản phẩm không tồn tại' })
+            }
+
+            // Kiểm tra xem sản phẩm có đang trong khuyến mãi hay không
+            if (!product.flashSaleStart || !product.flashSaleEnd) {
+                return res.status(400).json({ message: 'Sản phẩm không đang trong khuyến mãi' })
+            }
+
+            // Xóa thông tin khuyến mãi của sản phẩm
+            product.flashSaleStart = null
+            product.flashSaleEnd = null
+
+            // Khôi phục giá chính từ trường regularPrice
+            product.price = product.regularPrice
+
+            await product.save()
         }
-
-        // Xóa thông tin khuyến mãi của sản phẩm
-        product.salePrice = null
-        product.flashSaleStart = null
-        product.flashSaleEnd = null
-
-        // Khôi phục giá chính từ trường regularPrice
-        product.price = product.regularPrice
-
-        await product.save()
 
         return res.status(200).json({ message: 'Xóa khuyến mãi thành công' })
     } catch (error) {

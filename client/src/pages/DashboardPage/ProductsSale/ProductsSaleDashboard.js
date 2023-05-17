@@ -257,9 +257,9 @@ const ProductsSaleDashboard = ({ dataModal, onEdit }) => {
                                                     minWidth: '100px'
                                                 }}
                                             >
-                                                {row.price?.toLocaleString('vi-VN')}
+                                                {row.regularPrice?.toLocaleString('vi-VN')}
                                             </TableCell>
-                                            <TableCell>{row.salePrice.toLocaleString('vi-VN')}</TableCell>
+                                            <TableCell>{row.price.toLocaleString('vi-VN')}</TableCell>
                                             <TableCell
                                                 sx={{
                                                     minWidth: '120px'
