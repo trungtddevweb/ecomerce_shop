@@ -6,7 +6,6 @@ import userRoutes from './user.js'
 import stripeRoutes from './stripe.js'
 import orderRoutes from './order.js'
 import voucherRoutes from './voucher.js'
-import { verifyAdmin } from '../middleware/verify.js'
 
 const router = express.Router()
 
@@ -22,6 +21,6 @@ router.use('/stripe', stripeRoutes)
 
 router.use('/orders', orderRoutes)
 
-router.use('/vouchers', verifyAdmin, voucherRoutes)
+router.use('/vouchers', voucherRoutes)
 
 export default router

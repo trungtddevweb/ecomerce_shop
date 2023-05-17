@@ -283,8 +283,12 @@ const VouchersDashboard = () => {
                                             >
                                                 <Chip
                                                     size='small'
-                                                    label={row.used !== row.total ? 'Khả dụng' : 'Hết mã'}
-                                                    color={row.used !== row.total ? 'success' : 'default'}
+                                                    label={
+                                                        row.used !== row.total || row.expired ? 'Khả dụng' : 'Hết mã'
+                                                    }
+                                                    color={
+                                                        row.used !== row.total || row.expired ? 'success' : 'default'
+                                                    }
                                                 />
                                             </TableCell>
                                         </TableRow>
