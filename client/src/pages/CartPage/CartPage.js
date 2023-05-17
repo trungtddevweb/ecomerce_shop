@@ -24,6 +24,8 @@ const CartPage = () => {
     const [orderCode, setOrderCode] = useState('')
     const [voucherCode, setVoucherCode] = useState('')
     const [voucher, setVoucher] = useState(0)
+    const [sumPrice, setSumPrice] = useState(0)
+
     const [order, setOrder] = useState({
         products: [],
         address: {},
@@ -91,6 +93,8 @@ const CartPage = () => {
                         onNext={handleProductSelect}
                         setVoucherCode={setVoucherCode}
                         voucherCode={voucherCode}
+                        sumPrice={sumPrice}
+                        setSumPrice={setSumPrice}
                     />
                 )
             case 1:
@@ -114,6 +118,7 @@ const CartPage = () => {
                         order={order}
                         voucherCode={voucherCode}
                         setOrderCode={setOrderCode}
+                        sumPrice={sumPrice}
                     />
                 )
             default:
