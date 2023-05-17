@@ -37,7 +37,7 @@ function EnhancedTableToolbar(props) {
         try {
             setDeleting(true)
             const res =
-                managerId === 'products-sale'
+                managerId !== 'products-sale'
                     ? await deleteItemByParams(managerId, token, selectedItem)
                     : await removeProductFromSaleAPI(managerId, token, selectedItem)
             if (res.status === 200) {
