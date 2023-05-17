@@ -45,9 +45,6 @@ const ProductSchema = new Schema(
         flashSaleEnd: {
             type: Date
         },
-        salePrice: {
-            type: Number
-        },
         category: {
             type: String,
             default: 'tất cả'

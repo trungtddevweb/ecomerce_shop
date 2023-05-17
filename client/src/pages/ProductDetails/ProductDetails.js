@@ -153,6 +153,7 @@ const ProductDetails = () => {
             console.error(error)
         }
     }
+
     return (
         <Box display='flex' padding={1} justifyContent='center' marginY={4}>
             <Box
@@ -309,27 +310,49 @@ const ProductDetails = () => {
                                 <Typography color='GrayText' marginY={2} fontStyle='italic' variant='subtitle2'>
                                     Trong kho còn lại {product.quantity}
                                 </Typography>
-                                <Typography marginY={2} variant={isMatch ? 'h6' : 'h4'} color='red'>
-                                    Giá: {totalPrice.toLocaleString('vi-VN')} đ
-                                </Typography>
-                                <Stack direction='row' spacing={2}>
-                                    <Button
-                                        size={isMatch ? 'medium' : 'large'}
-                                        startIcon={<AddShoppingCart fontSize='large' />}
-                                        variant='contained'
-                                        color='error'
-                                        onClick={handleAddToCart}
-                                    >
-                                        Thêm vào giỏ hàng
+                                {product.regularPrice > product.price ? (
+                                    <Stack direction='row' columnGap={2}>
+                                        <Typography
+                                            sx={{ textDecoration: 'line-through' }}
+                                            marginY={2}
+                                            variant={isMatch ? 'h6' : 'h4'}
+                                            color='lightgray'
+                                        >
+                                            Giá: {product.regularPrice.toLocaleString('vi-VN')}
+                                        </Typography>
+                                        <Typography marginY={2} variant={isMatch ? 'h6' : 'h4'} color='red'>
+                                            Giá KM: {product.price.toLocaleString('vi-VN')} đ
+                                        </Typography>
+                                    </Stack>
+                                ) : (
+                                    <Typography marginY={2} variant={isMatch ? 'h6' : 'h4'} color='red'>
+                                        Giá: {totalPrice.toLocaleString('vi-VN')} đ
+                                    </Typography>
+                                )}
+                                {product.quantity === 0 ? (
+                                    <Button size={isMatch ? 'medium' : 'large'} variant='contained' disabled>
+                                        Đã hết hàng
                                     </Button>
-                                    <Button
-                                        size={isMatch ? 'medium' : 'large'}
-                                        variant='contained'
-                                        onClick={handleBuyNow}
-                                    >
-                                        Mua ngay
-                                    </Button>
-                                </Stack>
+                                ) : (
+                                    <Stack direction='row' spacing={2}>
+                                        <Button
+                                            size={isMatch ? 'medium' : 'large'}
+                                            startIcon={<AddShoppingCart fontSize='large' />}
+                                            variant='contained'
+                                            color='error'
+                                            onClick={handleAddToCart}
+                                        >
+                                            Thêm vào giỏ hàng
+                                        </Button>
+                                        <Button
+                                            size={isMatch ? 'medium' : 'large'}
+                                            variant='contained'
+                                            onClick={handleBuyNow}
+                                        >
+                                            Mua ngay
+                                        </Button>
+                                    </Stack>
+                                )}
                             </Box>
                         </Grid>
                     </Grid>

@@ -8,16 +8,16 @@ import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import { getAllOrdersAPI } from '~/api/main'
 import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
-import { Chip, TablePagination, TableRow, Typography } from '@mui/material'
+import { Chip, Menu, MenuItem, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
 import Image from '~/components/Image'
 import images from '~/assets/imgs'
-import EditModal from '~/components/EditModal/EditModal'
 import { formatDate } from 'src/utils/format'
 import { useSelector } from 'react-redux'
+import { usePopupState, bindTrigger, bindMenu } from 'material-ui-popup-state/hooks'
 
 const OrdersDashboard = ({ dataModal, onEdit }) => {
     const [data, setData] = useState(null)
@@ -30,24 +30,19 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    // Modal
-    const [modalOpen, setModalOpen] = useState(false)
-    const [modalData, setModalData] = useState(null)
     const token = useSelector(state => state.auth.user.token)
 
-    const handleModalOpen = data => {
-        setModalData(data)
-        setModalOpen(true)
-    }
+    // const [anchorEl, setAnchorEl] = useState(null)
 
-    const handleModalClose = () => {
-        setModalOpen(false)
-        setModalData(null)
-    }
+    // const handleClickRow = event => {
+    //     setAnchorEl(event.currentTarget)
+    // }
 
-    const handleModalSave = value => {
-        onEdit(modalData.id, value)
-    }
+    // const handleClose = () => {
+    //     setAnchorEl(null)
+    // }
+
+    const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
 
     function convertStatus(status) {
         switch (status) {
@@ -218,7 +213,12 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                     <LinearIndeterminate />
                 ) : (
                     <TableContainer>
-                        <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
+                        <Table
+                            style={{ cursor: 'context-menu' }}
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby='tableTitle'
+                            size={dense ? 'small' : 'medium'}
+                        >
                             <EnhancedTableHead
                                 page={page}
                                 headCells={headCells}
@@ -235,6 +235,8 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                     const labelId = `enhanced-table-checkbox-${index}`
                                     return (
                                         <TableRow
+                                            // onClick={handleClickRow}
+                                            {...bindTrigger(popupState)}
                                             hover
                                             role='checkbox'
                                             aria-checked={isItemSelected}
@@ -280,7 +282,9 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                                     minWidth: '100px'
                                                 }}
                                             >
-                                                {(row.totalPrice - row.discount).toLocaleString('vi-VN')}
+                                                {row.totalPrice - row.discount < 0
+                                                    ? '0'
+                                                    : (row.totalPrice - row.discount).toLocaleString('vi-VN')}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
@@ -345,6 +349,15 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                 )}
                             </TableBody>
                         </Table>
+                        {/* <Menu keepMounted open={Boolean(anchorEl)} onClose={handleClose} anchorEl={anchorEl}>
+                            <MenuItem onClick={handleClose}>Option 1</MenuItem>
+                            <MenuItem onClick={handleClose}>Option 2</MenuItem>
+                            <MenuItem onClick={handleClose}>Option 3</MenuItem>
+                        </Menu> */}
+                        <Menu {...bindMenu(popupState)}>
+                            <MenuItem onClick={popupState.close}>Cake</MenuItem>
+                            <MenuItem onClick={popupState.close}>Death</MenuItem>
+                        </Menu>
                         {products.length === 0 && (
                             <Box
                                 margin='auto'
@@ -360,14 +373,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                         )}
                     </TableContainer>
                 )}
-                {modalData && (
-                    <EditModal
-                        open={modalOpen}
-                        handleClose={handleModalClose}
-                        handleSave={handleModalSave}
-                        value={modalData.name}
-                    />
-                )}
+
                 <TablePagination
                     rowsPerPageOptions={[5, 10]}
                     component='div'

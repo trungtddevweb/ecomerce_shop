@@ -71,8 +71,8 @@ const CardProductItem = ({ data }) => {
                     )}
                 </CardContent>
                 <Divider color='gray' />
-                <Typography color='text.secondary' padding='8px 16px' variant='body1'>
-                    {data.location || 'Hà Nội'}
+                <Typography color='text.secondary' padding='8px 16px' variant='body2'>
+                    {data.regularPrice > data.price ? 'Đang khuyến mãi' : 'Hà Nội'}
                 </Typography>
             </CardActionArea>
         </Card>

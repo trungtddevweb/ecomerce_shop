@@ -14,6 +14,8 @@ const productJob = cron.schedule('* * * * *', async () => {
         // Cập nhật giá của các sản phẩm về giá chính
         for (const product of productsToUpdate) {
             product.price = product.regularPrice
+            product.flashSaleStart = null
+            product.flashSaleEnd = null
             await product.save()
         }
     } catch (error) {
