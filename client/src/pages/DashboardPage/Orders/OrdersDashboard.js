@@ -54,6 +54,8 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                 return 'Đang giao'
             case 'delivered':
                 return 'Đã giao'
+            case 'cancel':
+                return 'Đã huỷ'
             default:
                 return 'Chuẩn bị'
         }
@@ -305,7 +307,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                                     size='small'
                                                     label={convertStatus(row.status)}
                                                     color={
-                                                        row.status === 'prepare'
+                                                        row.status === ('prepare' || 'cancel')
                                                             ? 'default'
                                                             : row.status === 'pending'
                                                             ? 'warning'

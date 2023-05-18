@@ -96,4 +96,4 @@ export const imagesSlider = [
     { src: banner3, alt: 'Slider 3' }
 ]
 
-export const statusShipping = ['prepare', 'pending', 'delivering', 'delivered']
+export const statusShipping = ['prepare', 'pending', 'delivering', 'delivered', 'cancel']

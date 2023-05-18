@@ -1,5 +1,7 @@
 import express from 'express'
 import {
+    cancelOrderByAdmin,
+    cancelOrderByUser,
     createOrder,
     deletedOrderById,
     getAllOrderByAdmin,
@@ -28,5 +30,11 @@ router.patch('/', verifyUser, updateOrder)
 
 // Delete order
 router.delete('/', verifyAdmin, deletedOrderById)
+
+// Cancel order by User
+router.post('/user-cancel', verifyUser, cancelOrderByUser)
+
+// Cancel order by Admin
+router.post('/admin-cancel', verifyAdmin, cancelOrderByAdmin)
 
 export default router

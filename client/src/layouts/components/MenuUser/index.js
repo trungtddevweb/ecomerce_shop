@@ -18,7 +18,7 @@ import {
     useTheme
 } from '@mui/material'
 import routes from 'src/utils/routes'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import useStyles from '~/assets/styles/useStyles'
 import CustomBackDrop from '~/components/BackDrop'
 import { showToast } from 'src/redux/slice/toastSlice'
@@ -29,7 +29,6 @@ const MenuUser = ({ onClose, onLoading }) => {
     const theme = useTheme()
     const isMatch = useMediaQuery(theme.breakpoints.down('md'))
     const classes = useStyles()
-    const navigate = useNavigate()
 
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth.info)
@@ -71,7 +70,7 @@ const MenuUser = ({ onClose, onLoading }) => {
             <Button
                 sx={{
                     ml: 2,
-                    width: isMatch ? '80px' : 'auto',
+                    width: isMatch ? '120px' : 'auto',
                     overflow: 'hidden',
                     whiteSpace: 'nowrap',
                     textOverflow: 'ellipsis'

@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { Avatar, Stack, TablePagination, TableRow, Typography } from '@mui/material'
+import { Avatar, Chip, Stack, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
@@ -99,7 +99,19 @@ const UsersDashBoard = () => {
             id: 'orderCount',
             numeric: false,
             disablePadding: false,
-            label: 'Đơn hàng'
+            label: 'Đã đặt'
+        },
+        {
+            id: 'totalCancel',
+            numeric: false,
+            disablePadding: false,
+            label: 'Đã hủy'
+        },
+        {
+            id: 'status',
+            numeric: false,
+            disablePadding: false,
+            label: 'Trạng thái'
         },
         {
             id: 'date',
@@ -248,6 +260,14 @@ const UsersDashBoard = () => {
                                                 }}
                                             >
                                                 {row.ordersCount?.length || 0}
+                                            </TableCell>
+                                            <TableCell>{row?.totalCancel}</TableCell>
+                                            <TableCell>
+                                                <Chip
+                                                    size='small'
+                                                    label={row.isActive ? 'Hoạt động' : 'Khóa'}
+                                                    color={row.isPaid ? 'success' : 'warning'}
+                                                />
                                             </TableCell>
                                             <TableCell>{formatDate(row.createdAt)}</TableCell>
                                         </TableRow>
