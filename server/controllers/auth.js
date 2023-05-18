@@ -36,6 +36,10 @@ export const login = async (req, res) => {
         const checkPassword = await bcrypt.compare(req.body.password, user.password)
         if (!checkPassword) return responseHandler.badRequest(res, 'Tài khoản hoặc mật khẩu chưa chính xác!')
 
+        if (!user.isActive) {
+            return res.status(400).json('Tài khoản của bạn đã bị khóa!')
+        }
+
         const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, process.env.JWT_KEY, { expiresIn: '30d' })
         const newToken = {
             token,

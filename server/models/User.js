@@ -69,6 +69,14 @@ const UserSchema = new Schema(
         ordersCount: {
             type: [String]
         },
+        isActive: {
+            type: Boolean,
+            default: true
+        },
+        totalCancel: {
+            type: Number,
+            default: 0
+        },
         products: [ProductItem],
         totalItems: { type: Number, default: 0 },
         tokens: [{ type: Object }]

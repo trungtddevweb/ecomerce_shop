@@ -64,7 +64,7 @@ export const createOrder = async (req, res) => {
         if (voucherCode) {
             const voucher = await Voucher.findOne({ voucherCode })
             if (voucher.used === voucher.total) {
-                console.log('Voucher đã được sử dụng hết')
+                res.status(400).json('Voucher đã được sử dụng hết')
             } else {
                 await Voucher.findOneAndUpdate({ voucherCode }, { $inc: { used: 1 } })
             }
@@ -175,5 +175,45 @@ export const getAllOrderByAdmin = async (req, res) => {
         res.status(200).json(orders)
     } catch (error) {
         res.status(500).json({ sucess: false, message: error })
+    }
+}
+
+export const cancelOrderByUser = async (req, res) => {
+    const { orderCode } = req.body
+    try {
+        // Tìm đơn hàng và tải thông tin người dùng liên quan
+        const order = await Order.findOne({ orderCode }).populate('userId')
+        if (!order) return res.status(404).json({ message: 'Đơn hàng không tồn tại!' })
+        if (order.isPaid || order.status === 'cancel') {
+            return res.status(400).json({ message: 'Không thể hủy đơn hàng!' })
+        }
+        // Cập nhật thông tin người dùng
+        const userId = order.userId._id
+        await User.findByIdAndUpdate(userId, { $inc: { totalCancel: 1 } })
+
+        order.status = 'cancel'
+        await order.save()
+        res.status(200).json('Hủy đơn hàng thành công')
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message })
+    }
+}
+
+export const cancelOrderByAdmin = async (req, res) => {
+    const { orderCode } = req.body
+    try {
+        const order = await Order.findOne({ orderCode })
+        if (!order) {
+            return res.status(404).json({ message: 'Đơn hàng không tồn tại!' })
+        } else {
+            if (order.isPaid) return res.status(400).json({ message: 'Không thể hủy đơn đã thanh toán!' })
+            if (order.status === 'cancel') return res.status(400).json('Đơn hàng đã ở trạng thái hủy')
+
+            order.status = 'cancel'
+            await order.save()
+            res.status(200).json('Hủy đơn hàng thành công')
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message })
     }
 }

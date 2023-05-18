@@ -20,7 +20,7 @@ export const getAUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
     const { limit, page } = req.query
     const options = {
-        select: 'name email createdAt picture ordersCount',
+        select: 'name email createdAt picture ordersCount isActive voucher',
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
         sort: { createdAt: 'desc' }

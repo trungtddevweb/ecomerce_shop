@@ -130,6 +130,8 @@ export default function CustomPaginationActionsTable() {
                 return 'Đang giao'
             case statusShipping[3]:
                 return 'Đã nhận hàng'
+            case statusShipping[4]:
+                return 'Đã huỷ'
             default:
                 return 'Chuẩn bị hàng'
         }
@@ -201,7 +203,11 @@ export default function CustomPaginationActionsTable() {
                                 </TableCell>
                                 <TableCell>{row?.orderedDate.split('T')[0]}</TableCell>
                                 <TableCell>{row.paymentMethod === 'cash' ? 'Tiền mặt' : 'Thẻ tín dụng/Visa'}</TableCell>
-                                <TableCell>{(row.totalPrice - row.discount).toLocaleString('vi-VN')}</TableCell>
+                                <TableCell>
+                                    {row.totalPrice - row.discount < 0
+                                        ? '0'
+                                        : (row.totalPrice - row.discount).toLocaleString('vi-VN')}
+                                </TableCell>
                                 <TableCell>
                                     <Chip
                                         size='small'
