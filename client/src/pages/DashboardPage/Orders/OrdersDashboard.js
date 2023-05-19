@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import { getAllOrdersAPI } from '~/api/main'
 import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
-import { Chip, Menu, MenuItem, TablePagination, TableRow, Typography } from '@mui/material'
+import { Chip, Menu, MenuItem, Stack, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
@@ -17,7 +17,7 @@ import Image from '~/components/Image'
 import images from '~/assets/imgs'
 import { formatDate } from 'src/utils/format'
 import { useSelector } from 'react-redux'
-import { usePopupState, bindTrigger, bindMenu } from 'material-ui-popup-state/hooks'
+import { Edit, MoreVert, Search, Visibility } from '@mui/icons-material'
 
 const OrdersDashboard = ({ dataModal, onEdit }) => {
     const [data, setData] = useState(null)
@@ -32,17 +32,19 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const token = useSelector(state => state.auth.user.token)
 
-    // const [anchorEl, setAnchorEl] = useState(null)
+    const [anchorEl, setAnchorEl] = useState(null)
 
-    // const handleClickRow = event => {
-    //     setAnchorEl(event.currentTarget)
-    // }
+    const handleClickRow = event => {
+        setAnchorEl(event.currentTarget)
+    }
 
-    // const handleClose = () => {
-    //     setAnchorEl(null)
-    // }
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
 
-    const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
+    const handleMenuItemClick = row => {
+        handleClose()
+    }
 
     function convertStatus(status) {
         switch (status) {
@@ -116,7 +118,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
             id: 'userId',
             numeric: false,
             disablePadding: false,
-            label: 'UserId'
+            label: 'ID khách hàng'
         },
         {
             id: 'price',
@@ -149,6 +151,12 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
             numeric: false,
             disablePadding: false,
             label: 'Thanh toán'
+        },
+        {
+            id: 'setting',
+            numeric: true,
+            disablePadding: false,
+            label: ''
         }
     ]
 
@@ -237,8 +245,6 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                     const labelId = `enhanced-table-checkbox-${index}`
                                     return (
                                         <TableRow
-                                            // onClick={handleClickRow}
-                                            {...bindTrigger(popupState)}
                                             hover
                                             role='checkbox'
                                             aria-checked={isItemSelected}
@@ -259,7 +265,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    minWidth: '115px'
+                                                    maxWidth: '110px'
                                                 }}
                                                 component='th'
                                                 id={labelId}
@@ -271,7 +277,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                             <TableCell
                                                 sx={{
                                                     minWidth: '130px',
-                                                    maxWidth: '130px',
+                                                    maxWidth: '150px',
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',
                                                     textOverflow: 'ellipsis'
@@ -281,7 +287,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    minWidth: '100px'
+                                                    maxWidth: '120px'
                                                 }}
                                             >
                                                 {row.totalPrice - row.discount < 0
@@ -290,24 +296,24 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    maxWidth: '120px',
+                                                    maxWidth: '150px',
                                                     overflow: 'hidden',
                                                     whiteSpace: 'nowrap',
                                                     textOverflow: 'ellipsis'
                                                 }}
                                             >
-                                                {row.voucherCode}
+                                                {row.voucherCode || 'Không có'}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    minWidth: '130px'
+                                                    width: '130px'
                                                 }}
                                             >
                                                 <Chip
                                                     size='small'
                                                     label={convertStatus(row.status)}
                                                     color={
-                                                        row.status === ('prepare' || 'cancel')
+                                                        row.status === 'prepare'
                                                             ? 'default'
                                                             : row.status === 'pending'
                                                             ? 'warning'
@@ -315,20 +321,20 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                                             ? 'info'
                                                             : row.status === 'delivered'
                                                             ? 'success'
-                                                            : undefined
+                                                            : 'error'
                                                     }
                                                 />
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    minWidth: '120px'
+                                                    width: '120px'
                                                 }}
                                             >
                                                 {formatDate(row.createdAt)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
-                                                    minWidth: '110px'
+                                                    minWidth: '100px'
                                                 }}
                                             >
                                                 <Chip
@@ -337,6 +343,42 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                                     color={row.isPaid ? 'success' : 'warning'}
                                                 />
                                             </TableCell>
+                                            <TableCell
+                                                onClick={handleClickRow}
+                                                sx={{
+                                                    width: '80px'
+                                                }}
+                                                align='right'
+                                            >
+                                                <MoreVert />
+                                            </TableCell>
+                                            <Menu
+                                                keepMounted
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
+                                            >
+                                                <MenuItem onClick={() => handleMenuItemClick(row)}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Visibility />
+                                                        <Typography>Xem thêm</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                                <MenuItem onClick={handleClose}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Edit />
+                                                        <Typography>Sửa</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                            </Menu>
                                         </TableRow>
                                     )
                                 })}
@@ -351,15 +393,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                 )}
                             </TableBody>
                         </Table>
-                        {/* <Menu keepMounted open={Boolean(anchorEl)} onClose={handleClose} anchorEl={anchorEl}>
-                            <MenuItem onClick={handleClose}>Option 1</MenuItem>
-                            <MenuItem onClick={handleClose}>Option 2</MenuItem>
-                            <MenuItem onClick={handleClose}>Option 3</MenuItem>
-                        </Menu> */}
-                        <Menu {...bindMenu(popupState)}>
-                            <MenuItem onClick={popupState.close}>Cake</MenuItem>
-                            <MenuItem onClick={popupState.close}>Death</MenuItem>
-                        </Menu>
+
                         {products.length === 0 && (
                             <Box
                                 margin='auto'

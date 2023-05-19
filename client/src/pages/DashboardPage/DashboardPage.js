@@ -103,7 +103,7 @@ const DashboardPage = () => {
                 container
                 spacing={{ xs: 2, md: 1, xl: 2 }}
             >
-                <Grid item xs={12} md={3} xl={4}>
+                <Grid item xs={12} md={3} xl={3}>
                     <Paper elevation={6}>
                         {isMatch ? (
                             <Tabs
@@ -256,7 +256,7 @@ const DashboardPage = () => {
                         )}
                     </Paper>
                 </Grid>
-                <Grid item xs={12} md={9} xl={8}>
+                <Grid item xs={12} md={9} xl={9}>
                     <Paper elevation={6}>{getFields(selectedParam)}</Paper>
                 </Grid>
             </Grid>

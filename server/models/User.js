@@ -53,6 +53,10 @@ const UserSchema = new Schema(
             type: String,
             default: ''
         },
+        address: {
+            type: String,
+            default: ''
+        },
         password: {
             type: String,
             required: true

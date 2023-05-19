@@ -12,7 +12,7 @@ function EnhancedTableHead(props) {
 
     return (
         <TableHead>
-            <TableRow>
+            <TableRow sx={{ bgcolor: 'lightseagreen' }}>
                 <TableCell padding='checkbox'>
                     <Checkbox
                         color='primary'

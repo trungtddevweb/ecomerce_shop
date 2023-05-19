@@ -14,11 +14,12 @@ const Settings = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth.info)
-    const { name, email, phone } = user
+    const { name, email, phone, address } = user
     const defaultValues = {
         name,
         email,
-        phone
+        phone,
+        address
     }
 
     const {
@@ -102,20 +103,7 @@ const Settings = () => {
                             <Controller
                                 control={control}
                                 name='email'
-                                render={({
-                                    field: { onChange, onBlur, value, name, ref },
-                                    fieldState: { invalid, isTouched, isDirty, error }
-                                }) => (
-                                    <TextField
-                                        defaultValue={defaultValues.email}
-                                        type='email'
-                                        size='small'
-                                        onBlur={onBlur} // notify when input is touched
-                                        onChange={onChange}
-                                        checked={value}
-                                        inputRef={ref}
-                                    />
-                                )}
+                                render={({ field }) => <TextField {...field} type='email' size='small' />}
                             />
                         </Stack>
                         <Stack direction='row' alignItems='center'>
@@ -125,19 +113,17 @@ const Settings = () => {
                             <Controller
                                 control={control}
                                 name='phone'
-                                render={({
-                                    field: { onChange, onBlur, value, name, ref },
-                                    fieldState: { invalid, isTouched, isDirty, error }
-                                }) => (
-                                    <TextField
-                                        defaultValue={defaultValues.phone}
-                                        size='small'
-                                        onBlur={onBlur} // notify when input is touched
-                                        onChange={onChange}
-                                        checked={value}
-                                        inputRef={ref}
-                                    />
-                                )}
+                                render={({ field }) => <TextField {...field} type='number' size='small' />}
+                            />
+                        </Stack>
+                        <Stack direction='row' alignItems='center'>
+                            <Typography variant='body1' fontWeight={600} minWidth={150}>
+                                Địa chỉ:
+                            </Typography>
+                            <Controller
+                                control={control}
+                                name='address'
+                                render={({ field }) => <TextField {...field} size='small' />}
                             />
                         </Stack>
 
@@ -176,6 +162,12 @@ const Settings = () => {
                                 Số điện thoại:
                             </Typography>
                             <Typography>{user.phone || 'Chưa cập nhập SĐT'}</Typography>
+                        </Stack>
+                        <Stack direction='row' alignItems='center'>
+                            <Typography variant='body1' fontWeight={600} minWidth={150}>
+                                Địa chỉ:
+                            </Typography>
+                            <Typography>{user?.address || 'Chưa cập nhập'}</Typography>
                         </Stack>
                         <Stack direction='row'>
                             <Typography variant='body1' fontWeight={600} minWidth={150}>
