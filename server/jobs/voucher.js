@@ -10,12 +10,11 @@ const voucherJob = cron.schedule('* * * * *', async () => {
         const vouchers = await Voucher.find({ endTime: { $gte: currentUTCTime } })
 
         // Lặp qua từng voucher
-        vouchers.forEach(async voucher => {
-            if (voucher.endTime < currentUTCTime) {
-                // Cập nhật trạng thái voucher thành "hết hạn"
-                await Voucher.findByIdAndUpdate(voucher._id, { expired: true })
-            }
-        })
+        // Cập nhật giá của các sản phẩm về giá chính
+        for (const voucher of vouchers) {
+            voucher.expired = true
+            await voucher.save()
+        }
     } catch (error) {
         console.error('Lỗi kiểm tra và cập nhật voucher:', error)
     }
