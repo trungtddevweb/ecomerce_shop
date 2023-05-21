@@ -8,7 +8,8 @@ import {
     removeMutiplesProductId,
     removeProductIdFromCart,
     removeQuantityProductIdFromCart,
-    updatedUser
+    updatedUser,
+    updatedUserByAdmin
 } from '../controllers/user.js'
 import { verifyAdmin, verifyUser } from '../middleware/verify.js'
 import { validateAddProduct } from '../middleware/joiMiddleWare.js'
@@ -23,6 +24,9 @@ router.get('/find/user', verifyUser, getAUser)
 
 // Update user
 router.patch('/update-user', verifyUser, updatedUser)
+
+// Update user by admin
+router.patch('/update-user/admin', verifyAdmin, updatedUserByAdmin)
 
 // Delete Many Users
 router.delete('/', verifyAdmin, deleteUsers)

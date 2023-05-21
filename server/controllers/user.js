@@ -20,7 +20,7 @@ export const getAUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
     const { limit, page } = req.query
     const options = {
-        select: 'name email createdAt picture ordersCount isActive voucher',
+        select: 'name email createdAt picture ordersCount isActive voucher totalCancel address',
         limit: parseInt(limit, 10) || 10,
         page: parseInt(page, 10) || 1,
         sort: { createdAt: 'desc' }
@@ -39,6 +39,15 @@ export const updatedUser = async (req, res) => {
 
     try {
         const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true })
+        res.status(200).json(updatedUser)
+    } catch (error) {
+        res.status(500).json({ message: 'Lỗi trong quá trình cập nhật người dùng', error })
+    }
+}
+
+export const updatedUserByAdmin = async (req, res) => {
+    try {
+        const updatedUser = await User.findByIdAndUpdate(req.body.userId, updateFields, { new: true })
         res.status(200).json(updatedUser)
     } catch (error) {
         res.status(500).json({ message: 'Lỗi trong quá trình cập nhật người dùng', error })

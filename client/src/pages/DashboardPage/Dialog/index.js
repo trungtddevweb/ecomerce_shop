@@ -16,27 +16,45 @@ import SpanningTable from './SpanningTable'
 import Detail from './Detail'
 import { Controller, useForm } from 'react-hook-form'
 import { convertStatus, statusShipping } from 'src/utils/const'
-import { LoadingButton } from '@mui/lab'
+import { updateOrderByAdminAPI } from '~/api/main'
+import { useDispatch, useSelector } from 'react-redux'
+import { showToast } from 'src/redux/slice/toastSlice'
 
-const DialogDashboard = ({ title, open, handleClose, data, type }) => {
-    let defaultValues = {}
+const DialogDashboard = ({ title, open, handleClose, data, type, setIsDeleting }) => {
+    const { orderCode } = data
+    const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.user.token)
 
-    defaultValues = {
+    const defaultValues = {
         status: data.status,
         isPaid: data.isPaid
     }
     const {
         control,
         handleSubmit,
-        formState: { errors, isDirty }
+        formState: { isDirty }
     } = useForm({
-        defaultValues,
-        shouldUnregister: false
+        defaultValues
     })
 
-    const handleFormSubmit = formData => {
-        // Xử lý submit form tại đây
-        console.log(formData)
+    const handleFormSubmit = async formData => {
+        const payload = {
+            ...formData,
+            orderCode
+        }
+        setIsDeleting(true)
+        try {
+            const res = await updateOrderByAdminAPI(payload, token)
+            if (res.status === 200) {
+                setIsDeleting(false)
+                dispatch(showToast({ type: 'success', message: res.data }))
+                handleClose()
+            }
+        } catch (error) {
+            setIsDeleting(true)
+            console.error(error)
+            dispatch(showToast({ type: 'error', message: error.message }))
+        }
     }
 
     return type === 'view' ? (
@@ -72,7 +90,7 @@ const DialogDashboard = ({ title, open, handleClose, data, type }) => {
                     Chỉnh sửa trạng thái đơn hàng/trạng thái thanh toán dựa theo tình trạng shipping hoặc đã thanh toán
                     toán sau đó bằng cách chuyển khoản hoặc phương thức khác.
                 </DialogContentText>
-                <Box component='form' onSubmit={handleSubmit(handleFormSubmit)}>
+                <Box component='form'>
                     <Grid container spacing={2} mt={1}>
                         <Grid item xs={12} md={6}>
                             <Controller
@@ -94,7 +112,7 @@ const DialogDashboard = ({ title, open, handleClose, data, type }) => {
                                 control={control}
                                 name='isPaid'
                                 render={({ field }) => (
-                                    <Select fullWidth {...field}>
+                                    <Select disabled={defaultValues.isPaid} fullWidth {...field}>
                                         <MenuItem value={true}>True</MenuItem>
                                         <MenuItem value={false}>False</MenuItem>
                                     </Select>
@@ -106,9 +124,9 @@ const DialogDashboard = ({ title, open, handleClose, data, type }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Đóng</Button>
-                <LoadingButton disabled={!isDirty} type='submit' variant='contained'>
+                <Button disabled={!isDirty} onClick={handleSubmit(handleFormSubmit)} variant='contained'>
                     Xác nhận
-                </LoadingButton>
+                </Button>
             </DialogActions>
         </Dialog>
     )
