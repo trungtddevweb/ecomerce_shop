@@ -393,6 +393,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                 {open && (
                                     <DialogDashboard
                                         title='Thông tin đơn hàng'
+                                        setIsDeleting={setIsDeleting}
                                         open={open}
                                         type={type}
                                         handleClose={setOpen}

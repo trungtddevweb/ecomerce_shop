@@ -118,29 +118,17 @@ export const getOrderByOrderCode = async (req, res) => {
 }
 
 export const updateOrder = async (req, res) => {
-    const userId = req.user._id
-    const orderCode = req.body.orderCode
-
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({ message: 'Không có trường nào được cập nhật' })
-    }
-
     try {
-        const user = await User.findById(userId)
-        if (!user) return res.status(404).json({ message: 'Không tìm thấy người dùng' })
+        const { orderCode } = req.body
 
-        const order = await Order.findOne({ orderCode })
-        if (!order) return res.status(404).json({ message: 'Không tìm thấy đơn hàng' })
-
-        if (userId.equals(order.userId) || user.isAdmin) {
-            const updateOps = req.body
-            const updatedOrder = await Order.findOneAndUpdate(orderCode, { $set: updateOps }, { new: true })
-            responseHandler.success(res, updatedOrder)
-        } else {
-            return res.status(401).json({ message: 'Bạn không có quyền cập nhật đơn hàng của người khác!' })
+        const order = await Order.findOneAndUpdate({ orderCode }, { ...req.body }, { new: true })
+        if (!order) {
+            return res.status(404).json({ message: 'Đơn hàng không tồn tại' })
         }
+
+        res.status(200).json('Cập nhật đơn hàng thành công!')
     } catch (error) {
-        res.status(500).json({ message: error })
+        res.status(500).json({ message: error.message })
     }
 }
 
@@ -180,7 +168,7 @@ export const getAllOrderByAdmin = async (req, res) => {
 
 export const cancelOrderByUser = async (req, res) => {
     const { orderCode } = req.body
-    const userId = req.user._id
+    const { userId } = req.user
     try {
         // Tìm đơn hàng và tải thông tin người dùng liên quan
         const order = await Order.findOne({ orderCode }).populate('userId')

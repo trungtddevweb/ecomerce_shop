@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { Avatar, Chip, Stack, TablePagination, TableRow, Typography } from '@mui/material'
+import { Avatar, Chip, Menu, MenuItem, Stack, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
@@ -17,6 +17,9 @@ import { useSelector } from 'react-redux'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
 import { formatDate } from 'src/utils/format'
+import { Edit, MoreVert } from '@mui/icons-material'
+import useToggle from '~/hooks/useToggle'
+import UserModal from './UserModal'
 
 const UsersDashBoard = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -29,8 +32,26 @@ const UsersDashBoard = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const [data, setData] = useState(null)
     const [users, setUsers] = useState([])
-
     const token = useSelector(state => state.auth.user?.token)
+
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [open, setOpen] = useToggle(false)
+    const [dataField, setDataField] = useState(null)
+
+    const handleClickRow = (event, row) => {
+        setAnchorEl(event.currentTarget)
+        setDataField(row)
+    }
+
+    const handleClose = row => {
+        setAnchorEl(null)
+        setDataField('')
+    }
+
+    const handleViewRow = () => {
+        setOpen()
+        setAnchorEl(null)
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -118,6 +139,12 @@ const UsersDashBoard = () => {
             numeric: false,
             disablePadding: false,
             label: 'Ngày tạo'
+        },
+        {
+            id: 'tool',
+            numeric: false,
+            disablePadding: false,
+            label: ''
         }
     ]
 
@@ -203,7 +230,6 @@ const UsersDashBoard = () => {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -213,6 +239,7 @@ const UsersDashBoard = () => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -261,15 +288,44 @@ const UsersDashBoard = () => {
                                             >
                                                 {row.ordersCount?.length || 0}
                                             </TableCell>
-                                            <TableCell>{row?.totalCancel}</TableCell>
+                                            <TableCell>{row.totalCancel}</TableCell>
                                             <TableCell>
                                                 <Chip
                                                     size='small'
                                                     label={row.isActive ? 'Hoạt động' : 'Khóa'}
-                                                    color={row.isPaid ? 'success' : 'warning'}
+                                                    color={row.isActive ? 'success' : 'error'}
                                                 />
                                             </TableCell>
                                             <TableCell>{formatDate(row.createdAt)}</TableCell>
+                                            <TableCell
+                                                onClick={e => handleClickRow(e, row)}
+                                                sx={{
+                                                    width: '80px'
+                                                }}
+                                                align='right'
+                                            >
+                                                <MoreVert />
+                                            </TableCell>
+                                            <Menu
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                            >
+                                                <MenuItem onClick={handleViewRow}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Edit />
+                                                        <Typography>Chỉnh sửa</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                            </Menu>
                                         </TableRow>
                                     )
                                 })}
@@ -282,6 +338,12 @@ const UsersDashBoard = () => {
                                         <TableCell colSpan={6} />
                                     </TableRow>
                                 )}
+                                <UserModal
+                                    setIsDeleting={setIsDeleting}
+                                    open={open}
+                                    handleClose={setOpen}
+                                    data={dataField}
+                                />
                             </TableBody>
                         </Table>
                         {users.length === 0 && (

@@ -161,6 +161,15 @@ export const orderProductAPI = async (token, orderDetails) => {
     })
 }
 
+export const updateOrderByAdminAPI = async (data, token) => {
+    const res = await mainAPI.patch('/orders', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return res.data
+}
+
 // Stripe
 export const gePublicKey = async () => {
     const res = await mainAPI.get('/stripe/config')
