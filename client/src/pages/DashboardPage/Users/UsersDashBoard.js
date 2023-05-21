@@ -338,12 +338,14 @@ const UsersDashBoard = () => {
                                         <TableCell colSpan={6} />
                                     </TableRow>
                                 )}
-                                <UserModal
-                                    setIsDeleting={setIsDeleting}
-                                    open={open}
-                                    handleClose={setOpen}
-                                    data={dataField}
-                                />
+                                {open && (
+                                    <UserModal
+                                        setIsDeleting={setIsDeleting}
+                                        open={open}
+                                        handleClose={setOpen}
+                                        data={dataField}
+                                    />
+                                )}
                             </TableBody>
                         </Table>
                         {users.length === 0 && (
