@@ -54,6 +54,15 @@ export const updatedUserAPI = async (data, token) => {
     })
 }
 
+export const updatedUserByAdminAPI = async (data, token) => {
+    const res = await mainAPI.put('/users/update-user/admin', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return res.data
+}
+
 export const getAllProducts = async (limit, page) => {
     const response = await mainAPI.get(`/products?limit=${limit}&page=${page}`)
     return response.data

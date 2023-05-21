@@ -38,7 +38,23 @@ export const updatedUser = async (req, res) => {
     const updateFields = req.body
 
     try {
+        if (updatedData.email) {
+            const existingUser = await User.findOne({ email: updatedData.email })
+
+            if (existingUser && existingUser._id.toString() !== userId) {
+                return res.status(400).json({ error: 'Email đã tồn tại' })
+            }
+        }
+
+        if (updatedData.phone) {
+            const existingUser = await User.findOne({ phone: updatedData.phone })
+
+            if (existingUser && existingUser._id.toString() !== userId) {
+                return res.status(400).json({ error: 'Số điện thoại đã tồn tại' })
+            }
+        }
         const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true })
+
         res.status(200).json(updatedUser)
     } catch (error) {
         res.status(500).json({ message: 'Lỗi trong quá trình cập nhật người dùng', error })
@@ -46,11 +62,36 @@ export const updatedUser = async (req, res) => {
 }
 
 export const updatedUserByAdmin = async (req, res) => {
+    const updatedData = req.body
+
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.body.userId, updateFields, { new: true })
+        const user = await User.findById(updatedData._id)
+
+        if (!user) {
+            return res.status(404).json({ error: 'Không tìm thấy người dùng' })
+        }
+
+        if (updatedData.email) {
+            const existingUser = await User.findOne({ email: updatedData.email })
+
+            if (existingUser && existingUser._id.toString() !== userId) {
+                return res.status(400).json({ error: 'Email đã tồn tại' })
+            }
+        }
+
+        if (updatedData.phone) {
+            const existingUser = await User.findOne({ phone: updatedData.phone })
+
+            if (existingUser && existingUser._id.toString() !== userId) {
+                return res.status(400).json({ error: 'Số điện thoại đã tồn tại' })
+            }
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(updatedData._id, updatedData, { new: true })
         res.status(200).json(updatedUser)
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi trong quá trình cập nhật người dùng', error })
+        console.error('Lỗi cập nhật người dùng:', error)
+        res.status(500).json({ error: 'Lỗi cập nhật người dùng' })
     }
 }
 
