@@ -180,6 +180,7 @@ export const getAllOrderByAdmin = async (req, res) => {
 
 export const cancelOrderByUser = async (req, res) => {
     const { orderCode } = req.body
+    const userId = req.user._id
     try {
         // Tìm đơn hàng và tải thông tin người dùng liên quan
         const order = await Order.findOne({ orderCode }).populate('userId')
@@ -188,7 +189,6 @@ export const cancelOrderByUser = async (req, res) => {
             return res.status(400).json({ message: 'Không thể hủy đơn hàng!' })
         }
         // Cập nhật thông tin người dùng
-        const userId = order.userId._id
         await User.findByIdAndUpdate(userId, { $inc: { totalCancel: 1 } })
 
         order.status = 'cancel'
@@ -208,6 +208,8 @@ export const cancelOrderByAdmin = async (req, res) => {
         } else {
             if (order.isPaid) return res.status(400).json({ message: 'Không thể hủy đơn đã thanh toán!' })
             if (order.status === 'cancel') return res.status(400).json('Đơn hàng đã ở trạng thái hủy')
+
+            await User.findByIdAndUpdate(order.userId, { $inc: { totalCancel: 1 } })
 
             order.status = 'cancel'
             await order.save()

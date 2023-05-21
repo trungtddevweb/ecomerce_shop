@@ -97,3 +97,20 @@ export const imagesSlider = [
 ]
 
 export const statusShipping = ['prepare', 'pending', 'delivering', 'delivered', 'cancel']
+
+export function convertStatus(status) {
+    switch (status) {
+        case 'prepare':
+            return 'Chuẩn bị'
+        case 'pending':
+            return 'Đang xử lý'
+        case 'delivering':
+            return 'Đang giao'
+        case 'delivered':
+            return 'Đã giao'
+        case 'cancel':
+            return 'Đã huỷ'
+        default:
+            return 'Chuẩn bị'
+    }
+}

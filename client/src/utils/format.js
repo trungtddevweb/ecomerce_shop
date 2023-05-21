@@ -82,3 +82,10 @@ export function formatDate(dateString) {
 
     return `${day}/${month}/${year}`
 }
+
+export const formatPrice = value => {
+    if (typeof value === 'number') {
+        return value.toLocaleString('vi-VN')
+    }
+    return
+}

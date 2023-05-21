@@ -26,7 +26,7 @@ router.get('/all-order', verifyAdmin, getAllOrderByAdmin)
 router.get('/', verifyUser, getOrderByUserId)
 
 // Update order
-router.patch('/', verifyUser, updateOrder)
+router.patch('/', verifyAdmin, updateOrder)
 
 // Delete order
 router.delete('/', verifyAdmin, deletedOrderById)

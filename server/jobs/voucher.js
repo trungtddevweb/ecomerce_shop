@@ -7,7 +7,7 @@ const voucherJob = cron.schedule('* * * * *', async () => {
         // Lấy tất cả các voucher chưa hết hạn
         const localTime = new Date()
         const currentUTCTime = new Date(localTime.getTime() + localTime.getTimezoneOffset() * 60000)
-        const vouchers = await Voucher.find({ endTime: { $gte: currentUTCTime } })
+        const vouchers = await Voucher.find({ endTime: { $lt: currentUTCTime } })
 
         // Lặp qua từng voucher
         // Cập nhật giá của các sản phẩm về giá chính
