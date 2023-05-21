@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy } from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -15,9 +15,13 @@ import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
 import Image from '~/components/Image'
 import images from '~/assets/imgs'
-import { formatDate } from 'src/utils/format'
+import { formatDate, formatPrice } from 'src/utils/format'
 import { useSelector } from 'react-redux'
-import { Edit, MoreVert, Search, Visibility } from '@mui/icons-material'
+import { Edit, MoreVert, Visibility } from '@mui/icons-material'
+import useToggle from '~/hooks/useToggle'
+import { convertStatus } from 'src/utils/const'
+import DialogDashboard from '../Dialog'
+// const DialogDashboard = lazy(() => import('../Dialog'))
 
 const OrdersDashboard = ({ dataModal, onEdit }) => {
     const [data, setData] = useState(null)
@@ -29,38 +33,34 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
     const [selected, setSelected] = useState([])
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
+    const [type, setType] = useState('')
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const token = useSelector(state => state.auth.user.token)
 
     const [anchorEl, setAnchorEl] = useState(null)
+    const [open, setOpen] = useToggle(false)
+    const [dataField, setDataField] = useState(null)
 
-    const handleClickRow = event => {
+    const handleClickRow = (event, row) => {
         setAnchorEl(event.currentTarget)
+        setDataField(row)
     }
 
-    const handleClose = () => {
+    const handleClose = row => {
+        setAnchorEl(null)
+        setDataField('')
+    }
+
+    const handleViewRow = () => {
+        setOpen()
+        setType('view')
         setAnchorEl(null)
     }
 
-    const handleMenuItemClick = row => {
-        handleClose()
-    }
-
-    function convertStatus(status) {
-        switch (status) {
-            case 'prepare':
-                return 'Chuẩn bị'
-            case 'pending':
-                return 'Đang xử lý'
-            case 'delivering':
-                return 'Đang giao'
-            case 'delivered':
-                return 'Đã giao'
-            case 'cancel':
-                return 'Đã huỷ'
-            default:
-                return 'Chuẩn bị'
-        }
+    const handleEditRow = row => {
+        setOpen()
+        setType('edit')
+        setAnchorEl(null)
     }
 
     // End modal
@@ -292,7 +292,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                             >
                                                 {row.totalPrice - row.discount < 0
                                                     ? '0'
-                                                    : (row.totalPrice - row.discount).toLocaleString('vi-VN')}
+                                                    : formatPrice(row.totalPrice - row.discount)}
                                             </TableCell>
                                             <TableCell
                                                 sx={{
@@ -344,7 +344,7 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                                 />
                                             </TableCell>
                                             <TableCell
-                                                onClick={handleClickRow}
+                                                onClick={e => handleClickRow(e, row)}
                                                 sx={{
                                                     width: '80px'
                                                 }}
@@ -353,7 +353,9 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                                 <MoreVert />
                                             </TableCell>
                                             <Menu
-                                                keepMounted
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
                                                 anchorOrigin={{
                                                     vertical: 'top',
                                                     horizontal: 'left'
@@ -362,17 +364,14 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                                     vertical: 'top',
                                                     horizontal: 'left'
                                                 }}
-                                                open={Boolean(anchorEl)}
-                                                onClose={handleClose}
-                                                anchorEl={anchorEl}
                                             >
-                                                <MenuItem onClick={() => handleMenuItemClick(row)}>
+                                                <MenuItem onClick={handleViewRow}>
                                                     <Stack direction='row' spacing={1}>
                                                         <Visibility />
                                                         <Typography>Xem thêm</Typography>
                                                     </Stack>
                                                 </MenuItem>
-                                                <MenuItem onClick={handleClose}>
+                                                <MenuItem onClick={handleEditRow}>
                                                     <Stack direction='row' spacing={1}>
                                                         <Edit />
                                                         <Typography>Sửa</Typography>
@@ -390,6 +389,15 @@ const OrdersDashboard = ({ dataModal, onEdit }) => {
                                     >
                                         <TableCell colSpan={7} />
                                     </TableRow>
+                                )}
+                                {open && (
+                                    <DialogDashboard
+                                        title='Thông tin đơn hàng'
+                                        open={open}
+                                        type={type}
+                                        handleClose={setOpen}
+                                        data={dataField}
+                                    />
                                 )}
                             </TableBody>
                         </Table>
