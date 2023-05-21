@@ -18,6 +18,7 @@ import { showToast } from 'src/redux/slice/toastSlice'
 import { updatedUserByAdminAPI } from '~/api/main'
 
 const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
+    const { _id } = data
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
     const defaultValues = {
@@ -37,9 +38,13 @@ const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
     })
 
     const handleSubmitForm = async data => {
+        const payload = {
+            ...data,
+            _id
+        }
         setIsDeleting(true)
         try {
-            await updatedUserByAdminAPI(data, token)
+            await updatedUserByAdminAPI(payload, token)
             dispatch(showToast({ type: 'success', message: 'Cập nhập thành công!' }))
             handleClose()
             setIsDeleting(false)

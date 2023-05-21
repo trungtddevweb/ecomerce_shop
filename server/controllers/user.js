@@ -35,63 +35,63 @@ export const getAllUsers = async (req, res) => {
 
 export const updatedUser = async (req, res) => {
     const userId = req.user._id
-    const updateFields = req.body
+    const { email, phone } = req.body
 
     try {
-        if (updatedData.email) {
-            const existingUser = await User.findOne({ email: updatedData.email })
-
-            if (existingUser && existingUser._id.toString() !== userId) {
+        if (email) {
+            const existingUser = await User.findOne({ email })
+            console.log(userId)
+            if (existingUser && existingUser._id.toString() !== userId.toString()) {
                 return res.status(400).json({ error: 'Email đã tồn tại' })
             }
         }
 
-        if (updatedData.phone) {
-            const existingUser = await User.findOne({ phone: updatedData.phone })
+        if (phone) {
+            const existingUser = await User.findOne({ phone })
+            console.log(existingUser)
 
-            if (existingUser && existingUser._id.toString() !== userId) {
+            if (existingUser && existingUser._id.toString() !== userId.toString) {
                 return res.status(400).json({ error: 'Số điện thoại đã tồn tại' })
             }
         }
-        const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true })
+        const updatedUser = await User.findByIdAndUpdate(userId, { ...req.body }, { new: true })
 
         res.status(200).json(updatedUser)
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi trong quá trình cập nhật người dùng', error })
+        res.status(500).json({ message: error })
     }
 }
 
 export const updatedUserByAdmin = async (req, res) => {
-    const updatedData = req.body
+    const { userId, email, phone } = req.body
 
     try {
-        const user = await User.findById(updatedData._id)
+        const user = await User.findById(userId)
 
         if (!user) {
             return res.status(404).json({ error: 'Không tìm thấy người dùng' })
         }
 
-        if (updatedData.email) {
-            const existingUser = await User.findOne({ email: updatedData.email })
+        if (email) {
+            const existingUser = await User.findOne({ email })
 
             if (existingUser && existingUser._id.toString() !== userId) {
                 return res.status(400).json({ error: 'Email đã tồn tại' })
             }
         }
 
-        if (updatedData.phone) {
-            const existingUser = await User.findOne({ phone: updatedData.phone })
+        if (phone) {
+            const existingUser = await User.findOne({ phone })
 
             if (existingUser && existingUser._id.toString() !== userId) {
                 return res.status(400).json({ error: 'Số điện thoại đã tồn tại' })
             }
         }
 
-        const updatedUser = await User.findByIdAndUpdate(updatedData._id, updatedData, { new: true })
+        const updatedUser = await User.findByIdAndUpdate(userId, { ...req.body }, { new: true })
         res.status(200).json(updatedUser)
     } catch (error) {
-        console.error('Lỗi cập nhật người dùng:', error)
-        res.status(500).json({ error: 'Lỗi cập nhật người dùng' })
+        res.status(500).json({ error: error })
     }
 }
 

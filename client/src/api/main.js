@@ -55,7 +55,7 @@ export const updatedUserAPI = async (data, token) => {
 }
 
 export const updatedUserByAdminAPI = async (data, token) => {
-    const res = await mainAPI.put('/users/update-user/admin', data, {
+    const res = await mainAPI.patch('/users/update-user/admin', data, {
         headers: {
             Authorization: `Bearer ${token}`
         }
