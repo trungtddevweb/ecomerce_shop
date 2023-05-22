@@ -5,10 +5,10 @@ import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import helmet from 'helmet'
 import connectDB from './connect.js'
-import routes from './routes/index.js'
+import routes from './src/routes/index.js'
 import cors from 'cors'
 import path from 'path'
-import runJobs from './jobs/index.js'
+import runJobs from './src/jobs/index.js'
 
 // Used for environment variables
 dotenv.config()
