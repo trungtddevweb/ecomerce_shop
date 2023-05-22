@@ -16,6 +16,7 @@ import loginBg from '~/assets/imgs/login-bg.jpg'
 import Image from 'mui-image'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import useToggle from '~/hooks/useToggle'
+import { showToast } from 'src/redux/slice/toastSlice'
 
 const registerData = yup.object().shape({
     email: yup.string().email().required(),
@@ -46,9 +47,10 @@ const Login = () => {
             dispatch(login(res))
             setLoading(false)
             navigate(-1)
-        } catch (err) {
+        } catch (error) {
             setLoading(false)
-            setError(err.response.data.message)
+            dispatch(showToast({ type: 'error', message: error.response?.data }))
+            setError(error.response.data.message)
         }
     }
 

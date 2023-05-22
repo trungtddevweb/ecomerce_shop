@@ -40,7 +40,7 @@ const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
     const handleSubmitForm = async data => {
         const payload = {
             ...data,
-            _id
+            userId: _id
         }
         setIsDeleting(true)
         try {
