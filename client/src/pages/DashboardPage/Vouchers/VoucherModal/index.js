@@ -16,7 +16,7 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
-import { updatedUserByAdminAPI, updatedVoucherAPI } from '~/api/main'
+import { updatedVoucherAPI } from '~/api/main'
 import dayjs from 'dayjs'
 
 const VoucherModal = ({ open, handleClose, data, setIsDeleting }) => {
@@ -42,9 +42,13 @@ const VoucherModal = ({ open, handleClose, data, setIsDeleting }) => {
     })
 
     const handleSubmitForm = async data => {
+        const payload = {
+            ...data,
+            id: voucherId
+        }
         setIsDeleting(true)
         try {
-            await updatedVoucherAPI(voucherId, data, token)
+            await updatedVoucherAPI(payload, token)
             dispatch(showToast({ type: 'success', message: 'Cập nhập thành công!' }))
             handleClose()
             setIsDeleting(false)
