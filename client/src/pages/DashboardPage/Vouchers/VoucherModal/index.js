@@ -1,3 +1,4 @@
+import { DatePicker } from '@mui/x-date-pickers'
 import {
     Box,
     Button,
@@ -15,19 +16,22 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
-import { updatedUserByAdminAPI } from '~/api/main'
+import { updatedUserByAdminAPI, updatedVoucherAPI } from '~/api/main'
+import dayjs from 'dayjs'
 
-const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
-    const { _id } = data
+const VoucherModal = ({ open, handleClose, data, setIsDeleting }) => {
+    const { voucherCode, startTime, endTime, discount, expired, total } = data
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
     const defaultValues = {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        isActive: data.isActive
+        voucherCode: voucherCode,
+        startTime: dayjs(startTime),
+        endTime: dayjs(endTime),
+        discount: discount,
+        expired: expired,
+        total: total
     }
+    const voucherId = data._id
 
     const {
         control,
@@ -38,13 +42,9 @@ const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
     })
 
     const handleSubmitForm = async data => {
-        const payload = {
-            ...data,
-            userId: _id
-        }
         setIsDeleting(true)
         try {
-            await updatedUserByAdminAPI(payload, token)
+            await updatedVoucherAPI(voucherId, data, token)
             dispatch(showToast({ type: 'success', message: 'Cập nhập thành công!' }))
             handleClose()
             setIsDeleting(false)
@@ -53,6 +53,7 @@ const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
             setIsDeleting(false)
             console.error(error)
         }
+        console.log('data', data)
     }
 
     return (
@@ -65,31 +66,24 @@ const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
                             <Grid item xs={12} md={6}>
                                 <Controller
                                     control={control}
-                                    name='name'
-                                    render={({ field }) => <TextField fullWidth label='Tên' {...field} />}
+                                    name='voucherCode'
+                                    render={({ field }) => <TextField fullWidth label='Tên voucher' {...field} />}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <Controller
                                     control={control}
-                                    name='email'
-                                    render={({ field }) => <TextField fullWidth label='Email' {...field} />}
+                                    name='discount'
+                                    render={({ field }) => <TextField fullWidth label='Giá giảm' {...field} />}
                                 />
                             </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Controller
-                                control={control}
-                                name='address'
-                                render={({ field }) => <TextField fullWidth label='Địa chỉ' {...field} />}
-                            />
                         </Grid>
                         <Grid container item spacing={2}>
                             <Grid item xs={12} md={6}>
                                 <Controller
                                     control={control}
-                                    name='phone'
-                                    render={({ field }) => <TextField fullWidth label='Số điện thoại' {...field} />}
+                                    name='total'
+                                    render={({ field }) => <TextField fullWidth label='Số lượng' {...field} />}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -97,15 +91,47 @@ const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
                                     <InputLabel id='demo-simple-select-label'>Trạng thái</InputLabel>
                                     <Controller
                                         control={control}
-                                        name='isActive'
+                                        name='expired'
                                         render={({ field }) => (
                                             <Select {...field} label='Trạng thái'>
-                                                <MenuItem value={true}>Hoạt động</MenuItem>
-                                                <MenuItem value={false}>Chặn</MenuItem>
+                                                <MenuItem value={true}>Khả dụng</MenuItem>
+                                                <MenuItem value={false}>Hết hạn</MenuItem>
                                             </Select>
                                         )}
                                     />
                                 </FormControl>
+                            </Grid>
+                        </Grid>
+                        <Grid container item spacing={2}>
+                            <Grid item xs={12} md={6}>
+                                <Controller
+                                    control={control}
+                                    name='startTime'
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            disablePast
+                                            format='DD/MM/YYYY'
+                                            {...field}
+                                            label='Bắt đầu'
+                                            sx={{ width: '100%' }}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <Controller
+                                    control={control}
+                                    name='endTime'
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            disablePast
+                                            format='DD/MM/YYYY'
+                                            {...field}
+                                            label='Kết thúc'
+                                            sx={{ width: '100%' }}
+                                        />
+                                    )}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -120,4 +146,4 @@ const UserModal = ({ open, handleClose, data, setIsDeleting }) => {
         </Dialog>
     )
 }
-export default UserModal
+export default VoucherModal

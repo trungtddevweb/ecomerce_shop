@@ -12,7 +12,7 @@ const UserInfo = ({ info }) => {
                 >
                     Họ tên:{' '}
                 </Typography>
-                <Typography>{shippingAddress.fullName}</Typography>
+                <Typography fontWeight={600}>{shippingAddress.fullName}</Typography>
             </Stack>
             <Stack direction='row' spacing={1}>
                 <Typography
@@ -22,7 +22,7 @@ const UserInfo = ({ info }) => {
                 >
                     Địa chỉ:{' '}
                 </Typography>
-                <Typography>{shippingAddress.address}</Typography>
+                <Typography fontWeight={600}>{shippingAddress.address}</Typography>
             </Stack>
             <Stack direction='row' spacing={1}>
                 <Typography
@@ -32,7 +32,7 @@ const UserInfo = ({ info }) => {
                 >
                     Số điện thoại:{' '}
                 </Typography>
-                <Typography>{shippingAddress.phone}</Typography>
+                <Typography fontWeight={600}>{shippingAddress.phone}</Typography>
             </Stack>
         </Box>
     )

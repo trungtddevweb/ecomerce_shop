@@ -13,7 +13,9 @@ const Detail = ({ info }) => {
                 >
                     Mã đơn hàng:{' '}
                 </Typography>
-                <Typography>{info.orderCode}</Typography>
+                <Typography fontWeight={600} color='error'>
+                    {info.orderCode}
+                </Typography>
             </Stack>
             <Stack direction='row' spacing={1}>
                 <Typography
@@ -23,7 +25,7 @@ const Detail = ({ info }) => {
                 >
                     Ngày đặt:{' '}
                 </Typography>
-                <Typography>{formatDate(info.createdAt)}</Typography>
+                <Typography fontWeight={600}>{formatDate(info.createdAt)}</Typography>
             </Stack>
             <Stack direction='row' spacing={1}>
                 <Typography
@@ -33,7 +35,9 @@ const Detail = ({ info }) => {
                 >
                     PT thanh toán:{' '}
                 </Typography>
-                <Typography>{info.paymentMethod === 'cash' ? 'Tiền mặt' : 'Thẻ Visa/Banking'}</Typography>
+                <Typography fontWeight={600}>
+                    {info.paymentMethod === 'cash' ? 'Tiền mặt' : 'Thẻ Visa/Banking'}
+                </Typography>
             </Stack>
             <Stack direction='row' spacing={1}>
                 <Typography
@@ -43,7 +47,7 @@ const Detail = ({ info }) => {
                 >
                     Trạng thái:{' '}
                 </Typography>
-                <Typography>{convertStatus(info.status)}</Typography>
+                <Typography fontWeight={600}>{convertStatus(info.status)}</Typography>
             </Stack>
         </Box>
     )

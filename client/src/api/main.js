@@ -170,6 +170,18 @@ export const orderProductAPI = async (token, orderDetails) => {
     })
 }
 
+export const cancelOrderAPI = async (orderCode, token) => {
+    return await mainAPI.post(
+        '/orders/user-cancel',
+        { orderCode },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+}
+
 export const updateOrderByAdminAPI = async (data, token) => {
     return await mainAPI.patch('/orders', data, {
         headers: {
@@ -258,4 +270,14 @@ export const removeProductFromSaleAPI = async (token, selectedItem) => {
         }
     })
     return response.data
+}
+
+// Update voucher
+export const updatedVoucherAPI = async (voucherId, payload, token) => {
+    const res = await mainAPI.patch('vouchers/', payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return res.data
 }

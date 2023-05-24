@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { Chip, TablePagination, TableRow, Typography } from '@mui/material'
+import { Chip, Menu, MenuItem, Stack, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
@@ -17,6 +17,9 @@ import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
 import { useSelector } from 'react-redux'
 import { formatDate } from 'src/utils/format'
+import { Edit, MoreVert } from '@mui/icons-material'
+import useToggle from '~/hooks/useToggle'
+import VoucherModal from './VoucherModal'
 
 const VouchersDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -30,6 +33,25 @@ const VouchersDashboard = () => {
     const [vouchers, setVouchers] = useState([])
     const [data, setData] = useState(null)
     const token = useSelector(state => state.auth.user?.token)
+
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [open, setOpen] = useToggle(false)
+    const [dataField, setDataField] = useState(null)
+
+    const handleClickRow = (event, row) => {
+        setAnchorEl(event.currentTarget)
+        setDataField(row)
+    }
+
+    const handleClose = row => {
+        setAnchorEl(null)
+        setDataField('')
+    }
+
+    const handleViewRow = () => {
+        setOpen()
+        setAnchorEl(null)
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -115,6 +137,12 @@ const VouchersDashboard = () => {
             numeric: true,
             disablePadding: false,
             label: 'Trạng thái'
+        },
+        {
+            id: 'tool',
+            numeric: true,
+            disablePadding: false,
+            label: ''
         }
     ]
 
@@ -160,9 +188,9 @@ const VouchersDashboard = () => {
         setPage(0)
     }
 
-    const handleChangeDense = event => {
-        setDense(event.target.checked)
-    }
+    // const handleChangeDense = event => {
+    //     setDense(event.target.checked)
+    // }
 
     const isSelected = id => selected.includes(id)
     const count = data?.totalDocs || 0
@@ -291,6 +319,35 @@ const VouchersDashboard = () => {
                                                     }
                                                 />
                                             </TableCell>
+                                            <TableCell
+                                                onClick={e => handleClickRow(e, row)}
+                                                sx={{
+                                                    width: '80px'
+                                                }}
+                                                align='right'
+                                            >
+                                                <MoreVert />
+                                            </TableCell>
+                                            <Menu
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                            >
+                                                <MenuItem onClick={handleViewRow}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Edit />
+                                                        <Typography>Chỉnh sửa</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                            </Menu>
                                         </TableRow>
                                     )
                                 })}
@@ -302,6 +359,14 @@ const VouchersDashboard = () => {
                                     >
                                         <TableCell colSpan={6} />
                                     </TableRow>
+                                )}
+                                {open && (
+                                    <VoucherModal
+                                        setIsDeleting={setIsDeleting}
+                                        open={open}
+                                        handleClose={setOpen}
+                                        data={dataField}
+                                    />
                                 )}
                             </TableBody>
                         </Table>

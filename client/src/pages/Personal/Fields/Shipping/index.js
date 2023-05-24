@@ -1,26 +1,44 @@
-import { useState } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableFooter from '@mui/material/TableFooter'
-import TablePagination from '@mui/material/TablePagination'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import FirstPageIcon from '@mui/icons-material/FirstPage'
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
-import LastPageIcon from '@mui/icons-material/LastPage'
-import { getOrderByUserIdAPI } from '~/api/main'
-import { useSelector } from 'react-redux'
-import { Chip, TableHead, styled } from '@mui/material'
+import {
+    Box,
+    IconButton,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableFooter,
+    TablePagination,
+    TableRow,
+    tableCellClasses,
+    Chip,
+    Menu,
+    MenuItem,
+    Stack,
+    TableHead,
+    Typography,
+    styled
+} from '@mui/material'
+import { cancelOrderAPI, getOrderByUserIdAPI } from '~/api/main'
+import { useDispatch, useSelector } from 'react-redux'
 import LinearIndeterminate from 'src/fallback/LinearProgress/LinearProgress'
-import { useLayoutEffect } from 'react'
-import { statusShipping } from 'src/utils/const'
+import { convertStatus, statusShipping } from 'src/utils/const'
+import { formatDate } from 'src/utils/format'
+import {
+    Edit,
+    FirstPage,
+    KeyboardArrowLeft,
+    KeyboardArrowRight,
+    LastPage,
+    MoreVert,
+    Visibility
+} from '@mui/icons-material'
+import useToggle from '~/hooks/useToggle'
+import ModalShipping from './ModalShipping'
+import { showDialog } from 'src/redux/slice/dialogSlice'
+import { showToast } from 'src/redux/slice/toastSlice'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -65,7 +83,7 @@ function TablePaginationActions(props) {
     return (
         <Box sx={{ flexShrink: 0, ml: 2.5 }}>
             <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label='first page'>
-                {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+                {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
             </IconButton>
             <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label='previous page'>
                 {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
@@ -82,7 +100,7 @@ function TablePaginationActions(props) {
                 disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                 aria-label='last page'
             >
-                {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+                {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
             </IconButton>
         </Box>
     )
@@ -103,6 +121,53 @@ export default function CustomPaginationActionsTable() {
     const [orders, setOrders] = useState([])
     const [loading, setLoading] = useState(false)
     const token = useSelector(state => state.auth.user?.token)
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [open, setOpen] = useToggle(false)
+    const [dataField, setDataField] = useState(null)
+    const dispatch = useDispatch()
+    const [isPending, setIsPending] = useState(true)
+
+    const handleClickRow = (event, row) => {
+        setAnchorEl(event.currentTarget)
+        setDataField(row)
+    }
+
+    const handleClose = row => {
+        setAnchorEl(null)
+        setDataField('')
+    }
+
+    const handleViewRow = () => {
+        setOpen()
+        setAnchorEl(null)
+    }
+
+    const handleConfirm = async () => {
+        try {
+            setIsPending(true)
+            const res = await cancelOrderAPI(dataField.orderCode, token)
+            if (res.status === 200) {
+                dispatch(showToast({ type: 'success', message: 'Hủy đơn hàng thành công!' }))
+                setIsPending(false)
+                handleClose()
+            }
+        } catch (error) {
+            setIsPending(false)
+            console.error(error)
+            dispatch(showToast({ type: 'error', message: `${error.response.data.message}` }))
+        }
+    }
+
+    const handleCancel = () => {
+        dispatch(
+            showDialog({
+                title: 'Hủy đơn hàng',
+                message: `Bạn có chắc muốn hủy đơn hàng này chứ (Chú ý với đơn hàng đã thanh toán không thể hủy, hãy liên lạc với bên chăm sóc khách hàng để được hỗ trợ hủy và hoàn tiền)`,
+                onConfirm: handleConfirm
+            })
+        )
+        handleClose()
+    }
 
     useLayoutEffect(() => {
         const fetchOrder = async () => {
@@ -118,24 +183,7 @@ export default function CustomPaginationActionsTable() {
             }
         }
         fetchOrder()
-    }, [token, page, rowsPerPage])
-
-    function getStatusShipping(status) {
-        switch (status) {
-            case statusShipping[0]:
-                return 'Chuẩn bị hàng'
-            case statusShipping[1]:
-                return 'Đang xử lý'
-            case statusShipping[2]:
-                return 'Đang giao'
-            case statusShipping[3]:
-                return 'Đã nhận hàng'
-            case statusShipping[4]:
-                return 'Đã huỷ'
-            default:
-                return 'Chuẩn bị hàng'
-        }
-    }
+    }, [token, page, rowsPerPage, isPending])
 
     const columns = [
         { id: 'orderCode', label: 'Mã đơn hàng', minWidth: 100 },
@@ -158,6 +206,10 @@ export default function CustomPaginationActionsTable() {
         {
             id: 'status',
             label: 'Trạng thái'
+        },
+        {
+            id: 'tool',
+            label: ''
         }
     ]
 
@@ -189,7 +241,7 @@ export default function CustomPaginationActionsTable() {
                 {loading ? (
                     <TableBody>
                         <TableRow>
-                            <StyledTableCell colSpan={6}>
+                            <StyledTableCell colSpan={7}>
                                 <LinearIndeterminate />
                             </StyledTableCell>
                         </TableRow>
@@ -201,7 +253,7 @@ export default function CustomPaginationActionsTable() {
                                 <TableCell component='th' scope='row'>
                                     {row.orderCode}
                                 </TableCell>
-                                <TableCell>{row?.orderedDate.split('T')[0]}</TableCell>
+                                <TableCell>{formatDate(row.orderedDate)}</TableCell>
                                 <TableCell>{row.paymentMethod === 'cash' ? 'Tiền mặt' : 'Thẻ tín dụng/Visa'}</TableCell>
                                 <TableCell>
                                     {row.totalPrice - row.discount < 0
@@ -215,13 +267,75 @@ export default function CustomPaginationActionsTable() {
                                         color={row.isPaid ? 'success' : 'warning'}
                                     />
                                 </TableCell>
-                                <TableCell>{getStatusShipping(row.status)}</TableCell>
+                                <TableCell>
+                                    <Chip
+                                        size='small'
+                                        label={convertStatus(row.status)}
+                                        color={
+                                            row.status === 'prepare'
+                                                ? 'default'
+                                                : row.status === 'pending'
+                                                ? 'warning'
+                                                : row.status === 'delivering'
+                                                ? 'info'
+                                                : row.status === 'delivered'
+                                                ? 'success'
+                                                : 'error'
+                                        }
+                                    />
+                                </TableCell>
+                                <TableCell
+                                    onClick={e => handleClickRow(e, row)}
+                                    sx={{
+                                        width: '80px',
+                                        cursor: 'pointer'
+                                    }}
+                                    align='right'
+                                >
+                                    <MoreVert />
+                                </TableCell>
+                                <Menu
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleClose}
+                                    anchorEl={anchorEl}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left'
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left'
+                                    }}
+                                >
+                                    <MenuItem onClick={handleViewRow}>
+                                        <Stack direction='row' spacing={1}>
+                                            <Visibility />
+                                            <Typography>Chi tiết</Typography>
+                                        </Stack>
+                                    </MenuItem>
+                                    {dataField && dataField.status !== 'cancel' && (
+                                        <MenuItem onClick={handleCancel}>
+                                            <Stack direction='row' spacing={1}>
+                                                <Edit />
+                                                <Typography>Hủy đơn</Typography>
+                                            </Stack>
+                                        </MenuItem>
+                                    )}
+                                </Menu>
                             </StyledTableRow>
                         ))}
                         {emptyRows > 0 && (
                             <StyledTableRow style={{ height: 53 * emptyRows }}>
-                                <StyledTableCell colSpan={6} />
+                                <StyledTableCell colSpan={7} />
                             </StyledTableRow>
+                        )}
+                        {open && (
+                            <ModalShipping
+                                title='Thông tin đơn hàng'
+                                open={open}
+                                handleClose={setOpen}
+                                data={dataField}
+                            />
                         )}
                     </TableBody>
                 )}
@@ -229,8 +343,8 @@ export default function CustomPaginationActionsTable() {
                 <TableFooter>
                     <TableRow>
                         <TablePagination
-                            rowsPerPageOptions={[5, 10, 25]}
-                            colSpan={6}
+                            rowsPerPageOptions={[5, 10]}
+                            colSpan={7}
                             count={count}
                             rowsPerPage={rowsPerPage}
                             page={page}
