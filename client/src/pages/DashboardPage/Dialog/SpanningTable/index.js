@@ -52,7 +52,7 @@ const SpanningTable = ({ rows }) => {
                     </TableRow>
                     <TableRow>
                         <TableCell colSpan={4}>Tổng thanh toán</TableCell>
-                        <TableCell align='right'>{formatPrice(sumPrice)}</TableCell>
+                        <TableCell align='right'>{formatPrice(sumPrice < 0 ? 0 : sumPrice)}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

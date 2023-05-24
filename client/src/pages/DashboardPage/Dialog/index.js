@@ -64,16 +64,22 @@ const DialogDashboard = ({ title, open, handleClose, data, type, setIsDeleting }
                 <Grid container spacing={2}>
                     <Grid container item spacing={2}>
                         <Grid item xs={12} md={6}>
-                            <Typography fontWeight={600}>Khách hàng</Typography>
-                            <UserInfo info={data} />{' '}
+                            <Typography fontWeight={600} color='primary'>
+                                Khách hàng
+                            </Typography>
+                            <UserInfo info={data} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Typography fontWeight={600}>Chi tiết</Typography>
+                            <Typography fontWeight={600} color='primary'>
+                                Chi tiết
+                            </Typography>
                             <Detail info={data} />
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography fontWeight={600}>Đơn hàng</Typography>
+                        <Typography fontWeight={600} color='primary'>
+                            Đơn hàng
+                        </Typography>
                         <SpanningTable rows={data} />
                     </Grid>
                 </Grid>

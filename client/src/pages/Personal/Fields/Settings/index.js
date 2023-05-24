@@ -50,8 +50,8 @@ const Settings = () => {
             }
         } catch (err) {
             console.error(err)
-            dispatch(showToast({ type: 'error', message: 'Cập nhập thất bại!' }))
-            setIsEdit(false)
+            dispatch(showToast({ type: 'error', message: err.response.data.error }))
+            // setIsEdit(false)
         }
     }
 

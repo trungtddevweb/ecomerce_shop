@@ -168,17 +168,21 @@ export const getAllOrderByAdmin = async (req, res) => {
 
 export const cancelOrderByUser = async (req, res) => {
     const { orderCode } = req.body
-    const { userId } = req.user
+    const userId = req.user._id
     try {
         // Tìm đơn hàng và tải thông tin người dùng liên quan
         const order = await Order.findOne({ orderCode }).populate('userId')
+        console.log('req.user', userId)
         if (!order) return res.status(404).json({ message: 'Đơn hàng không tồn tại!' })
         if (order.isPaid || order.status === 'cancel') {
             return res.status(400).json({ message: 'Không thể hủy đơn hàng!' })
         }
-        // Cập nhật thông tin người dùng
-        await User.findByIdAndUpdate(userId, { $inc: { totalCancel: 1 } })
+        // // Cập nhật thông tin người dùng
+        const user = await User.findByIdAndUpdate(userId, { $inc: { totalCancel: 1 } })
 
+        if (!user) {
+            return res.status(404).json({ message: 'Người dùng không tồn tại!' })
+        }
         order.status = 'cancel'
         await order.save()
         res.status(200).json('Hủy đơn hàng thành công')

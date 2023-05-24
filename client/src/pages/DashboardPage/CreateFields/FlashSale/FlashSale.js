@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import dayjs from 'dayjs'
 import { Box, TextField, Grid, Typography, Stack, InputAdornment } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
@@ -38,6 +38,7 @@ const FlashSale = () => {
                 setIsLoading(false)
                 reset()
             }
+            console.log(data)
         } catch (err) {
             console.log(err)
             setIsLoading(false)

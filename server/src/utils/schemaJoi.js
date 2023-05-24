@@ -8,7 +8,7 @@ export const addProductSchema = Joi.object({
 })
 
 export const flashSaleProduct = Joi.object({
-    productId: Joi.string().required(),
+    name: Joi.string().required(),
     salePrice: Joi.number().required(),
     flashSaleStart: Joi.date().required(),
     flashSaleEnd: Joi.date().required()
