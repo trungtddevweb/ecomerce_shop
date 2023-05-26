@@ -44,7 +44,7 @@ export const getAllPosts = async (req, res) => {
 
 export const updatedPost = async (req, res) => {
     try {
-        const postId = req.body
+        const { postId } = req.body
         const updateFields = req.body
         const updatedPost = await Blog.findByIdAndUpdate(postId, { $set: updateFields }, { new: true })
         if (postId) return responseHandler.notFound(res)

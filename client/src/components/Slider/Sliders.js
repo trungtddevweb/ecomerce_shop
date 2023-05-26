@@ -1,9 +1,25 @@
+import { useEffect, useState } from 'react'
 import Slider from 'react-slick'
 import { Box } from '@mui/material'
 import Image from 'mui-image'
-import { imagesSlider } from 'src/utils/const'
+import { getRandomProductsAPI } from '~/api/main'
+import SlideImage from '../SlideImage/SlideImage'
 
 const Sliders = () => {
+    const [data, setData] = useState([])
+    const NUMBER_RANDOM = 5
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await getRandomProductsAPI(NUMBER_RANDOM)
+                setData(response.data)
+            } catch (error) {
+                console.error(error.message)
+            }
+        }
+        fetchData()
+    }, [])
+
     const settings = {
         dots: true,
         infinite: true,
@@ -28,8 +44,8 @@ const Sliders = () => {
     return (
         <Box className='slide-container'>
             <Slider {...settings}>
-                {imagesSlider.map(slider => (
-                    <Image duration={500} key={slider.src} src={slider.src} alt={slider.alt} />
+                {data?.map(slider => (
+                    <SlideImage key={slider._id} slider={slider} />
                 ))}
             </Slider>
         </Box>
