@@ -1,5 +1,6 @@
 import responseHandler from '../handler/responseHandler.js'
 import Order from '../models/Order.js'
+import Product from '../models/Product.js'
 import User from '../models/User.js'
 import Voucher from '../models/Voucher.js'
 import { generateUniqueOrderCode, updateProductQuantities } from '../utils/const.js'
@@ -119,14 +120,19 @@ export const getOrderByOrderCode = async (req, res) => {
 
 export const updateOrder = async (req, res) => {
     try {
-        const { orderCode } = req.body
+        const { orderCode, status } = req.body
 
-        const order = await Order.findOneAndUpdate({ orderCode }, { ...req.body }, { new: true })
+        const order = await Order.findOne({ orderCode }).populate('products.productId')
         if (!order) {
             return res.status(404).json({ message: 'Đơn hàng không tồn tại' })
         }
-
-        res.status(200).json('Cập nhật đơn hàng thành công!')
+        if (status === 'delivered') {
+            for (const product of order.products) {
+                await Product.findByIdAndUpdate(product.productId, { $inc: { countPurchased: product.quantity } })
+            }
+        }
+        const updateOrder = await Order.findOneAndUpdate({ orderCode }, { ...req.body }, { new: true })
+        res.status(200).json(updateOrder)
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -172,7 +178,6 @@ export const cancelOrderByUser = async (req, res) => {
     try {
         // Tìm đơn hàng và tải thông tin người dùng liên quan
         const order = await Order.findOne({ orderCode }).populate('userId')
-        console.log('req.user', userId)
         if (!order) return res.status(404).json({ message: 'Đơn hàng không tồn tại!' })
         if (order.isPaid || order.status === 'cancel') {
             return res.status(400).json({ message: 'Không thể hủy đơn hàng!' })

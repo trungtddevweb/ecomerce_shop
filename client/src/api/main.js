@@ -84,6 +84,15 @@ export const getAllBlogs = async (limit, pageSize) => {
     return response.data
 }
 
+// Updated A Blog
+export const updatedBlogAPI = async (updateFields, token) => {
+    return await mainAPI.put('/blogs', updateFields, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 export const searchBlogsByQuery = async query => {
     const response = await mainAPI.get(`/blogs/search?title=${query}`)
     return response.data
@@ -159,6 +168,15 @@ export const getProductsByHot = async (limit, page) => {
 export const getProductByFieldAPI = async (fields, value, limit, page) => {
     const response = await mainAPI.get(`/products/fields/search/?${fields}=${value}&limit=${limit}&page=${page}`)
     return response.data
+}
+
+// Updated Products API
+export const updatedProductAPI = async (updateFields, token) => {
+    return await mainAPI.put('/products', updateFields, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }
 
 // Order

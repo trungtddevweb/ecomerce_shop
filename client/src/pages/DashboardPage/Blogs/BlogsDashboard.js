@@ -7,16 +7,18 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import EnhancedTableHead from '~/components/EnhancedTableHead'
-import { IconButton, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { Menu, MenuItem, Stack, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
 import { getAllBlogs } from '~/api/main'
-import { Edit } from '@mui/icons-material'
+import { Edit, MoreVert, Visibility } from '@mui/icons-material'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
 import { formatDate } from 'src/utils/format'
+import useToggle from '~/hooks/useToggle'
+import DialogBlog from './DialogBlog'
 
 const BlogsDashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -29,6 +31,33 @@ const BlogsDashboard = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5)
     const [blogs, setBlogs] = useState([])
     const [data, setData] = useState(null)
+
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [open, setOpen] = useToggle(false)
+    const [dataField, setDataField] = useState(null)
+    const [type, setType] = useState('view')
+
+    const handleClickRow = (event, row) => {
+        setAnchorEl(event.currentTarget)
+        setDataField(row)
+    }
+
+    const handleClose = row => {
+        setAnchorEl(null)
+        setDataField('')
+    }
+
+    const handleViewRow = () => {
+        setOpen()
+        setType('view')
+        setAnchorEl(null)
+    }
+
+    const handleEditRow = row => {
+        setOpen()
+        setType('edit')
+        setAnchorEl(null)
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -101,7 +130,7 @@ const BlogsDashboard = () => {
             id: 'settings',
             numeric: true,
             disablePadding: false,
-            label: 'Chỉnh sửa'
+            label: ''
         }
     ]
 
@@ -146,11 +175,6 @@ const BlogsDashboard = () => {
         setRowsPerPage(parseInt(event.target.value, 10))
         setPage(0)
     }
-
-    const handleChangeDense = event => {
-        setDense(event.target.checked)
-    }
-
     const isSelected = id => selected.includes(id)
     const count = data?.totalDocs || 0
     // Avoid a layout jump when reaching the last page with empty rows.
@@ -188,7 +212,6 @@ const BlogsDashboard = () => {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -198,6 +221,7 @@ const BlogsDashboard = () => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -246,17 +270,40 @@ const BlogsDashboard = () => {
                                                 {formatDate(row.createdAt)}
                                             </TableCell>
                                             <TableCell
+                                                onClick={e => handleClickRow(e, row)}
                                                 sx={{
-                                                    minWidth: '125px'
+                                                    width: '80px'
                                                 }}
                                                 align='right'
                                             >
-                                                <Tooltip title='Sửa'>
-                                                    <IconButton>
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
+                                                <MoreVert />
                                             </TableCell>
+                                            <Menu
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                            >
+                                                <MenuItem onClick={handleViewRow}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Visibility />
+                                                        <Typography>Xem thêm</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                                <MenuItem onClick={handleEditRow}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Edit />
+                                                        <Typography>Sửa</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                            </Menu>
                                         </TableRow>
                                     )
                                 })}
@@ -268,6 +315,16 @@ const BlogsDashboard = () => {
                                     >
                                         <TableCell colSpan={6} />
                                     </TableRow>
+                                )}
+                                {open && (
+                                    <DialogBlog
+                                        title='Thông tin bài viết'
+                                        setIsDeleting={setIsDeleting}
+                                        open={open}
+                                        type={type}
+                                        handleClose={setOpen}
+                                        data={dataField}
+                                    />
                                 )}
                             </TableBody>
                         </Table>
