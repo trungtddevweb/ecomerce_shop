@@ -14,7 +14,7 @@ const RandomProduct = ({ nameValue, isMatch }) => {
         const fetch = async () => {
             try {
                 setIsFetching(true)
-                const res = await getRandomProductsAPI()
+                const res = await getRandomProductsAPI(10)
                 setData(res.data)
                 setIsFetching(false)
             } catch (error) {
