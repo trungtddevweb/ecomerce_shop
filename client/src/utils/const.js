@@ -78,6 +78,7 @@ export const sizeLists = [
     { label: 'S', value: 's' },
     { label: 'M', value: 'm' },
     { label: 'L', value: 'l' },
+    { label: 'XL', value: 'xl' },
     { label: 'XXL', value: 'xxl' },
     { label: '3XL', value: '3xl' },
     { label: '4XL', value: '4XL' }

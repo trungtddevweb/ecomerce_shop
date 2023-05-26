@@ -9,7 +9,9 @@ import {
     DialogContentText,
     Select,
     Box,
-    MenuItem
+    MenuItem,
+    FormControl,
+    InputLabel
 } from '@mui/material'
 import UserInfo from './UserInfo'
 import SpanningTable from './SpanningTable'
@@ -94,36 +96,47 @@ const DialogDashboard = ({ title, open, handleClose, data, type, setIsDeleting }
             <DialogContent>
                 <DialogContentText tabIndex={-1} id='scroll-dialog-description'>
                     Chỉnh sửa trạng thái đơn hàng/trạng thái thanh toán dựa theo tình trạng shipping hoặc đã thanh toán
-                    toán sau đó bằng cách chuyển khoản hoặc phương thức khác.
+                    toán sau đó bằng cách chuyển khoản hoặc phương thức khác. Không thể cập nhập đơn hàng đã giao!
                 </DialogContentText>
                 <Box component='form'>
                     <Grid container spacing={2} mt={1}>
                         <Grid item xs={12} md={6}>
-                            <Controller
-                                control={control}
-                                name='status'
-                                render={({ field }) => (
-                                    <Select fullWidth {...field}>
-                                        {statusShipping.map((item, index) => (
-                                            <MenuItem value={item} key={index}>
-                                                {convertStatus(item)}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                )}
-                            />
+                            <FormControl fullWidth>
+                                <InputLabel>Trạng thái </InputLabel>
+
+                                <Controller
+                                    control={control}
+                                    name='status'
+                                    render={({ field }) => (
+                                        <Select
+                                            label='Trạng thái'
+                                            disabled={defaultValues.status === 'delivered'}
+                                            {...field}
+                                        >
+                                            {statusShipping.map((item, index) => (
+                                                <MenuItem value={item} key={index}>
+                                                    {convertStatus(item)}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    )}
+                                />
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Controller
-                                control={control}
-                                name='isPaid'
-                                render={({ field }) => (
-                                    <Select disabled={defaultValues.isPaid} fullWidth {...field}>
-                                        <MenuItem value={true}>True</MenuItem>
-                                        <MenuItem value={false}>False</MenuItem>
-                                    </Select>
-                                )}
-                            />
+                            <FormControl fullWidth>
+                                <InputLabel>Thanh toán </InputLabel>
+                                <Controller
+                                    control={control}
+                                    name='isPaid'
+                                    render={({ field }) => (
+                                        <Select label='Thanh toán' disabled={defaultValues.isPaid} {...field}>
+                                            <MenuItem value={true}>Đã thanh toán</MenuItem>
+                                            <MenuItem value={false}>Chưa thanh toán</MenuItem>
+                                        </Select>
+                                    )}
+                                />
+                            </FormControl>
                         </Grid>
                     </Grid>
                 </Box>
