@@ -18,9 +18,12 @@ import { getABlogPostAPI } from '~/api/main'
 import { CalendarMonth, Person3 } from '@mui/icons-material'
 import useDocumentTitle from '~/hooks/useDocumentTitle'
 import useScrollToTop from '~/hooks/useScrollToTop'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 const RecentPosts = lazy(() => import('./RecentBlogs'))
 
 const BlogDetailPage = () => {
+    dayjs.extend(relativeTime)
     const [post, setPost] = useState({})
     useDocumentTitle(post?.title)
     useScrollToTop()
@@ -94,7 +97,7 @@ const BlogDetailPage = () => {
                                                 component='div'
                                             >
                                                 <CalendarMonth fontSize='small' />
-                                                {post.createdAt?.split('T')[0]}
+                                                {dayjs(post.createdAt).fromNow()}
                                             </Typography>
                                             <Typography
                                                 gap={1}

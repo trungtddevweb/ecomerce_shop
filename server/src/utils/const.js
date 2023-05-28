@@ -33,7 +33,7 @@ export const updateProductQuantities = async products => {
             throw new Error('Sản phẩm không có sẵn trong cửa hàng')
         }
         return Product.findByIdAndUpdate(productId.productId._id, {
-            $inc: { quantity: -productId.quantity, countPurchased: productId.quantity }
+            $inc: { quantity: -productId.quantity }
         })
     })
 

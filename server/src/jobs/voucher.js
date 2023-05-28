@@ -5,12 +5,12 @@ import Voucher from '../models/Voucher.js'
 const voucherJob = cron.schedule('* * * * *', async () => {
     try {
         // Lấy tất cả các voucher chưa hết hạn
-        const localTime = new Date()
-        const currentUTCTime = new Date(localTime.getTime() + localTime.getTimezoneOffset() * 60000)
+        const currentTime = new Date()
+        const currentUTCTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60000)
         const vouchers = await Voucher.find({ endTime: { $lt: currentUTCTime } })
 
         // Lặp qua từng voucher
-        // Cập nhật giá của các sản phẩm về giá chính
+        // Cập nhật field expired của các vouchers
         for (const voucher of vouchers) {
             voucher.expired = true
             await voucher.save()

@@ -69,7 +69,7 @@ const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode, s
         } else {
             setSumPrice(newSumPrice)
         }
-    }, [totalPrice, discount])
+    }, [totalPrice, discount, setSumPrice])
 
     useEffect(() => {
         // Xử lý khi discount không hợp lệ và checked rỗng

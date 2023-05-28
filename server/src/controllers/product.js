@@ -165,7 +165,7 @@ export const flashSaleProduct = async (req, res) => {
     try {
         const { name, salePrice, flashSaleStart, flashSaleEnd } = req.body
         // Kiểm tra xem sản phẩm có tồn tại không
-        const product = await Product.findById({ name })
+        const product = await Product.findOne({ name })
         if (!product) {
             return res.status(404).json({ message: 'Sản phẩm không tồn tại' })
         }

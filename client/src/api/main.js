@@ -74,14 +74,23 @@ export const getAllProductByQueryAPI = async (limit, url) => {
     return res.data
 }
 
-export const getRandomProductsAPI = async () => {
-    return await mainAPI.get('/products/random')
+export const getRandomProductsAPI = async num => {
+    return await mainAPI.get(`/products/random?num=${num}`)
 }
 
 // Blogs
 export const getAllBlogs = async (limit, pageSize) => {
     const response = await mainAPI.get(`/blogs?limit=${limit}&page=${pageSize}`, {})
     return response.data
+}
+
+// Updated A Blog
+export const updatedBlogAPI = async (updateFields, token) => {
+    return await mainAPI.put('/blogs', updateFields, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }
 
 export const searchBlogsByQuery = async query => {
@@ -161,6 +170,15 @@ export const getProductByFieldAPI = async (fields, value, limit, page) => {
     return response.data
 }
 
+// Updated Products API
+export const updatedProductAPI = async (updateFields, token) => {
+    return await mainAPI.put('/products', updateFields, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 // Order
 export const orderProductAPI = async (token, orderDetails) => {
     return await mainAPI.post('/orders', orderDetails, {
@@ -168,6 +186,18 @@ export const orderProductAPI = async (token, orderDetails) => {
             Authorization: `Bearer ${token}`
         }
     })
+}
+
+export const cancelOrderAPI = async (orderCode, token) => {
+    return await mainAPI.post(
+        '/orders/user-cancel',
+        { orderCode },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
 }
 
 export const updateOrderByAdminAPI = async (data, token) => {
@@ -240,16 +270,15 @@ export const getAllProductsInFlashSaleAPI = async (limit, page, token) => {
 }
 
 export const createFlashSaleAPI = async (data, token) => {
-    const response = await mainAPI.post('/products/flash-sale/create', data, {
+    return await mainAPI.post('/products/flash-sale/create', data, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     })
-    return response.data
 }
 
 export const removeProductFromSaleAPI = async (token, selectedItem) => {
-    const response = await mainAPI.delete('products/flash-sale/products', {
+    return await mainAPI.delete('/products/flash-sale/products', {
         headers: {
             Authorization: `Bearer ${token}`
         },
@@ -257,5 +286,14 @@ export const removeProductFromSaleAPI = async (token, selectedItem) => {
             selectedIds: selectedItem
         }
     })
-    return response.data
+}
+
+// Update voucher
+export const updatedVoucherAPI = async (payload, token) => {
+    const res = await mainAPI.patch('/vouchers/', payload, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return res.data
 }

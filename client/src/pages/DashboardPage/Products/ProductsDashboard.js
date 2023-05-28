@@ -8,16 +8,18 @@ import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
 import { getAllProducts } from '~/api/main'
 import EnhancedTableHead from '~/components/EnhancedTableHead/EnhancedTableHead'
-import { IconButton, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { Menu, MenuItem, Stack, TablePagination, TableRow, Typography } from '@mui/material'
 import EnhancedTableToolbar from '~/components/EnhancedTableToolbar'
 import withFallback from 'src/hoc/withFallback'
 import ErrorFallback from 'src/fallback/Error'
 import LinearIndeterminate from 'src/fallback/LinearProgress'
-import { Edit } from '@mui/icons-material'
+import { Edit, MoreVert, Visibility } from '@mui/icons-material'
 import Image from '~/components/Image/Image'
 import images from '~/assets/imgs'
 import EditModal from '~/components/EditModal/EditModal'
 import { formatDate } from 'src/utils/format'
+import useToggle from '~/hooks/useToggle'
+import DialogProducts from './DialogProducts'
 
 const ProductsDashboard = ({ dataModal, onEdit }) => {
     const [data, setData] = useState(null)
@@ -30,24 +32,34 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
     const [page, setPage] = useState(0)
     const [dense, setDense] = useState(false)
     const [rowsPerPage, setRowsPerPage] = useState(5)
-    // Modal
-    const [modalOpen, setModalOpen] = useState(false)
-    const [modalData, setModalData] = useState(null)
 
-    const handleModalOpen = data => {
-        setModalData(data)
-        setModalOpen(true)
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [open, setOpen] = useToggle(false)
+    const [dataField, setDataField] = useState(null)
+    const [type, setType] = useState('view')
+
+    const handleClickRow = (event, row) => {
+        setAnchorEl(event.currentTarget)
+        setDataField(row)
     }
 
-    const handleModalClose = () => {
-        setModalOpen(false)
-        setModalData(null)
+    const handleClose = row => {
+        setAnchorEl(null)
+        setDataField('')
     }
 
-    const handleModalSave = value => {
-        onEdit(modalData.id, value)
+    const handleViewRow = () => {
+        setOpen()
+        setType('view')
+        setAnchorEl(null)
     }
-    // End modal
+
+    const handleEditRow = row => {
+        setOpen()
+        setType('edit')
+        setAnchorEl(null)
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -126,7 +138,7 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
             id: 'settings',
             numeric: true,
             disablePadding: false,
-            label: 'Chỉnh sửa'
+            label: ''
         }
     ]
 
@@ -211,7 +223,6 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => handleClick(event, row._id)}
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
@@ -221,6 +232,7 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
                                         >
                                             <TableCell padding='checkbox'>
                                                 <Checkbox
+                                                    onClick={event => handleClick(event, row._id)}
                                                     color='primary'
                                                     checked={isItemSelected}
                                                     inputProps={{
@@ -263,17 +275,40 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
                                                 {formatDate(row.createdAt)}
                                             </TableCell>
                                             <TableCell
+                                                onClick={e => handleClickRow(e, row)}
                                                 sx={{
-                                                    padding: '8px'
+                                                    width: '80px'
                                                 }}
                                                 align='right'
                                             >
-                                                <Tooltip title='Sửa'>
-                                                    <IconButton onClick={() => handleModalOpen(row)}>
-                                                        <Edit />
-                                                    </IconButton>
-                                                </Tooltip>
+                                                <MoreVert />
                                             </TableCell>
+                                            <Menu
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                                anchorEl={anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left'
+                                                }}
+                                            >
+                                                <MenuItem onClick={handleViewRow}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Visibility />
+                                                        <Typography>Xem thêm</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                                <MenuItem onClick={handleEditRow}>
+                                                    <Stack direction='row' spacing={1}>
+                                                        <Edit />
+                                                        <Typography>Sửa</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                            </Menu>
                                         </TableRow>
                                     )
                                 })}
@@ -285,6 +320,16 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
                                     >
                                         <TableCell colSpan={7} />
                                     </TableRow>
+                                )}
+                                {open && (
+                                    <DialogProducts
+                                        title='Thông tin sản phẩm'
+                                        setIsDeleting={setIsDeleting}
+                                        open={open}
+                                        type={type}
+                                        handleClose={setOpen}
+                                        data={dataField}
+                                    />
                                 )}
                             </TableBody>
                         </Table>
@@ -303,14 +348,7 @@ const ProductsDashboard = ({ dataModal, onEdit }) => {
                         )}
                     </TableContainer>
                 )}
-                {modalData && (
-                    <EditModal
-                        open={modalOpen}
-                        handleClose={handleModalClose}
-                        handleSave={handleModalSave}
-                        value={modalData.name}
-                    />
-                )}
+
                 <TablePagination
                     rowsPerPageOptions={[5, 10]}
                     component='div'
