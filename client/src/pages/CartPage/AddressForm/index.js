@@ -76,7 +76,6 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
     const handleChange = e => {
         const { name, value } = e.target
         setInfo(prev => ({ ...prev, [name]: value }))
-        console.log(setInfo(prev => ({ ...prev, [name]: value })))
     }
 
     const handleNextClick = e => {
@@ -123,33 +122,19 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
                                 variant='standard'
                             />
                         </Grid>
-                        {/* <Grid item xs={12}>
+                        <Grid item xs={12}>
                             <TextField
                                 required
                                 id='address1'
                                 name='address1'
                                 label='Địa chỉ thường trú'
+                                onFocus={handleFocus}
                                 fullWidth
                                 onChange={handleChange}
                                 autoComplete='shipping address-line1'
                                 variant='standard'
+                                value={getAddressValue()}
                             />
-                        </Grid> */}
-                        <>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    id='address1'
-                                    name='address1'
-                                    label='Địa chỉ thường trú'
-                                    onFocus={handleFocus}
-                                    fullWidth
-                                    onChange={handleChange}
-                                    autoComplete='shipping address-line1'
-                                    variant='standard'
-                                    value={getAddressValue()}
-                                />
-                            </Grid>
                             {isFocused && (
                                 <Grid container spacing={2}>
                                     <Grid item xs={12} md={4}>
@@ -204,7 +189,7 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
                                     </Grid>
                                 </Grid>
                             )}
-                        </>
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 required
