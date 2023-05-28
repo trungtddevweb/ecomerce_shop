@@ -148,6 +148,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
                                 {address.fullName}
                             </Typography>
                         </Stack>
+
                         <Stack direction='row'>
                             <Typography minWidth={150} gutterBottom>
                                 Số điện thoại:

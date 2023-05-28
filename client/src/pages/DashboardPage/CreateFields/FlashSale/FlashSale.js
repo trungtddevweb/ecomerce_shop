@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
-import { Box, TextField, Grid, Typography, Stack, InputAdornment } from '@mui/material'
+import { Box, TextField, Grid, Typography, Stack, InputAdornment, Select, MenuItem } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import { LoadingButton } from '@mui/lab'
 import { useDispatch, useSelector } from 'react-redux'
@@ -128,7 +128,8 @@ const FlashSale = () => {
                         )}
                     />
                 </Grid>
-                <Grid item sx={12}>
+
+                <Grid item xs={12}>
                     <LoadingButton loading={isLoading} type='submit' variant='contained'>
                         Tạo
                     </LoadingButton>
