@@ -159,15 +159,31 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
                         </Stack>
                         <Stack direction='row'>
                             <Typography gutterBottom minWidth={150}>
-                                Địa chỉ thường trú:{' '}
+                                Thành phố/Tỉnh:
                             </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
-                                {address.address1}
+                                {address.province}
                             </Typography>
                         </Stack>
                         <Stack direction='row'>
                             <Typography gutterBottom minWidth={150}>
-                                Địa chỉ nhận hàng:{' '}
+                                Quận/Huyện:
+                            </Typography>
+                            <Typography color='primary' fontWeight={600} gutterBottom>
+                                {address.district}
+                            </Typography>
+                        </Stack>
+                        <Stack direction='row'>
+                            <Typography gutterBottom minWidth={150}>
+                                Thị xã:
+                            </Typography>
+                            <Typography color='primary' fontWeight={600} gutterBottom>
+                                {address.ward}
+                            </Typography>
+                        </Stack>
+                        <Stack direction='row'>
+                            <Typography gutterBottom minWidth={150}>
+                                Địa chỉ cụ thể:
                             </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
                                 {address.address2}

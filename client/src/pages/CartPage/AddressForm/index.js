@@ -10,8 +10,7 @@ import {
     TextField,
     FormControlLabel,
     Grid,
-    Autocomplete,
-    Typography
+    Autocomplete
 } from '@mui/material'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -20,11 +19,7 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
     const [info, setInfo] = useState({
         fullName: '',
         phoneNumber: '',
-        address1: '',
         address2: '',
-        city: '',
-        zip: '',
-        country: 'Việt Nam',
         province: '',
         district: '',
         ward: ''
@@ -32,16 +27,6 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
     const [provinces, setProvinces] = useState([])
     const [districts, setDistricts] = useState([])
     const [wards, setWards] = useState([])
-    const [isFocused, setIsFocused] = useState(false)
-
-    const handleFocus = () => {
-        setIsFocused(true)
-    }
-
-    const getAddressValue = () => {
-        const { province, district, ward } = info
-        return `${province}, ${district}, ${ward}`
-    }
 
     useEffect(() => {
         const getProvinces = async () => {
@@ -76,6 +61,7 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
     const handleChange = e => {
         const { name, value } = e.target
         setInfo(prev => ({ ...prev, [name]: value }))
+        console.log(name, value)
     }
 
     const handleNextClick = e => {
@@ -122,111 +108,66 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
                                 variant='standard'
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                id='address1'
-                                name='address1'
-                                label='Địa chỉ thường trú'
-                                onFocus={handleFocus}
-                                fullWidth
-                                onChange={handleChange}
-                                autoComplete='shipping address-line1'
-                                variant='standard'
-                                value={getAddressValue()}
+
+                        <Grid item xs={12} md={4}>
+                            <Autocomplete
+                                id='province'
+                                freeSolo
+                                name='province'
+                                options={provinces.map(option => option.name)}
+                                renderInput={params => (
+                                    <TextField {...params} variant='standard' label='Thành phố/Tỉnh' />
+                                )}
+                                onChange={(e, value) => {
+                                    const updatedValue = { target: { name: 'province', value } }
+                                    handleChange(updatedValue)
+                                }}
+                                value={info.province}
                             />
-                            {isFocused && (
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} md={4}>
-                                        <Autocomplete
-                                            id='province'
-                                            freeSolo
-                                            name='province'
-                                            options={provinces.map(option => option.name)}
-                                            renderInput={params => (
-                                                <TextField {...params} variant='standard' label='Thành phố/Tỉnh' />
-                                            )}
-                                            onChange={(e, value) => {
-                                                const updatedValue = { target: { name: 'province', value } }
-                                                handleChange(updatedValue)
-                                            }}
-                                            value={info.province}
-                                        />
-                                    </Grid>
+                        </Grid>
 
-                                    <Grid item xs={12} md={4}>
-                                        <Autocomplete
-                                            id='district'
-                                            name='district'
-                                            freeSolo
-                                            options={districts.map(option => option.name)}
-                                            renderInput={params => (
-                                                <TextField {...params} variant='standard' label='Quận/Huyện' />
-                                            )}
-                                            onChange={(e, value) => {
-                                                const updatedValue = { target: { name: 'district', value } }
-                                                handleChange(updatedValue)
-                                            }}
-                                            value={info.district}
-                                        />
-                                    </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Autocomplete
+                                id='district'
+                                name='district'
+                                freeSolo
+                                options={districts.map(option => option.name)}
+                                renderInput={params => <TextField {...params} variant='standard' label='Quận/Huyện' />}
+                                onChange={(e, value) => {
+                                    const updatedValue = { target: { name: 'district', value } }
+                                    handleChange(updatedValue)
+                                }}
+                                value={info.district}
+                            />
+                        </Grid>
 
-                                    <Grid item xs={12} md={4}>
-                                        <Autocomplete
-                                            id='ward'
-                                            name='ward'
-                                            freeSolo
-                                            options={wards.map(option => option.name)}
-                                            renderInput={params => (
-                                                <TextField {...params} variant='standard' label='Thị xã' />
-                                            )}
-                                            onChange={(e, value) => {
-                                                const updatedValue = { target: { name: 'ward', value } }
-                                                handleChange(updatedValue)
-                                            }}
-                                            value={info.ward}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            )}
+                        <Grid item xs={12} md={4}>
+                            <Autocomplete
+                                id='ward'
+                                name='ward'
+                                freeSolo
+                                options={wards.map(option => option.name)}
+                                renderInput={params => <TextField {...params} variant='standard' label='Thị xã' />}
+                                onChange={(e, value) => {
+                                    const updatedValue = { target: { name: 'ward', value } }
+                                    handleChange(updatedValue)
+                                }}
+                                value={info.ward}
+                            />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 required
                                 id='address2'
                                 name='address2'
-                                label='Địa chỉ nhận hàng'
+                                label='Địa chỉ cụ thể'
                                 fullWidth
                                 onChange={handleChange}
                                 autoComplete='shipping address-line1'
                                 variant='standard'
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                required
-                                id='zip'
-                                name='zip'
-                                label='Mã Zip code'
-                                fullWidth
-                                onChange={handleChange}
-                                autoComplete='shipping postal-code'
-                                variant='standard'
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                required
-                                id='country'
-                                name='country'
-                                label='Đất nước'
-                                fullWidth
-                                value={info.country}
-                                onChange={handleChange}
-                                autoComplete='shipping country'
-                                variant='standard'
-                            />
-                        </Grid>
+
                         <Grid item xs={12}>
                             <FormControlLabel
                                 control={<Checkbox color='secondary' name='saveAddress' value='yes' />}
