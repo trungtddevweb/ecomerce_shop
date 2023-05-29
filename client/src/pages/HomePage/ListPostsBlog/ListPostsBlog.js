@@ -18,6 +18,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
 import { optionsQuery } from 'src/utils/const'
+import { formatDate } from 'src/utils/format'
 import routes from 'src/utils/routes'
 import { getAllBlogs } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
@@ -134,7 +135,7 @@ const ListPostsBlog = () => {
                                                     textAlign='right'
                                                     fontSize={14}
                                                 >
-                                                    {item?.createdAt.split('T')[0]}
+                                                    {formatDate(item.createdAt)}
                                                 </Typography>
                                             </Link>
                                         ) : (

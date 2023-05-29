@@ -51,7 +51,6 @@ const ProductSchema = new Schema(
         },
         sizes: {
             type: [String],
-            enum: ['s', 'm', 'l', 'xl', 'xxl', '3xl', '4xl'],
             default: 'l'
         },
         isHot: {
