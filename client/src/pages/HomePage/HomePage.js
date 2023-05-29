@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material'
+import { Box, Stack, useMediaQuery, useTheme } from '@mui/material'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import NewLastestProduct from './NewLastestProduct'
 import Image from 'mui-image'
@@ -13,10 +13,12 @@ import ListProducts from './ListProducts/ListProducts'
 const HomePage = () => {
     useDocumentTitle('Trang chủ')
     useScrollToTop()
+    const theme = useTheme()
+    const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (
         <Box>
-            <Sliders />
+            {!isMatch && <Sliders />}
             <Stack direction='column' className='homePage-container'>
                 <ListProducts title='Sản phẩm hot nhất' />
                 <Onboarding />
