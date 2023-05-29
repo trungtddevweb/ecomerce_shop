@@ -24,12 +24,12 @@ const VoucherModal = ({ open, handleClose, data, setIsDeleting }) => {
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
     const defaultValues = {
-        voucherCode: voucherCode,
+        voucherCode,
         startTime: dayjs(startTime),
         endTime: dayjs(endTime),
-        discount: discount,
-        expired: expired,
-        total: total
+        discount,
+        expired,
+        total
     }
     const voucherId = data._id
 
@@ -57,7 +57,6 @@ const VoucherModal = ({ open, handleClose, data, setIsDeleting }) => {
             setIsDeleting(false)
             console.error(error)
         }
-        console.log('data', data)
     }
 
     return (
@@ -98,8 +97,8 @@ const VoucherModal = ({ open, handleClose, data, setIsDeleting }) => {
                                         name='expired'
                                         render={({ field }) => (
                                             <Select {...field} label='Trạng thái'>
-                                                <MenuItem value={true}>Khả dụng</MenuItem>
-                                                <MenuItem value={false}>Hết hạn</MenuItem>
+                                                <MenuItem value={false}>Khả dụng</MenuItem>
+                                                <MenuItem value={true}>Hết hạn</MenuItem>
                                             </Select>
                                         )}
                                     />

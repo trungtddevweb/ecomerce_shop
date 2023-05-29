@@ -43,11 +43,11 @@ export const getAllPosts = async (req, res) => {
 }
 
 export const updatedPost = async (req, res) => {
+    const { postId } = req.body
+    const updateFields = req.body
     try {
-        const { postId } = req.body
-        const updateFields = req.body
+        if (!postId) return responseHandler.notFound(res)
         const updatedPost = await Blog.findByIdAndUpdate(postId, { $set: updateFields }, { new: true })
-        if (postId) return responseHandler.notFound(res)
         responseHandler.success(res, updatedPost)
     } catch (error) {
         responseHandler.error(res, error)
