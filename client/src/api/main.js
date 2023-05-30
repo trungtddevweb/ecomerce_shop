@@ -1,4 +1,6 @@
+import axios from 'axios'
 import mainAPI from './base'
+import { locationURL } from 'src/utils/const'
 
 // Auth APIs
 export const registerAPI = async data => {
@@ -296,4 +298,17 @@ export const updatedVoucherAPI = async (payload, token) => {
         }
     })
     return res.data
+}
+
+// Location
+export const getLocationAPI = async () => {
+    return await axios.get(`${locationURL}/p`)
+}
+
+export const getDistrictsAPI = async code => {
+    return await axios.get(`${locationURL}/p/${code}?depth=2`)
+}
+
+export const getWardsAPI = async code => {
+    return await axios.get(`${locationURL}/d/${code}?depth=2`)
 }

@@ -14,11 +14,13 @@ import {
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
+import { formatPrice } from 'src/utils/format'
 import { orderProductAPI } from '~/api/main'
 import useStyles from '~/assets/styles/useStyles'
 
 export default function Review({ order, onBack, onNext, setOrderCode, voucher, voucherCode, sumPrice }) {
     const { products, address, paymentMethod } = order
+    const { location } = address
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user?.token)
     const isPaid = paymentMethod === 'credit'
@@ -40,7 +42,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
     }))
     const shippingAddress = {
         fullName: address.fullName,
-        address: address.address1,
+        address: address.address,
         phone: address.phoneNumber
     }
 
@@ -51,7 +53,8 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
         shippingAddress,
         isPaid,
         discount: voucher,
-        voucherCode
+        voucherCode,
+        location
     }
 
     const handleOrder = async () => {
@@ -119,12 +122,12 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
                         <ListItemText primary={<Typography fontWeight={600}>Voucher</Typography>} />
                         <Typography variant='body2' fontWeight={600} color='error'>
                             {' '}
-                            - {voucher?.toLocaleString('vi-VN')} đ
+                            - {formatPrice(voucher)} đ
                         </Typography>
                     </ListItem>
                     <ListItem sx={{ py: 1, px: 0 }}>
                         <ListItemText primary={<Typography fontWeight={600}>Phí vận chuyển</Typography>} />
-                        <Typography>0 đ</Typography>
+                        <Typography>Miễn phí ship</Typography>
                     </ListItem>
                     <Divider variant='fullWidth' component='div' />
 
@@ -162,7 +165,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
                                 Thành phố/Tỉnh:
                             </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
-                                {address.province}
+                                {location.selectedProvinces}
                             </Typography>
                         </Stack>
                         <Stack direction='row'>
@@ -170,7 +173,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
                                 Quận/Huyện:
                             </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
-                                {address.district}
+                                {location.selectedDistrict}
                             </Typography>
                         </Stack>
                         <Stack direction='row'>
@@ -178,7 +181,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
                                 Thị xã:
                             </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
-                                {address.ward}
+                                {location.selectedWard}
                             </Typography>
                         </Stack>
                         <Stack direction='row'>
@@ -186,7 +189,7 @@ export default function Review({ order, onBack, onNext, setOrderCode, voucher, v
                                 Địa chỉ cụ thể:
                             </Typography>
                             <Typography color='primary' fontWeight={600} gutterBottom>
-                                {address.address2}
+                                {address.address}
                             </Typography>
                         </Stack>
                     </Grid>

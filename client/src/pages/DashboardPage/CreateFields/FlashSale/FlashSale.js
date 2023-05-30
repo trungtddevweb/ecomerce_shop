@@ -178,7 +178,7 @@ const FlashSale = () => {
                     />
                     <Typography color='error'>{errors.flashSaleEnd?.message}</Typography>
                 </Grid>
-                <Grid item sx={12}>
+                <Grid item xs={12}>
                     <LoadingButton loading={isLoading} type='submit' variant='contained'>
                         Tạo
                     </LoadingButton>

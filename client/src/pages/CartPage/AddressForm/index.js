@@ -12,61 +12,94 @@ import {
     Grid,
     Autocomplete
 } from '@mui/material'
-import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useState, useEffect } from 'react'
+import { getDistrictsAPI, getLocationAPI, getWardsAPI } from '~/api/main'
 
 const AddressForm = ({ onNext, onBack, isMatch }) => {
+    const [provinces, setProvinces] = useState([])
+    const [selectedProvinces, setSelectedProvinces] = useState(null)
+    const [districts, setDistricts] = useState([])
+    const [selectedDistrict, setSelectedDistrict] = useState(null)
+    const [selectedWard, setSelectedWard] = useState(null)
+    const [wards, setWards] = useState([])
     const [info, setInfo] = useState({
         fullName: '',
         phoneNumber: '',
-        address2: '',
-        province: '',
-        district: '',
-        ward: ''
+        address: ''
     })
-    const [provinces, setProvinces] = useState([])
-    const [districts, setDistricts] = useState([])
-    const [wards, setWards] = useState([])
+
+    const getLocation = () => {
+        return { selectedProvinces, selectedDistrict, selectedWard }
+    }
+    const location = getLocation()
 
     useEffect(() => {
-        const getProvinces = async () => {
+        const fetchLocation = async () => {
             try {
-                const res = await axios.get('https://provinces.open-api.vn/api/p/')
+                const res = await getLocationAPI()
                 setProvinces(res.data)
             } catch (err) {
-                console.log(err)
+                console.error(err)
             }
         }
-        const getDistricts = async () => {
-            try {
-                const res = await axios.get(`https://provinces.open-api.vn/api/d/`)
-                setDistricts(res.data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        const getWards = async () => {
-            try {
-                const res = await axios.get('https://provinces.open-api.vn/api/w/')
-                setWards(res.data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        getProvinces()
-        getDistricts()
-        getWards()
+        fetchLocation()
     }, [])
+
+    // Handlers
+    const handleProvinceChange = (event, newValue) => {
+        setSelectedProvinces(newValue?.name)
+        setSelectedDistrict(null)
+        setSelectedWard(null)
+        if (newValue) {
+            const fetchDistricts = async () => {
+                try {
+                    const response = await getDistrictsAPI(newValue.code)
+                    setDistricts(response.data.districts)
+                } catch (error) {
+                    console.error(error)
+                }
+            }
+            fetchDistricts()
+        } else {
+            setDistricts([])
+        }
+    }
+
+    const handleDistrictChange = (event, newValue) => {
+        setSelectedDistrict(newValue?.name)
+        setSelectedWard(null)
+        if (newValue) {
+            const getWards = async () => {
+                try {
+                    const response = await getWardsAPI(newValue.code)
+                    setWards(response.data.wards)
+                } catch (error) {
+                    console.error(error)
+                }
+            }
+            getWards()
+        } else {
+            setWards([])
+        }
+    }
+
+    const handleWardChange = (event, newValue) => {
+        setSelectedWard(newValue?.name)
+    }
 
     const handleChange = e => {
         const { name, value } = e.target
         setInfo(prev => ({ ...prev, [name]: value }))
-        console.log(name, value)
     }
 
     const handleNextClick = e => {
         e.preventDefault()
-        onNext(info)
+        const payload = {
+            ...info,
+            location
+        }
+        onNext(payload)
     }
 
     return (
@@ -111,55 +144,40 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
 
                         <Grid item xs={12} md={4}>
                             <Autocomplete
-                                id='province'
-                                freeSolo
+                                options={provinces}
                                 name='province'
-                                options={provinces.map(option => option.name)}
+                                getOptionLabel={option => option.name}
+                                onChange={handleProvinceChange}
                                 renderInput={params => (
-                                    <TextField {...params} variant='standard' label='Thành phố/Tỉnh' />
+                                    <TextField {...params} label='Tỉnh/Thành phố' variant='standard' />
                                 )}
-                                onChange={(e, value) => {
-                                    const updatedValue = { target: { name: 'province', value } }
-                                    handleChange(updatedValue)
-                                }}
-                                value={info.province}
                             />
                         </Grid>
 
                         <Grid item xs={12} md={4}>
                             <Autocomplete
-                                id='district'
                                 name='district'
-                                freeSolo
-                                options={districts.map(option => option.name)}
+                                getOptionLabel={option => option.name}
+                                options={districts.map(option => option)}
+                                onChange={handleDistrictChange}
                                 renderInput={params => <TextField {...params} variant='standard' label='Quận/Huyện' />}
-                                onChange={(e, value) => {
-                                    const updatedValue = { target: { name: 'district', value } }
-                                    handleChange(updatedValue)
-                                }}
-                                value={info.district}
                             />
                         </Grid>
 
                         <Grid item xs={12} md={4}>
                             <Autocomplete
-                                id='ward'
                                 name='ward'
-                                freeSolo
-                                options={wards.map(option => option.name)}
+                                getOptionLabel={option => option.name}
+                                options={wards.map(option => option)}
+                                onChange={handleWardChange}
                                 renderInput={params => <TextField {...params} variant='standard' label='Thị xã' />}
-                                onChange={(e, value) => {
-                                    const updatedValue = { target: { name: 'ward', value } }
-                                    handleChange(updatedValue)
-                                }}
-                                value={info.ward}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 required
-                                id='address2'
-                                name='address2'
+                                id='address'
+                                name='address'
                                 label='Địa chỉ cụ thể'
                                 fullWidth
                                 onChange={handleChange}
