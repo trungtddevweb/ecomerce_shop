@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
+import * as yup from 'yup'
 import {
     Box,
     TextField,
@@ -11,7 +12,6 @@ import {
     CircularProgress,
     Avatar
 } from '@mui/material'
-import * as yup from 'yup'
 import { DatePicker } from '@mui/x-date-pickers'
 import { LoadingButton } from '@mui/lab'
 import { useDispatch, useSelector } from 'react-redux'
@@ -179,7 +179,7 @@ const FlashSale = () => {
                     <Typography color='error'>{errors.flashSaleEnd?.message}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <LoadingButton loading={loading} type='submit' variant='contained'>
+                    <LoadingButton loading={isLoading} type='submit' variant='contained'>
                         Tạo
                     </LoadingButton>
                 </Grid>
