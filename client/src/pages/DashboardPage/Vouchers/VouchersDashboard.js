@@ -312,10 +312,10 @@ const VouchersDashboard = () => {
                                                 <Chip
                                                     size='small'
                                                     label={
-                                                        row.used !== row.total || row.expired ? 'Khả dụng' : 'Hết mã'
+                                                        row.used === row.total || row.expired ? 'Hết mã' : 'Khả dụng'
                                                     }
                                                     color={
-                                                        row.used !== row.total || row.expired ? 'success' : 'default'
+                                                        row.used === row.total || row.expired ? 'default' : 'success'
                                                     }
                                                 />
                                             </TableCell>

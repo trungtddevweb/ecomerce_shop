@@ -1,11 +1,35 @@
+import { useRef, useState } from 'react'
+import emailjs from '@emailjs/browser'
 import { Send } from '@mui/icons-material'
-import { Box, Button, Grid, Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Grid, Stack, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import useStyles from '~/assets/styles/useStyles'
+import { toast } from 'react-toastify'
+import { LoadingButton } from '@mui/lab'
 
 const NewLetters = () => {
+    const [isLoading, setIsLoading] = useState(false)
     const theme = useTheme()
     const isMatch = useMediaQuery(theme.breakpoints.down('sm'))
     const classes = useStyles()
+    const form = useRef()
+
+    const sendEmail = e => {
+        e.preventDefault()
+        setIsLoading(true)
+        toast
+            .promise(emailjs.sendForm('service_v4tix23', 'template_nlr2obv', form.current, 'd1CBIhunT7-fyL3nu'), {
+                pending: 'Đang gửi',
+                success: 'Gửi thành công!!!',
+                error: 'Gửi thất bại, hãy thử lại'
+            })
+            .then(() => {
+                setIsLoading(false)
+                e.target.reset()
+            })
+            .catch(() => {
+                setIsLoading(false)
+            })
+    }
 
     return (
         <Box
@@ -42,27 +66,36 @@ const NewLetters = () => {
                     </Stack>
                 </Grid>
                 <Grid item xs={12} md={7}>
-                    <Stack direction={isMatch ? 'column' : 'row'} component='form' spacing={1}>
+                    <Stack
+                        direction={isMatch ? 'column' : 'row'}
+                        component='form'
+                        ref={form}
+                        onSubmit={sendEmail}
+                        spacing={1}
+                    >
                         <TextField
                             type='email'
                             required
+                            name='user_email'
                             autoComplete='email'
                             fullWidth
                             placeholder='Nhập email'
                             label='Email'
                         />
-                        <Button
+                        <LoadingButton
                             sx={{
                                 minWidth: {
                                     md: 150
                                 }
                             }}
+                            type='submit'
                             variant='contained'
                             endIcon={<Send />}
+                            loading={isLoading}
                             size={isMatch ? 'small' : 'medium'}
                         >
                             Subscribe
-                        </Button>
+                        </LoadingButton>
                     </Stack>
                 </Grid>
             </Grid>
