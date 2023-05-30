@@ -31,9 +31,7 @@ const CartPage = () => {
         address: {},
         paymentMethod: {}
     })
-    console.log(order.address)
     const [activeStep, setActiveStep] = useState(0)
-    // console.log('voucher====🚀', voucherCode)
 
     const previousAddress = usePrevious(order.address)
     const previousPaymentMethod = usePrevious(order.paymentMethod)

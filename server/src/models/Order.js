@@ -21,6 +21,11 @@ const OrderSchema = new Schema(
         products: { type: [productSchema], required: true },
         totalPrice: { type: Number, required: true },
         paymentMethod: { type: String },
+        location: {
+            selectedProvinces: { type: String },
+            selectedDistrict: { type: String },
+            selectedWard: { type: String }
+        },
         shippingAddress: {
             fullName: { type: String, required: true },
             address: { type: String, required: true },
