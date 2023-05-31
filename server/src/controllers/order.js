@@ -128,7 +128,9 @@ export const updateOrder = async (req, res) => {
         }
         if (status === 'delivered') {
             for (const product of order.products) {
-                await Product.findByIdAndUpdate(product.productId, { $inc: { countPurchased: product.quantity } })
+                await Product.findByIdAndUpdate(product.productId, {
+                    $inc: { countPurchased: product.quantity, revenue: product.price * product.quantity }
+                })
             }
         }
         const updateOrder = await Order.findOneAndUpdate({ orderCode }, { ...req.body }, { new: true })
