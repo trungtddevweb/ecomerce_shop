@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Create, HistoryEduOutlined, Inventory, LocalShipping, Loyalty, ManageAccounts } from '@mui/icons-material'
 import DiscountIcon from '@mui/icons-material/Discount'
+import DashboardIcon from '@mui/icons-material/Dashboard'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import BlogsDashboard from './Blogs'
 import ProductsDashboard from './Products'
@@ -30,6 +31,7 @@ import VouchersDashboard from './Vouchers'
 import UsersDashBoard from './Users'
 import OrdersDashboard from './Orders/'
 import ProductsSaleDashboard from './ProductsSale'
+import DashBoard from './DashBoard/DashBoard'
 import useScrollToTop from '~/hooks/useScrollToTop'
 
 const DashboardPage = () => {
@@ -70,6 +72,8 @@ const DashboardPage = () => {
                 return <OrdersDashboard />
             case 'products-sale':
                 return <ProductsSaleDashboard />
+            case 'dashboard':
+                return <DashBoard />
             default:
                 return <ProductsDashboard />
         }
@@ -233,6 +237,15 @@ const DashboardPage = () => {
                                             <Create />
                                         </ListItemIcon>
                                         <ListItemText primary='Tạo mới' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'dashboard'}
+                                        onClick={event => handleListItemClick(event, 'dashboard')}
+                                    >
+                                        <ListItemIcon>
+                                            <DashboardIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Dashboard' />
                                     </ListItemButton>
                                 </List>
                                 <ListItem
