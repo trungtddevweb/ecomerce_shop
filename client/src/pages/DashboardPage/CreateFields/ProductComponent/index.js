@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { showToast } from 'src/redux/slice/toastSlice'
-import { optionValueSizes } from 'src/utils/const'
+import { sizeLists } from 'src/utils/const'
 const ProductComponent = ({ isMatch }) => {
     const [files, setFiles] = useState([])
     const token = useSelector(state => state.auth.user?.token)
@@ -188,7 +188,7 @@ const ProductComponent = ({ isMatch }) => {
                                     multiple
                                     {...register('sizes')}
                                 >
-                                    {optionValueSizes.map(size => (
+                                    {sizeLists.map(size => (
                                         <MenuItem value={size.value} key={size.value}>
                                             {size.label}
                                         </MenuItem>

@@ -39,3 +39,7 @@ export const updateProductQuantities = async products => {
 
     await Promise.all(updateOperations)
 }
+
+export const calculateProductRevenue = (price, quantity) => {
+    return price * quantity
+}
