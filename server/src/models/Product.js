@@ -57,10 +57,6 @@ const ProductSchema = new Schema(
             type: Boolean,
             default: true
         },
-        countPurchased: {
-            type: Number,
-            default: 0
-        },
         monthlyRevenue: {
             type: Map,
             of: Number,
