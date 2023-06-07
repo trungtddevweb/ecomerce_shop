@@ -13,11 +13,12 @@ const NewLastestProduct = () => {
     const [lists, setLists] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const classes = useStyles()
+    const limit = 20
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const products = await getAllProducts()
+                const products = await getAllProducts(limit)
                 setIsLoading(false)
                 setLists(products.docs)
             } catch (error) {

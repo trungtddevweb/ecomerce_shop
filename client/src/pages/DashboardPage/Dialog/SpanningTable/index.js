@@ -44,7 +44,7 @@ const SpanningTable = ({ rows }) => {
                     </TableRow>
                     <TableRow>
                         <TableCell colSpan={4}>Tiền ship</TableCell>
-                        <TableCell align='right'>1</TableCell>
+                        <TableCell align='right'>Miễn phí</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell colSpan={4}>Mã giảm giá</TableCell>

@@ -3,7 +3,7 @@ import Order from '../models/Order.js'
 import Product from '../models/Product.js'
 import User from '../models/User.js'
 import Voucher from '../models/Voucher.js'
-import { generateUniqueOrderCode, updateProductQuantities } from '../utils/const.js'
+import { calculateProductRevenue, generateUniqueOrderCode, updateProductQuantities } from '../utils/const.js'
 
 // export const createOrder = async (req, res) => {
 //     try {
@@ -120,18 +120,23 @@ export const getOrderByOrderCode = async (req, res) => {
 
 export const updateOrder = async (req, res) => {
     try {
-        const { orderCode, status } = req.body
+        const { orderCode, status, month, year, isPaid } = req.body
 
         const order = await Order.findOne({ orderCode }).populate('products.productId')
         if (!order) {
             return res.status(404).json({ message: 'Đơn hàng không tồn tại' })
         }
-        if (status === 'delivered') {
+        if (status === 'delivered' && isPaid) {
             for (const product of order.products) {
-                await Product.findByIdAndUpdate(product.productId, { $inc: { countPurchased: product.quantity } })
+                const existProduct = await Product.findById(product.productId)
+                const monthYearKey = `${month}-${year}`
+                const revenue = calculateProductRevenue(existProduct.price, product.quantity)
+                existProduct.monthlyRevenue.set(monthYearKey, revenue)
+                await existProduct.save()
+                console.log('product', existProduct)
             }
         }
-        const updateOrder = await Order.findOneAndUpdate({ orderCode }, { ...req.body }, { new: true })
+        const updateOrder = await Order.findOneAndUpdate({ orderCode }, { status, isPaid }, { new: true })
         res.status(200).json(updateOrder)
     } catch (error) {
         res.status(500).json({ message: error.message })
