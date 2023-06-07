@@ -230,15 +230,6 @@ const DashboardPage = () => {
                                         <ListItemText primary='Sản phẩm sale' />
                                     </ListItemButton>
                                     <ListItemButton
-                                        selected={selectedParam === 'create'}
-                                        onClick={event => handleListItemClick(event, 'create')}
-                                    >
-                                        <ListItemIcon>
-                                            <Create />
-                                        </ListItemIcon>
-                                        <ListItemText primary='Tạo mới' />
-                                    </ListItemButton>
-                                    <ListItemButton
                                         selected={selectedParam === 'dashboard'}
                                         onClick={event => handleListItemClick(event, 'dashboard')}
                                     >
@@ -246,6 +237,15 @@ const DashboardPage = () => {
                                             <DashboardIcon />
                                         </ListItemIcon>
                                         <ListItemText primary='Dashboard' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'create'}
+                                        onClick={event => handleListItemClick(event, 'create')}
+                                    >
+                                        <ListItemIcon>
+                                            <Create />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Tạo mới' />
                                     </ListItemButton>
                                 </List>
                                 <ListItem
