@@ -23,6 +23,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 
 const DialogDashboard = ({ title, open, handleClose, data, type, setIsDeleting }) => {
+    const month = new Date().getMonth() + 1
+    const year = new Date().getFullYear()
     const { orderCode } = data
     const dispatch = useDispatch()
     const token = useSelector(state => state.auth.user.token)
@@ -42,7 +44,9 @@ const DialogDashboard = ({ title, open, handleClose, data, type, setIsDeleting }
     const handleFormSubmit = async formData => {
         const payload = {
             ...formData,
-            orderCode
+            orderCode,
+            month,
+            year
         }
         setIsDeleting(true)
         try {
