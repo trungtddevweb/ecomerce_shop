@@ -45,7 +45,7 @@ const DashBoard = () => {
             <Bar data={data} options={options} />
             {products &&
                 products.map((product, index) => {
-                    return <Typography key={index}>{product.price}</Typography>
+                    return <Typography key={index}>{product.updatedAt}</Typography>
                 })}
         </Box>
     )
