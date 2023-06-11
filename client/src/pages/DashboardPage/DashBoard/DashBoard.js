@@ -6,6 +6,7 @@ import { getAllProducts } from '~/api/main'
 
 const DashBoard = () => {
     const [products, setProducts] = useState([])
+
     useEffect(() => {
         const getAll = async () => {
             try {
@@ -18,19 +19,46 @@ const DashBoard = () => {
         }
         getAll()
     }, [])
-    const data = {
-        labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
-        datasets: [
-            {
-                label: 'Doanh thu',
-                data: [500, 800, 1200, 900, 1500, 2000],
-                backgroundColor: 'rgba(75,192,192,0.6)',
-                borderColor: 'rgba(75,192,192,1)',
-                borderWidth: 1
+
+    const currentDate = new Date()
+    const currentMonth = currentDate.getMonth() + 1
+
+    const generateMonthlyLabels = () => {
+        const labels = []
+
+        for (let i = 1; i <= currentMonth; i++) {
+            labels.push(`Tháng ${i}`)
+        }
+
+        return labels
+    }
+    const processDataForChart = () => {
+        const data = {
+            labels: generateMonthlyLabels(),
+            datasets: []
+        }
+
+        products.forEach((product, index) => {
+            const revenueValues = Object.values(product.monthlyRevenue)
+            const hasRevenue = revenueValues.some(revenue => revenue > 0)
+
+            if (hasRevenue) {
+                const dataset = {
+                    label: product.category,
+                    data: revenueValues,
+                    fill: false,
+                    borderColor: 'rgba(75,192,192,1)',
+                    borderWidth: 2
+                }
+
+                data.datasets.push(dataset)
             }
-        ]
+        })
+
+        return data
     }
 
+    const chartData = processDataForChart()
     // Cấu hình biểu đồ
     const options = {
         scales: {
@@ -42,11 +70,7 @@ const DashBoard = () => {
 
     return (
         <Box>
-            <Bar data={data} options={options} />
-            {products &&
-                products.map((product, index) => {
-                    return <Typography key={index}>{product.updatedAt}</Typography>
-                })}
+            <Bar data={chartData} options={options} />
         </Box>
     )
 }
