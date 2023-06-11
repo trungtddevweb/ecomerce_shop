@@ -92,7 +92,7 @@ const ListPostsBlog = () => {
                             >
                                 <CardActionArea>
                                     {item ? (
-                                        <CardMedia component='img' height='200' image={item?.picture} />
+                                        <CardMedia component='img' height='200' image={item?.picture?.[0]} />
                                     ) : (
                                         <SkeletonFallback
                                             key={index}

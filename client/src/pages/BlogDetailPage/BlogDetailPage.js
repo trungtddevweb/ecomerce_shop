@@ -47,6 +47,7 @@ const BlogDetailPage = () => {
         }
         fetchPost()
     }, [blogId])
+    console.log(post)
 
     return (
         <Box p={1} display='flex' minHeight='70vh' justifyContent={{ xl: 'center' }} marginY={5}>
@@ -86,7 +87,7 @@ const BlogDetailPage = () => {
                                 <CircularProgress />
                             ) : (
                                 <Paper elevation={6}>
-                                    <Image src={post?.picture || ''} alt={post.name} />
+                                    <Image src={post?.picture?.[0] || ''} alt={post.name} />
                                     <Stack spacing={2} padding={2}>
                                         <Stack direction='row' justifyContent='space-between'>
                                             <Typography

@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Create, HistoryEduOutlined, Inventory, LocalShipping, Loyalty, ManageAccounts } from '@mui/icons-material'
 import DiscountIcon from '@mui/icons-material/Discount'
+import DashboardIcon from '@mui/icons-material/Dashboard'
 import useDocumentTitle from 'src/hooks/useDocumentTitle'
 import BlogsDashboard from './Blogs'
 import ProductsDashboard from './Products'
@@ -31,6 +32,7 @@ import UsersDashBoard from './Users'
 import OrdersDashboard from './Orders/'
 import ProductsSaleDashboard from './ProductsSale'
 import useScrollToTop from '~/hooks/useScrollToTop'
+import RevenueDashboard from './RevenueDashboard'
 
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
@@ -70,6 +72,8 @@ const DashboardPage = () => {
                 return <OrdersDashboard />
             case 'products-sale':
                 return <ProductsSaleDashboard />
+            case 'revenue':
+                return <RevenueDashboard />
             default:
                 return <ProductsDashboard />
         }
@@ -151,6 +155,12 @@ const DashboardPage = () => {
                                     onClick={event => handleListItemClick(event, 'orders')}
                                 />
                                 <Tab
+                                    icon={<DashboardIcon />}
+                                    aria-label='revenue'
+                                    value='revenue'
+                                    onClick={event => handleListItemClick(event, 'revenue')}
+                                />
+                                <Tab
                                     icon={<Create />}
                                     aria-label='create'
                                     value='create'
@@ -224,6 +234,15 @@ const DashboardPage = () => {
                                             <Loyalty />
                                         </ListItemIcon>
                                         <ListItemText primary='Sản phẩm sale' />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={selectedParam === 'revenue'}
+                                        onClick={event => handleListItemClick(event, 'revenue')}
+                                    >
+                                        <ListItemIcon>
+                                            <DashboardIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary='Doanh thu' />
                                     </ListItemButton>
                                     <ListItemButton
                                         selected={selectedParam === 'create'}

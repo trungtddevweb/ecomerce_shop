@@ -24,7 +24,7 @@ const RecentPosts = ({ blogId }) => {
                 <Paper key={post._id} elevation={4}>
                     <Stack padding={2} spacing={2} direction='row'>
                         <Box>
-                            <Image width={100} height={100} src={post.picture} />
+                            <Image width={100} height={100} src={post.picture?.[0]} />
                         </Box>
                         <Link to={`/blogs/${post._id}`}>
                             <Stack>

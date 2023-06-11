@@ -101,11 +101,11 @@ const BlogPage = () => {
                             )}
                             <ImageList variant='masonry' gap={8} cols={isMatch ? 2 : 3}>
                                 {data.map(blog => (
-                                    <ImageListItem key={blog.picture}>
+                                    <ImageListItem key={blog.picture?.[0]}>
                                         <Link to={`/blogs/${blog._id}`}>
                                             <Image
                                                 duration={500}
-                                                src={blog.picture}
+                                                src={blog.picture?.[0]}
                                                 srcSet={blog.img}
                                                 alt={blog.title}
                                                 loading='lazy'

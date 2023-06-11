@@ -12,23 +12,25 @@ import {
     Grid,
     Autocomplete
 } from '@mui/material'
-import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { getDistrictsAPI, getLocationAPI, getWardsAPI } from '~/api/main'
+import { useSelector } from 'react-redux'
+import { getDistrictsAPI, getLocationAPI, getWardsAPI, getAUserAPI } from '~/api/main'
 
 const AddressForm = ({ onNext, onBack, isMatch }) => {
+    const token = useSelector(state => state.auth.user.token)
     const [provinces, setProvinces] = useState([])
     const [selectedProvinces, setSelectedProvinces] = useState(null)
     const [districts, setDistricts] = useState([])
     const [selectedDistrict, setSelectedDistrict] = useState(null)
     const [selectedWard, setSelectedWard] = useState(null)
     const [wards, setWards] = useState([])
+    const [userData, setUserData] = useState({})
+
     const [info, setInfo] = useState({
         fullName: '',
         phoneNumber: '',
         address: ''
     })
-
     const getLocation = () => {
         return { selectedProvinces, selectedDistrict, selectedWard }
     }
@@ -45,6 +47,29 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
         }
         fetchLocation()
     }, [])
+
+    useEffect(() => {
+        const getUserData = async () => {
+            try {
+                const res = await getAUserAPI(token)
+                setUserData(res)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getUserData()
+    }, [token])
+
+    useEffect(() => {
+        if (userData && userData.name && userData.phone && userData.address) {
+            setInfo(prevInfo => ({
+                ...prevInfo,
+                fullName: userData.name,
+                phoneNumber: userData.phone,
+                address: userData.address
+            }))
+        }
+    }, [userData])
 
     // Handlers
     const handleProvinceChange = (event, newValue) => {
@@ -126,6 +151,7 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
                                 fullWidth
                                 autoComplete='given-name'
                                 variant='standard'
+                                value={info.fullName}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -136,6 +162,7 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
                                 name='phoneNumber'
                                 label='Số điện thoại'
                                 fullWidth
+                                value={info.phoneNumber}
                                 onChange={handleChange}
                                 autoComplete='tel'
                                 variant='standard'
@@ -180,6 +207,7 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
                                 name='address'
                                 label='Địa chỉ cụ thể'
                                 fullWidth
+                                value={info.address}
                                 onChange={handleChange}
                                 autoComplete='shipping address-line1'
                                 variant='standard'
@@ -193,67 +221,6 @@ const AddressForm = ({ onNext, onBack, isMatch }) => {
                             />
                         </Grid>
                     </Grid>
-
-                    {/* <Box>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                id='address1'
-                                name='address1'
-                                label='Địa chỉ thường trú'
-                                onFocus={handleFocus}
-                                fullWidth
-                                onChange={handleChange}
-                                autoComplete='shipping address-line1'
-                                variant='standard'
-                                value={`${info.province}, ${info.district}, ${info.ward}`}
-                            />
-                        </Grid>
-                        {isFocused && (
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} md={4}>
-                                    <Autocomplete
-                                        id='free-solo-demo'
-                                        freeSolo
-                                        name='province'
-                                        options={provinces.map(option => option.name)}
-                                        renderInput={params => (
-                                            <TextField {...params} variant='standard' label='Thành phố/Tỉnh' />
-                                        )}
-                                        onChange={(e, value) => handleChange('province', value)}
-                                        value={info.province}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12} md={4}>
-                                    <Autocomplete
-                                        id='free-solo-demo'
-                                        freeSolo
-                                        options={districts.map(option => option.name)}
-                                        renderInput={params => (
-                                            <TextField {...params} variant='standard' label='Quận/Huyện' />
-                                        )}
-                                        onChange={(e, value) => handleChange('district', value)}
-                                        value={info.district}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12} md={4}>
-                                    <Autocomplete
-                                        id='free-solo-demo'
-                                        freeSolo
-                                        options={wards.map(option => option.name)}
-                                        renderInput={params => (
-                                            <TextField {...params} variant='standard' label='Thị xã' />
-                                        )}
-                                        onChange={(e, value) => handleChange('ward', value)}
-                                        value={info.ward}
-                                    />
-                                </Grid>
-                            </Grid>
-                        )}
-                    </Box> */}
-
                     <Grid item xs={12} display='flex' justifyContent='flex-end'>
                         <Stack direction='row'>
                             <Button onClick={onBack} variant='text'>

@@ -122,6 +122,34 @@ export const sliderLists = [
     }
 ]
 
+export const optionsChart = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top'
+        },
+        title: {
+            display: true,
+            text: 'Doanh thu trong năm'
+        }
+    }
+}
+
+export const labelsMonthChart = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12'
+]
+
 export const statusShipping = ['prepare', 'pending', 'delivering', 'delivered', 'cancel']
 
 export function convertStatus(status) {

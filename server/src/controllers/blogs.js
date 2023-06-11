@@ -3,11 +3,11 @@ import responseHandler from '../handler/responseHandler.js'
 import mongoose from 'mongoose'
 
 export const createAPost = async (req, res) => {
-    const picture = req.file
+    const filepaths = req.files?.map(file => file.path)
     try {
         const post = await Blog({
             ...req.body,
-            picture: picture?.path
+            picture: filepathss
         })
         await post.save()
         responseHandler.created(res, post)
