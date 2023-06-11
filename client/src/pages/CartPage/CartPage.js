@@ -126,7 +126,7 @@ const CartPage = () => {
     }
 
     return (
-        <Box className={classes.flexBox} bgcolor='lightGray' paddingY={6} paddingX={1}>
+        <Box className={classes.flexBox} minHeight={!isMatch && '70vh'} bgcolor='lightGray' paddingY={6} paddingX={1}>
             <Box>
                 {!isMatch && (
                     <Paper

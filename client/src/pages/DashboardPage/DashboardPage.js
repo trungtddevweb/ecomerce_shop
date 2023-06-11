@@ -31,8 +31,8 @@ import VouchersDashboard from './Vouchers'
 import UsersDashBoard from './Users'
 import OrdersDashboard from './Orders/'
 import ProductsSaleDashboard from './ProductsSale'
-import DashBoard from './DashBoard/DashBoard'
 import useScrollToTop from '~/hooks/useScrollToTop'
+import RevenueDashboard from './RevenueDashboard'
 
 const DashboardPage = () => {
     useDocumentTitle('Quản lý danh mục')
@@ -72,8 +72,8 @@ const DashboardPage = () => {
                 return <OrdersDashboard />
             case 'products-sale':
                 return <ProductsSaleDashboard />
-            case 'dashboard':
-                return <DashBoard />
+            case 'revenue':
+                return <RevenueDashboard />
             default:
                 return <ProductsDashboard />
         }
@@ -155,6 +155,12 @@ const DashboardPage = () => {
                                     onClick={event => handleListItemClick(event, 'orders')}
                                 />
                                 <Tab
+                                    icon={<DashboardIcon />}
+                                    aria-label='revenue'
+                                    value='revenue'
+                                    onClick={event => handleListItemClick(event, 'revenue')}
+                                />
+                                <Tab
                                     icon={<Create />}
                                     aria-label='create'
                                     value='create'
@@ -230,13 +236,13 @@ const DashboardPage = () => {
                                         <ListItemText primary='Sản phẩm sale' />
                                     </ListItemButton>
                                     <ListItemButton
-                                        selected={selectedParam === 'dashboard'}
-                                        onClick={event => handleListItemClick(event, 'dashboard')}
+                                        selected={selectedParam === 'revenue'}
+                                        onClick={event => handleListItemClick(event, 'revenue')}
                                     >
                                         <ListItemIcon>
                                             <DashboardIcon />
                                         </ListItemIcon>
-                                        <ListItemText primary='Dashboard' />
+                                        <ListItemText primary='Doanh thu' />
                                     </ListItemButton>
                                     <ListItemButton
                                         selected={selectedParam === 'create'}

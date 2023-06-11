@@ -6,15 +6,28 @@ import { useSelector, useDispatch } from 'react-redux'
 import { showToast } from 'src/redux/slice/toastSlice'
 import ErrorMessages from '~/components/ErrorMessages'
 import { LoadingButton } from '@mui/lab'
+import ReactQuill from 'react-quill'
 
 const BlogComponent = ({ isMatch }) => {
     const [isLoading, setIsLoading] = useState(false)
     const token = useSelector(state => state.auth.user?.token)
     const dispatch = useDispatch()
+    const [files, setFiles] = useState([])
+
+    const handleFileUpload = event => {
+        const fileList = event.target.files
+        const fileArray = Array.from(fileList)
+        setFiles(fileArray)
+    }
+    const handleEditorChange = value => {
+        setValue('desc', value)
+    }
+
     const {
         register,
         reset,
         handleSubmit,
+        setValue,
         formState: { errors }
     } = useForm()
     const onBlog = async data => {
@@ -23,6 +36,11 @@ const BlogComponent = ({ isMatch }) => {
         formData.set('desc', data.desc)
         formData.set('author', data.author)
         formData.set('picture', data.picture[0])
+
+        for (let i = 0; i < files.length && i < 5; i++) {
+            formData.append('picture', files[i])
+        }
+
         try {
             setIsLoading(true)
             const res = await createBlogAPI(formData, token)
@@ -52,8 +70,8 @@ const BlogComponent = ({ isMatch }) => {
                     />
                     <ErrorMessages errors={errors} fieldName='title' />
                 </Grid>
-                <Grid xs={12} item>
-                    <TextField
+                <Grid xs={12} item height={isMatch ? 300 : 250}>
+                    {/* <TextField
                         size={isMatch ? 'small' : 'medium'}
                         type='text'
                         label='Mô tả bài viết'
@@ -63,7 +81,29 @@ const BlogComponent = ({ isMatch }) => {
                         fullWidth
                         {...register('desc', { required: true })}
                     />
-                    <ErrorMessages errors={errors} fieldName='desc' />
+                    <ErrorMessages errors={errors} fieldName='desc' /> */}
+                    <ReactQuill
+                        modules={{
+                            toolbar: [
+                                ['bold', 'italic', 'underline', 'strike'],
+                                ['link', 'blockquote', 'code-block', 'image'],
+                                [{ header: 1 }, { header: 2 }],
+                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                [{ script: 'sub' }, { script: 'super' }],
+                                [{ indent: '-1' }, { indent: '+1' }],
+                                [{ direction: 'rtl' }],
+                                [{ size: ['small', false, 'large', 'huge'] }],
+                                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                                [{ color: [] }, { background: [] }],
+                                [{ font: [] }],
+                                [{ align: [] }],
+                                ['clean']
+                            ]
+                        }}
+                        className='editor-container'
+                        theme='snow'
+                        onChange={handleEditorChange}
+                    />
                 </Grid>
                 <Grid xs={12} item>
                     <TextField
@@ -77,7 +117,16 @@ const BlogComponent = ({ isMatch }) => {
                     />
                 </Grid>
                 <Grid xs={12} item>
-                    <Typography component='input' type='file' variant='outlined' {...register('picture')} />
+                    <Typography
+                        component='input'
+                        type='file'
+                        multiple
+                        variant='outlined'
+                        {...register('picture', {
+                            required: true,
+                            onChange: e => handleFileUpload(e)
+                        })}
+                    />
                 </Grid>
                 <Grid xs={12} item>
                     <LoadingButton
