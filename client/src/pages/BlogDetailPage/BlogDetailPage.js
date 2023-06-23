@@ -87,7 +87,7 @@ const BlogDetailPage = () => {
                                 <CircularProgress />
                             ) : (
                                 <Paper elevation={6}>
-                                    <Image src={post?.picture?.[0] || ''} alt={post.name} />
+                                    <Image src={post?.picture?.[0] || ''} height={300} alt={post.name} />
                                     <Stack spacing={2} padding={2}>
                                         <Stack direction='row' justifyContent='space-between'>
                                             <Typography
