@@ -47,7 +47,6 @@ const BlogDetailPage = () => {
         }
         fetchPost()
     }, [blogId])
-    console.log(post)
 
     return (
         <Box p={1} display='flex' minHeight='70vh' justifyContent={{ xl: 'center' }} marginY={5}>

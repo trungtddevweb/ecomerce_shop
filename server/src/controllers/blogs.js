@@ -7,7 +7,7 @@ export const createAPost = async (req, res) => {
     try {
         const post = await Blog({
             ...req.body,
-            picture: filepathss
+            picture: filepaths
         })
         await post.save()
         responseHandler.created(res, post)

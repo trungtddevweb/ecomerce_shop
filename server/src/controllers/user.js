@@ -40,7 +40,6 @@ export const updatedUser = async (req, res) => {
     try {
         if (email) {
             const existingUser = await User.findOne({ email })
-            console.log(userId)
             if (existingUser && existingUser._id.toString() !== userId.toString()) {
                 return res.status(400).json({ error: 'Email đã tồn tại' })
             }
