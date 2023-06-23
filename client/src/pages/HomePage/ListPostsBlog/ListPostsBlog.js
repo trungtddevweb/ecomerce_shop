@@ -13,6 +13,7 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material'
+import DOMPurify from 'dompurify'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -114,7 +115,7 @@ const ListPostsBlog = () => {
                                                     className={classes.title}
                                                     gutterBottom
                                                     variant='h6'
-                                                    minHeight={64}
+                                                    minHeight={56}
                                                     component='p'
                                                 >
                                                     {item?.title}
@@ -125,9 +126,8 @@ const ListPostsBlog = () => {
                                                     sx={{ minHeight: '80px' }}
                                                     component='div'
                                                     className={classes.limitLines}
-                                                >
-                                                    {item?.desc}
-                                                </Typography>
+                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.desc) }}
+                                                ></Typography>
                                                 <Typography
                                                     marginTop={2}
                                                     color='text.secondary'

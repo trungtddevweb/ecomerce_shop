@@ -1,11 +1,14 @@
 import { Box, Paper, Stack, Typography } from '@mui/material'
+import DOMPurify from 'dompurify'
 import Image from 'mui-image'
 import { Link } from 'react-router-dom'
 import SkeletonFallback from 'src/fallback/Skeleton/SkeletonFallback'
+import useStyles from '~/assets/styles/useStyles'
 import useFetchData from '~/hooks/useFetchData'
 
 const RecentPosts = ({ blogId }) => {
     const { data, isLoading } = useFetchData(`/blogs/`)
+    const classes = useStyles()
 
     if (isLoading)
         return (
@@ -28,10 +31,11 @@ const RecentPosts = ({ blogId }) => {
                         </Box>
                         <Link to={`/blogs/${post._id}`}>
                             <Stack>
-                                <Typography color='primary' fontWeight={600}>
+                                <Typography color='primary' className={classes.title} fontWeight={600}>
                                     {post.title}
                                 </Typography>
-                                <Typography
+                                {/* <Typography
+                                    component='div'
                                     variant='body2'
                                     color='Graytext'
                                     display={{ sm: 'none', md: 'block' }}
@@ -39,9 +43,8 @@ const RecentPosts = ({ blogId }) => {
                                         height: '60px',
                                         overflow: 'hidden'
                                     }}
-                                >
-                                    {post.desc}
-                                </Typography>
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}
+                                ></Typography> */}
                             </Stack>
                         </Link>
                     </Stack>
