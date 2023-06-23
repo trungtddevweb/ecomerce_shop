@@ -31,6 +31,7 @@
         "cloudinary-react": "^1.8.1",
         "customize-cra": "^1.0.0",
         "dayjs": "^1.11.7",
+        "dompurify": "^3.0.3",
         "material-ui-popup-state": "^5.0.8",
         "mui-image": "^1.0.7",
         "payment": "^2.4.6",
