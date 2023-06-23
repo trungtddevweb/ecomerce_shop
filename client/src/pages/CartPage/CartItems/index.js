@@ -127,7 +127,6 @@ const CartItems = ({ onNext, isMatch, setVoucher, voucherCode, setVoucherCode, s
 
         setChecked(newChecked)
     }
-    // console.log('Discount===🚀🚀🚀🚀:', discount)
 
     const handleCheckAll = () => {
         if (isCheckedAll) {

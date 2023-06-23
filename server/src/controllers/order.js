@@ -133,7 +133,6 @@ export const updateOrder = async (req, res) => {
                 const revenue = calculateProductRevenue(existProduct.price, product.quantity)
                 existProduct.monthlyRevenue.set(monthYearKey, revenue)
                 await existProduct.save()
-                console.log('product', existProduct)
             }
         }
         const updateOrder = await Order.findOneAndUpdate({ orderCode }, { status, isPaid }, { new: true })
