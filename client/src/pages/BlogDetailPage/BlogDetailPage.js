@@ -20,6 +20,7 @@ import useDocumentTitle from '~/hooks/useDocumentTitle'
 import useScrollToTop from '~/hooks/useScrollToTop'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import DOMPurify from 'dompurify'
 const RecentPosts = lazy(() => import('./RecentBlogs'))
 
 const BlogDetailPage = () => {
@@ -113,9 +114,13 @@ const BlogDetailPage = () => {
                                         <Typography variant='h5' color='primary' fontWeight={500}>
                                             {post.title}
                                         </Typography>
-                                        <Typography variant='body1' color='GrayText' fontWeight={500}>
-                                            {post.desc}
-                                        </Typography>
+                                        <Typography
+                                            component='div'
+                                            variant='body1'
+                                            color='GrayText'
+                                            fontWeight={500}
+                                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}
+                                        ></Typography>
                                     </Stack>
                                 </Paper>
                             )}

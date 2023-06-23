@@ -6,7 +6,7 @@ import uploadCloud from '../middleware/cloudinary.js'
 const router = express.Router()
 
 // Create A Post
-router.post('/', verifyAdmin, uploadCloud.single('picture'), createAPost)
+router.post('/', verifyAdmin, uploadCloud.array('picture'), createAPost)
 
 // Get A Post
 router.get('/find/:blogId', getAPost)
